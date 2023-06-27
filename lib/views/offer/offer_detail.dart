@@ -16,6 +16,8 @@ import 'package:test_ecommerce_app/views/widgets/shimmer_container.dart';
 import 'package:test_ecommerce_app/views/widgets/custom_text_line_through.dart';
 import 'package:test_ecommerce_app/views/offer/widget/merchant_logo.dart';
 import 'package:test_ecommerce_app/views/widgets/custom_indicator_carousel.dart';
+import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+    as translation;
 
 class OfferDescriptionPage extends GetView<OfferController> {
   final OfferModel offerModel;
@@ -50,152 +52,143 @@ class OfferDescriptionPage extends GetView<OfferController> {
     List<OfferImages> offerImages = offerModel.offerImages!
         .map((offerImage) => OfferImages.fromJson(offerImage))
         .toList();
-    return Directionality(
-        textDirection: Utils.direction,
-        child: Obx(
-          () => Scaffold(
-              backgroundColor: ColorConstants.backgroundContainer,
-              extendBodyBehindAppBar: true,
-              appBar: AppBar(
-                backgroundColor: controller.appBarOfferDescriptionColor.value,
-                elevation: 0,
-                toolbarHeight: 80,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
+    return Obx(
+      () => Scaffold(
+          backgroundColor: ColorConstants.backgroundContainer,
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            backgroundColor: controller.appBarOfferDescriptionColor.value,
+            elevation: 0,
+            toolbarHeight: 80,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+            ),
+            leadingWidth: 70,
+            leading: GestureDetector(
+              onTap: () => Get.back(),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  width: 37,
+                  height: 37,
+                  // margin: const EdgeInsets.only(left: 16,right: 16),
+                  decoration: const BoxDecoration(
+                    color: ColorConstants.mainColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: Colors.white,
+                    size: 20,
                   ),
                 ),
-                leadingWidth: 70,
-                leading: GestureDetector(
-                  onTap: () => Get.back(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Container(
-                      width: 37,
-                      height: 37,
-                      // margin: const EdgeInsets.only(left: 16,right: 16),
-                      decoration: const BoxDecoration(
-                        color: ColorConstants.mainColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_ios_rounded,
-                        color: Colors.white,
-                        size: 20,
-                      ),
+              ),
+            ),
+            actions: [
+              const SizedBox(
+                width: 16,
+              ),
+              appBarIcon(
+                  icon: Icons.share,
+                  iconColor: controller.appBarItemOfferDescriptionColor.value,
+                  containerColor: controller
+                      .appBarItemContainerOfferDescriptionColor.value),
+              const SizedBox(
+                width: 8,
+              ),
+              appBarIcon(
+                  icon: Icons.shopping_cart_rounded,
+                  iconColor: controller.appBarItemOfferDescriptionColor.value,
+                  containerColor: controller
+                      .appBarItemContainerOfferDescriptionColor.value),
+              const SizedBox(
+                width: 16,
+              ),
+            ],
+          ),
+          bottomNavigationBar: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+              height: 110,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          translation.discountName.tr,
+                          style: const TextStyle(
+                              color: ColorConstants.mainColor,
+                              fontSize: 12,
+                              fontFamily: 'Noto Kufi Arabic',
+                              fontWeight: FontWeight.w600),
+                        ),
+                        // const SizedBox(width: 20,),
+                        Text(
+                          ' ${translation.couponText.tr} ${Utils.getDateTime(dateTime: offerModel.expireDate!)}',
+                          style: const TextStyle(
+                              color: ColorConstants.mainColor,
+                              fontSize: 12,
+                              fontFamily: 'Noto Kufi Arabic',
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                actions: [
                   const SizedBox(
-                    width: 16,
+                    height: 10,
                   ),
-                  appBarIcon(
-                      icon: Icons.share,
-                      iconColor:
-                          controller.appBarItemOfferDescriptionColor.value,
-                      containerColor: controller
-                          .appBarItemContainerOfferDescriptionColor.value),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  appBarIcon(
-                      icon: Icons.shopping_cart_rounded,
-                      iconColor:
-                          controller.appBarItemOfferDescriptionColor.value,
-                      containerColor: controller
-                          .appBarItemContainerOfferDescriptionColor.value),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                ],
-              ),
-              bottomNavigationBar: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-                  height: 110,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              SharedPreferencesClass.getLanguageCode() == 'ar'
-                                  ? '${offerModel.enDiscount} خصم'
-                                  : '${offerModel.enDiscount} Discount',
-                              style: const TextStyle(
-                                  color: ColorConstants.mainColor,
-                                  fontSize: 12,
-                                  fontFamily: 'Noto Kufi Arabic',
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            // const SizedBox(width: 20,),
-                            Text(
-                              SharedPreferencesClass.getLanguageCode() == 'ar'
-                                  ? ' الكوبون صالح حتي ${Utils.getDateTime(dateTime: offerModel.expireDate!)} '
-                                  : ' The coupon is valid until now ${Utils.getDateTime(dateTime: offerModel.expireDate!)}',
-                              style: const TextStyle(
-                                  color: ColorConstants.mainColor,
-                                  fontSize: 12,
-                                  fontFamily: 'Noto Kufi Arabic',
-                                  fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                        width: MediaQuery.of(context).size.width / 1.3,
+                        child: _buildAddCartBtn(),
+                      ),
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          color: ColorConstants.mainColor,
+                          shape: BoxShape.circle,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 1.3,
-                            child: _buildAddCartBtn(),
-                          ),
-                          Container(
-                            width: 50,
-                            height: 50,
-                            decoration: const BoxDecoration(
-                              color: ColorConstants.mainColor,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.chat_outlined,
-                              color: Colors.white,
-                              size: 25,
-                            ),
-                          )
-                        ],
+                        child: const Icon(
+                          Icons.chat_outlined,
+                          color: Colors.white,
+                          size: 25,
+                        ),
                       )
                     ],
-                  )),
-              body: ListView(
-                  controller: controller.scrollOfferDescriptionController,
-                  padding: EdgeInsets.zero,
-                  children: [
-                        _buildCarousel(context: context, offerImages: offerImages),
-                    Transform.translate(
-                      offset: const Offset(0, -45),
-                          child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Obx(()=> CustomIndicatorCarousel(currentBanner: controller.currentBanner.value ,
-                                list:  offerImages,))),
-
-                    ),
-                    _offerDescription(
-                        context: context, offer: offer, theme: theme),
-                  ])),
-        ));
+                  )
+                ],
+              )),
+          body: ListView(
+              controller: controller.scrollOfferDescriptionController,
+              padding: EdgeInsets.zero,
+              children: [
+                _buildCarousel(context: context, offerImages: offerImages),
+                Transform.translate(
+                  offset: const Offset(0, -45),
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Obx(() => CustomIndicatorCarousel(
+                            currentBanner: controller.currentBanner.value,
+                            list: offerImages,
+                          ))),
+                ),
+                _offerDescription(context: context, offer: offer, theme: theme),
+              ])),
+    );
   }
 
   Widget _buildAddCartBtn() {
@@ -213,12 +206,16 @@ class OfferDescriptionPage extends GetView<OfferController> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.shopping_cart_rounded,color: Colors.white,size: 30,),
-                const SizedBox(width: 6,),
+                const Icon(
+                  Icons.shopping_cart_rounded,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
                 Text(
-                  SharedPreferencesClass.getLanguageCode() == 'ar'
-                      ? 'أضف إلى العربة'
-                      : 'Add to cart',
+                  translation.addToCart.tr,
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -367,17 +364,14 @@ class OfferDescriptionPage extends GetView<OfferController> {
                     _buildPriceContainer(
                         height: 40,
                         width: 85,
-                        text: SharedPreferencesClass.getLanguageCode() == 'ar'
-                            ? '${offer.priceAfterDiscount.toString()} جنية'
-                            : '${offer.priceAfterDiscount.toString()} EGP'),
+                        text:
+                             '${offer.priceAfterDiscount.toString()} ${translation.discountName.tr}'),
                     const SizedBox(
                       width: 10,
                     ),
                     CustomTextLineThrough(
-                        text:offer.priceBeforDiscount.toString(),textColor:ColorConstants.greyColor
-                    ),
-
-
+                        text: offer.priceBeforDiscount.toString(),
+                        textColor: ColorConstants.greyColor),
                     const SizedBox(
                       width: 10,
                     ),
@@ -408,10 +402,12 @@ class OfferDescriptionPage extends GetView<OfferController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-
-                MerchantLogo(merchantLogo:  companyModel.logo.toString(),
-                    containerWidth: 59, containerHeight: 59,
-                    logoWidth: 38, logoHeight: 38),
+                MerchantLogo(
+                    merchantLogo: companyModel.logo.toString(),
+                    containerWidth: 59,
+                    containerHeight: 59,
+                    logoWidth: 38,
+                    logoHeight: 38),
                 const SizedBox(
                   width: 10,
                 ),
@@ -441,10 +437,7 @@ class OfferDescriptionPage extends GetView<OfferController> {
             ),
             SizedBox(
                 width: MediaQuery.of(context).size.width,
-                child: Text(
-                  SharedPreferencesClass.getLanguageCode() == 'ar'
-                      ? offer.arSubtitle.toString()
-                      : offer.enSubtitle.toString(),
+                child: Text( Utils.getTranslatedText(arText: offer.arSubtitle.toString(), enText: offer.enSubtitle.toString()),
                   style: const TextStyle(
                     color: Colors.black,
                     height: 1.8,
@@ -457,9 +450,7 @@ class OfferDescriptionPage extends GetView<OfferController> {
               height: 21,
             ),
             Text(
-              SharedPreferencesClass.getLanguageCode() == 'ar'
-                  ? 'خيارات العرض'
-                  : 'Display options',
+              translation.displayOption.tr,
               style: const TextStyle(
                 color: Colors.black,
                 height: 1.3,
@@ -768,10 +759,12 @@ class OfferDescriptionPage extends GetView<OfferController> {
         children: [
           Row(
             children: [
-
-              MerchantLogo(merchantLogo:  logoUrl.toString().toString(),
-                  containerWidth: 41, containerHeight: 46,
-                  logoWidth: 25, logoHeight:26),
+              MerchantLogo(
+                  merchantLogo: logoUrl.toString().toString(),
+                  containerWidth: 41,
+                  containerHeight: 46,
+                  logoWidth: 25,
+                  logoHeight: 26),
               const SizedBox(
                 width: 10,
               ),
