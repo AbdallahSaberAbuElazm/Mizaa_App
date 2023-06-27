@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/shared/helpers/extensions/StringExtension.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
-import 'package:test_ecommerce_app/shared/utils.dart';
+import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+as translation;
+import 'package:test_ecommerce_app/views/wallet/wallet_screen.dart';
 
 class UserTab extends StatefulWidget {
   UserTab({Key? key}) : super(key: key);
@@ -24,29 +26,27 @@ class _UserTabState extends State<UserTab> {
 
     final theme = Theme.of(context);
 
-    return Directionality(
-      textDirection: Utils.direction,
-      child: SafeArea(
-          child: NestedScrollView(
-              headerSliverBuilder: (context, innerBoxIsScrolled) {
-                return <Widget>[
-                   SliverAppBar(
-                    expandedHeight: 100.0,
-                    floating: false,
-                    pinned: true,
-                    flexibleSpace: FlexibleSpaceBar(
-                      centerTitle: false,
-                      titlePadding: const EdgeInsets.symmetric(horizontal: 16),
-                      title: Text(SharedPreferencesClass.getLanguageCode() == 'ar'? 'إعدادات':'Settings',
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontFamily: 'Noto Kufi Arabic',
-                              fontWeight: FontWeight.w500)),
-                    ),
-                  ),
-                ];
-              },
+    return  SafeArea(
+          child: Scaffold(
+              // headerSliverBuilder: (context, innerBoxIsScrolled) {
+              //   return <Widget>[
+              //     //  SliverAppBar(
+              //     //   expandedHeight: 100.0,
+              //     //   floating: false,
+              //     //   pinned: true,
+              //     //   flexibleSpace: FlexibleSpaceBar(
+              //     //     centerTitle: false,
+              //     //     titlePadding: const EdgeInsets.symmetric(horizontal: 16),
+              //     //     title: Text(translation.settings.tr,
+              //     //         style: const TextStyle(
+              //     //             color: Colors.black,
+              //     //             fontSize: 18,
+              //     //             fontFamily: 'Noto Kufi Arabic',
+              //     //             fontWeight: FontWeight.w500)),
+              //     //   ),
+              //     // ),
+              //   ];
+              // },
               body: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -56,9 +56,9 @@ class _UserTabState extends State<UserTab> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 16),
-                         Text(SharedPreferencesClass.getLanguageCode() == 'ar'? 'حساب': "Account",
-                            style: const TextStyle(
-                                color: Colors.black,
+                         Text(translation.account.tr,
+                            style:  TextStyle(
+                                color:Get.isDarkMode? Colors.white: Colors.black,
                                 fontSize: 18,
                                 fontFamily: 'Noto Kufi Arabic',
                                 fontWeight: FontWeight.w500)),
@@ -95,30 +95,28 @@ class _UserTabState extends State<UserTab> {
                           ),
                         ),
                         const SizedBox(height: 32),
-                        Text(SharedPreferencesClass.getLanguageCode() == 'ar'? 'إعدادات':'Settings',
+                        Text(translation.settings.tr,
                             style: theme.textTheme.headline6
-                                ?.copyWith(fontWeight: FontWeight.w400)),
+                                ?.copyWith(fontWeight: FontWeight.w400,fontSize: 16)),
                         const SizedBox(height: 16),
+
+                        _buildListTile(
+                            translation.wallet.tr, Icons.wallet, '',ColorConstants.mainColor, theme,
+                            onTab: () {
+                              Get.to(()=> const WalletScreen());
+                            }),
                         GetBuilder<ThemesController>(builder: (_) {
-                          return _buildListTile(SharedPreferencesClass.getLanguageCode() == 'ar'? 'مظهر':'Appearance', Icons.dark_mode,
+                          return _buildListTile(
+                              translation.appearance.tr, Icons.dark_mode,
                               _.theme.toCapitalized(), Colors.purple, theme,
                               onTab: () =>
                                   _showAppearanceModal(theme, _.theme));
                           // return Text(_.theme);
                         }),
-                        SizedBox(height: 8),
-                        GetBuilder<ThemesController>(builder: (_) {
-                          return _buildListTile(SharedPreferencesClass.getLanguageName().toString() == 'العربية'? 'اللغة' : 'Language', Icons.language,
-                              SharedPreferencesClass.getLanguageName().toString(), Colors.orange, theme,
-                              onTab: () => _showLanguageModal(
-                                  theme,
-                                  SharedPreferencesClass.getLanguageName()
-                                      .toString()));
-                        }),
 
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         _buildListTile(
-                           SharedPreferencesClass.getLanguageCode() == 'ar'? 'تسجيل خروج': 'Logout', Icons.exit_to_app, '', Colors.red, theme,
+                           translation.logout.tr, Icons.exit_to_app, '', Colors.red, theme,
                             onTab: () {
                           print(
                               'user data ${SharedPreferencesClass.getPhoneNumber()}  ${SharedPreferencesClass.getFirstName()}');
@@ -132,7 +130,7 @@ class _UserTabState extends State<UserTab> {
                             ?.copyWith(color: Colors.grey.shade500)),
                   ],
                 ),
-              ))),
+              )),
     );
   }
 
@@ -153,7 +151,7 @@ class _UserTabState extends State<UserTab> {
             ),
           ),
         ),
-        title: Text(title, style: theme.textTheme.subtitle1),
+        title: Text(title, style: theme.textTheme.subtitle1?.copyWith(fontSize: 13.0)),
         trailing: SizedBox(
           width: 90,
           child: Row(
@@ -161,7 +159,7 @@ class _UserTabState extends State<UserTab> {
             children: [
               Text(trailing,
                   style: theme.textTheme.bodyText1
-                      ?.copyWith(color: Colors.grey.shade600)),
+                      ?.copyWith(color: Colors.grey.shade600,fontSize: 13.0)),
               const Icon(
                 Icons.arrow_forward_ios,
                 size: 16,

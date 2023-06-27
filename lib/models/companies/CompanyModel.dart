@@ -25,7 +25,7 @@ class CompanyModel with _$CompanyModel {
     String? youtube,
     String? website,
     String? creationDate,
-    List<CompanyBranchesModel>? companyBranches,
+    List<Map<String,dynamic>>? companyBrunches,
   }) = _CompanyModel;
 
   factory CompanyModel.fromJson(Map<String, dynamic> json) => _$CompanyModelFromJson(json);

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
 
 
@@ -25,21 +24,17 @@ class _CustomConfirmPasswordFormFieldState extends State<CustomConfirmPasswordFo
   @override
   void initState() {
     super.initState();
-    Utils.direction = Utils.getDirection((SharedPreferencesClass.getLanguageCode()== null || SharedPreferencesClass.getLanguageCode() == '') ? 'ar' : SharedPreferencesClass.getLanguageCode().toString());
-    TextAlign textAlign = Utils.getTextAlign(SharedPreferencesClass.getLanguageCode().toString());
   }
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: Utils.direction,
-      child: Column(
+    return  Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
                 widget.hintText,
                 style:  TextStyle(
-                    fontSize: 18, color: ColorConstants.black0, fontFamily: 'Noto Kufi Arabic',height: 1),textAlign: Controllers.directionalityController.textAlign.value
+                    fontSize: 18, color:Get.isDarkMode? Colors.white: ColorConstants.black0, fontFamily: 'Noto Kufi Arabic',height: 1),
             ),
             const SizedBox(
               height: 10,
@@ -50,7 +45,7 @@ class _CustomConfirmPasswordFormFieldState extends State<CustomConfirmPasswordFo
                 child: TextFormField(
               scrollPadding: EdgeInsets.zero,
               cursorColor: Colors.black,
-              controller: widget.controller,textDirection: Utils.direction,
+              controller: widget.controller,
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'ادخل ${widget.hintText}';
@@ -76,7 +71,7 @@ class _CustomConfirmPasswordFormFieldState extends State<CustomConfirmPasswordFo
                     (_passwordVisible == true)
                         ? Icons.visibility
                         : Icons.visibility_off,
-                    color: Colors.black, size: 22,
+                    color:Get.isDarkMode? Colors.white: Colors.black, size: 22,
                   ),
                   onPressed: () {
                     // Update the state i.e. toogle the state of passwordVisible variable
@@ -95,9 +90,9 @@ class _CustomConfirmPasswordFormFieldState extends State<CustomConfirmPasswordFo
               autocorrect: false,
               style:Theme.of(context).textTheme.subtitle1,
 
-              textAlign: Utils.textAlign,
+              // textAlign: Utils.textAlign,
 
-            )))]),
+            )))],
     );
   }
 }

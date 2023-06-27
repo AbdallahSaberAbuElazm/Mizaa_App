@@ -1,13 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:test_ecommerce_app/models/location/city/CityModel.dart';
 import 'package:test_ecommerce_app/models/location/country/CountryModel.dart';
 import 'package:test_ecommerce_app/providers/user_authentication_provider.dart';
+import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/views/authentication/otp_verifiy_screen.dart';
 import 'package:test_ecommerce_app/models/user/user_login_data.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
+import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+as translation;
 
 class UserAuthenticationController extends GetxController {
   final UserAuthenticationProvider userAuthenticationProvider;
@@ -146,10 +150,12 @@ class UserAuthenticationController extends GetxController {
                 token: userService.token));
 
         isButtonEnabled.value = false;
-        Get.offNamed('/home');
-        clearLoginTextFieldData();
+        Get.offNamed('/home')!.then((value){
+          clearLoginTextFieldData();
+        });
+
       } else {
-        Utils.snackBar(context: context, msg:SharedPreferencesClass.getLanguageCode() == 'ar'?  'بيانات الدخول غير صحيحة': 'Login information is incorrect');
+        Utils.snackBar(context: context, msg: translation.loginInfoIncorrect.tr,background: ColorConstants.redColor, textColor: Colors.white);
       }
     });
   }
@@ -164,10 +170,12 @@ class UserAuthenticationController extends GetxController {
         .then((value) {
       Get.back();
       if (value['isSuccess'] == true) {
-        Utils.snackBar(context: context, msg: SharedPreferencesClass.getLanguageCode() == 'ar'?value['message']:value['enmessage']);
+        Utils.snackBar(context: context, msg:
+        Utils.getTranslatedText(arText:value['message'] , enText: value['enmessage'])
+        ,background: ColorConstants.greenColor,textColor: Colors.white);
         Get.offAllNamed('/login');
       } else {
-        Utils.snackBar(context: context, msg: SharedPreferencesClass.getLanguageCode() == 'ar'?value['message']:value['enmessage']);
+        Utils.snackBar(context: context, msg: Utils.getTranslatedText(arText:value['message'] , enText: value['enmessage']),background: ColorConstants.redColor,textColor: Colors.white);
       }
     });
   }
@@ -188,7 +196,7 @@ class UserAuthenticationController extends GetxController {
               routeName: 'recover',
             ));
       } else {
-        Utils.snackBar(context: context, msg: 'تأكد من صحة بياناتك');
+        Utils.snackBar(context: context, msg:translation.verifyDataText.tr,background: ColorConstants.redColor,textColor: Colors.white);
       }
     });
   }
@@ -218,7 +226,7 @@ class UserAuthenticationController extends GetxController {
             ));
         clearRegisterTextFieldData();
       } else {
-        Utils.snackBar(context: context, msg: value['message']);
+        Utils.snackBar(context: context, msg: value['message'],background: ColorConstants.yellowColor,textColor: ColorConstants.black0);
       }
     });
   }
@@ -239,12 +247,12 @@ class UserAuthenticationController extends GetxController {
         .then((value) {
       if (value['isAuthenticated'] == true) {
         otpController.value = '';
-        Utils.snackBar(context: context, msg: SharedPreferencesClass.getLanguageCode() == 'ar'? 'تم انشاء حساب بنجاح':'An account has been created successfully');
+        Utils.snackBar(context: context, msg: translation.accountCreatedSuccessfully.tr,background: ColorConstants.greenColor ,textColor: Colors.white);
         Get.offAllNamed('/login');
       } else {
 
           Get.back();
-          Utils.snackBar(context: context, msg: SharedPreferencesClass.getLanguageCode() == 'ar'? 'الرمز الذي أدخلته غير صحيح' : 'The code you entered is incorrect');
+          Utils.snackBar(context: context, msg: translation.codeEnteredIncorrect.tr,background: ColorConstants.redColor, textColor: Colors.white  );
 
       }
     });

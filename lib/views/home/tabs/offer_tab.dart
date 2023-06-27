@@ -1,32 +1,39 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:restart_app/restart_app.dart';
+import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
 import 'package:test_ecommerce_app/controllers/home/HomeController.dart';
 import 'package:test_ecommerce_app/controllers/offers/OfferController.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
+import 'package:test_ecommerce_app/controllers/offers/search_offer_controller.dart';
+import 'package:test_ecommerce_app/controllers/offers/search_binding.dart';
 import 'package:test_ecommerce_app/models/categories/CategoryModel.dart';
 import 'package:test_ecommerce_app/models/companies/CompanyModel.dart';
 import 'package:test_ecommerce_app/models/location/city/CityModel.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
+import 'package:test_ecommerce_app/views/cart/cart_screen.dart';
+import 'package:test_ecommerce_app/views/home/HomePage.dart';
+import 'package:test_ecommerce_app/views/offer/offer_detail.dart';
 import 'package:test_ecommerce_app/views/offer/sub_categories.dart';
 import 'package:test_ecommerce_app/views/offer/OfferCard.dart';
 import 'package:test_ecommerce_app/views/offer/new_offer_card.dart';
 import 'package:test_ecommerce_app/views/offer/most_seller_offer_card.dart';
-import 'package:test_ecommerce_app/views/widgets/custom_button.dart';
+import 'package:test_ecommerce_app/views/widgets/chatting_btn.dart';
+import 'package:test_ecommerce_app/views/widgets/search_screen.dart';
 import 'package:test_ecommerce_app/views/widgets/shimmer_container.dart';
 import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/views/widgets/shimmer_list_view.dart';
-import 'package:test_ecommerce_app/views/offer/OfferDescriptionPage.dart';
 import 'package:test_ecommerce_app/views/offer/OfferListForMainCategoryPage.dart';
 import 'package:test_ecommerce_app/views/offer/OfferListForSubCategoryPage.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 import 'package:test_ecommerce_app/views/widgets/custom_text_line_through.dart';
 import 'package:test_ecommerce_app/views/widgets/custom_indicator_carousel.dart';
+import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+    as translation;
 
 class ExploreTab extends GetView<HomeController> {
   ExploreTab({Key? key}) : super(key: key);
@@ -36,204 +43,183 @@ class ExploreTab extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Directionality(
-        textDirection: Utils.direction,
-        child: SafeArea(
-            child: Obx(() => Scaffold(
-                  extendBodyBehindAppBar:
-                      true, // Extend the body behind the app bar
-                  appBar: AppBar(
-                      backgroundColor: controller.appBarColor
-                          .value, // Set the background color to transparent
-                      elevation: 0,
-                      toolbarHeight: 80,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20),
-                          bottomRight: Radius.circular(20),
-                        ),
-                      ),
-                      title: _buildAppBar(context: context)),
-                  body: ListView(
-                      controller: controller.scrollController,
-                      padding: EdgeInsets.zero,
-                      children: [
-                        _buildOfferCarousel(context),
-                        Transform.translate(
-                            offset: const Offset(0, -50),
-                            child: Obx(() => CustomIndicatorCarousel(
-                                list: controller.activeCarouselOffers,
-                                currentBanner:
-                                    controller.currentBanner.value))),
+    Get.put(CartController(Get.find()));
+    return SafeArea(
+        child: Obx(() => Scaffold(
+              extendBodyBehindAppBar:
+                  true, // Extend the body behind the app bar
+              appBar: AppBar(
+                  backgroundColor: controller.appBarColor
+                      .value, // Set the background color to transparent
+                  elevation: 0,
+                  toolbarHeight: 80,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                    ),
+                  ),
+                  title: _buildAppBar(context: context)),
+              floatingActionButton:const ChattingBtn(),
+              floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+              body: ListView(
+                  controller: controller.scrollController,
+                  padding: EdgeInsets.zero,
+                  children: [
+                    _buildOfferCarousel(context),
+                    Transform.translate(
+                        offset: const Offset(0, -50),
+                        child: Obx(() => CustomIndicatorCarousel(
+                            list: controller.activeCarouselOffers,
+                            currentBanner: controller.currentBanner.value))),
 
-                        _buildCashback(context: context),
+                    _buildCashback(context: context),
 
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        SizedBox(
-                            height: 118,
-                            width: MediaQuery.of(context).size.width,
-                            child: Obx(
-                              () => (controller.mainCategories.isNotEmpty)
-                                  ? ListView(
-                                      physics: const ScrollPhysics(),
-                                      scrollDirection: Axis.horizontal,
-                                      children: [
-                                        _buildLocationCategory(theme: theme),
-                                        _buildCategories(theme),
-                                      ],
-                                    )
-                                  : Padding(
-                                      padding: EdgeInsets.only(
-                                          left: SharedPreferencesClass
-                                                      .getLanguageCode() ==
-                                                  'ar'
-                                              ? 0
-                                              : 8,
-                                          right: SharedPreferencesClass
-                                                      .getLanguageCode() ==
-                                                  'ar'
-                                              ? 8
-                                              : 0),
-                                      child: ShimmerListView(
-                                        width: 118,
-                                        height: 112,
-                                        topPadding: 0,
-                                        bottomPadding: 0,
-                                        leftPadding: SharedPreferencesClass
-                                                    .getLanguageCode() ==
-                                                'ar'
-                                            ? 4
-                                            : 0,
-                                        rightPadding: SharedPreferencesClass
-                                                    .getLanguageCode() ==
-                                                'ar'
-                                            ? 0
-                                            : 4,
-                                      ),
-                                    ),
-                            )),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        _buildSection(
-                            title:
-                                SharedPreferencesClass.getLanguageCode() == 'ar'
-                                    ? 'أقوى العروض'
-                                    : 'Hot offers',
-                            onPressed: () {
-                              Get.to(() => OfferListForMainCategoryPage(
-                                  mainCategoryName: SharedPreferencesClass
-                                              .getLanguageCode() ==
-                                          'ar'
-                                      ? 'أقوى العروض'
-                                      : 'Hot offers',
-                                  offers: controller.todayOffers));
-                            },
-                            theme: theme),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Obx(() => (controller.todayOffers.isNotEmpty)
-                            ? _buildTheStrongestOffers(
-                                offerModels: controller.todayOffers,
-                                theme: theme,
-                              )
-                            : _shimmerForListViewForOffer(height: 224)),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        _buildSection(
-                            title:
-                                SharedPreferencesClass.getLanguageCode() == 'ar'
-                                    ? 'فسح وخروجات'
-                                    : 'Outings',
-                            onPressed: () {
-                              Get.to(() => SubCategoryPage(
-                                  categories: controller.subCategories,
-                                  subCategoryName: SharedPreferencesClass
-                                              .getLanguageCode() ==
-                                          'ar'
-                                      ? 'فسح وخروجات'
-                                      : 'Outings'));
-                            },
-                            theme: theme),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        _buildSubCategoryOutings(theme),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        _buildSection(
-                            title:
-                                SharedPreferencesClass.getLanguageCode() == 'ar'
-                                    ? 'الأكثر مبيعاً'
-                                    : 'Most Seller',
-                            onPressed: () {
-                              Get.to(() => OfferListForMainCategoryPage(
-                                  mainCategoryName: SharedPreferencesClass
-                                              .getLanguageCode() ==
-                                          'ar'
-                                      ? 'الأكثر مبيعاً'
-                                      : 'Most Seller',
-                                  offers: controller.mostSellerOffers));
-                            },
-                            theme: theme),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Obx(() => (controller.mostSellerOffers.isNotEmpty)
-                            ? _buildMostSellerOffers(
-                                offerModels: controller.mostSellerOffers,
-                                theme: theme,
-                              )
-                            : _shimmerForListViewForOffer(height: 224)),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                        height: 118,
+                        width: MediaQuery.of(context).size.width,
+                        child: Obx(
+                          () => (controller.mainCategories.isNotEmpty)
+                              ? ListView(
+                                  physics: const ScrollPhysics(),
+                                  scrollDirection: Axis.horizontal,
+                                  children: [
+                                    _buildLocationCategory(theme: theme),
+                                    _buildCategories(theme),
+                                  ],
+                                )
+                              : Padding(
+                                  padding: EdgeInsets.only(
+                                      left:Utils.leftPadding8FromRight,
+                                      right: Utils.rightPadding8FromLeft),
+                                  child: ShimmerListView(
+                                    width: 118,
+                                    height: 112,
+                                    topPadding: 0,
+                                    bottomPadding: 0,
+                                      leftPadding: Utils.leftPadding4FromRight,
+                                      rightPadding: Utils.rightPadding4FromLeft,
+                                  ),
+                                ),
+                        )),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    _buildSection(
+                        title: translation.hotOffersText.tr,
+                        onPressed: () {
 
-                        _buildSection(
-                            title:
-                                SharedPreferencesClass.getLanguageCode() == 'ar'
-                                    ? 'العروض الجديدة'
-                                    : 'New offers',
-                            onPressed: () {
-                              Get.to(() => OfferListForMainCategoryPage(
-                                  mainCategoryName: SharedPreferencesClass
-                                              .getLanguageCode() ==
-                                          'ar'
-                                      ? 'العروض الجديدة'
-                                      : 'New offers',
-                                  offers: controller.specialOffers));
-                            },
-                            theme: theme),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        // Obx(() => (controller.specialOffers.isNotEmpty)
-                        //     ? _buildNewOfferCard(
-                        //         offerModels: controller.specialOffers,
-                        //         theme: theme,
-                        //       )
-                        Obx(() => (controller.todayOffers.isNotEmpty)
-                            ? _buildNewOfferCard(
-                                offerModels: controller.todayOffers,
-                                theme: theme,
-                                context: context)
-                            : _shimmerForListViewForOffer(height: 260)),
+                          Get.to(() =>
+                              // HomePage(recentPage:
+                          OfferListForMainCategoryPage(
+                              typeOfCategory: TypeOfCategory.specificOffers,
+                              mainCategoryName: translation.hotOffersText.tr,
+                              categoryId: -1,
+                              offers: controller.todayOffers),
+                              // selectedIndex: 0)
+                          );
+                          Get.put(OfferController(Get.find())).getMerchant(catId: '1');
+                        },
+                        theme: theme),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Obx(() => (controller.todayOffers.isNotEmpty)
+                        ? _buildTheHotOffers(
+                            offerModels: controller.todayOffers,
+                            theme: theme,
+                          )
+                        : _shimmerForListViewForOffer(height: 224)),
+                    const SizedBox(
+                      height: 3,
+                    ),
+                    _buildSection(
+                        title: translation.outingsText.tr,
+                        onPressed: () {
+                          Get.to(() => HomePage(recentPage: SubCategoryPage(
+                              categories: controller.subCategoryOutings,
+                              subCategoryName: translation.outingsText.tr) , selectedIndex: 0));
+                        },
+                        theme: theme),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    _buildSubCategoryOutings(theme),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    _buildSection(
+                        title: translation.mostSellerText.tr,
+                        onPressed: () {
 
-                        const SizedBox(
-                          height: 16,
-                        ),
+                          Get.to(() =>
+                              // HomePage(recentPage:
+                              OfferListForMainCategoryPage(
+                              typeOfCategory: TypeOfCategory.specificOffers,
+                              mainCategoryName: translation.mostSellerText.tr,
+                              categoryId: -1,
+                              offers: controller.mostSellerOffers) ,
+                              // selectedIndex:0)
+                          );
+                          Get.put(OfferController(Get.find())).getMerchant(catId: '1');
+                        },
+                        theme: theme),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Obx(() => (controller.mostSellerOffers.isNotEmpty)
+                        ? _buildMostSellerOffers(
+                            offerModels: controller.mostSellerOffers,
+                            theme: theme,
+                          )
+                        : _shimmerForListViewForOffer(height: 224)),
 
-                        Obx(() => CustomIndicatorCarousel(
-                            list: controller.todayOffers,
-                            currentBanner:
-                                controller.currentBannerNewOffer.value)),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                      ]),
-                ))));
+                    _buildSection(
+                        title: translation.newOfferText.tr,
+                        onPressed: () {
+
+                          Get.to(() =>
+                              // HomePage(recentPage:
+                          OfferListForMainCategoryPage(
+                              typeOfCategory: TypeOfCategory.specificOffers,
+                              mainCategoryName: translation.mostSellerText.tr,
+                              categoryId: -1,
+                              offers: controller.specialOffers)
+                              // , selectedIndex: 0)
+                          );
+                          Get.put(OfferController(Get.find())).getMerchant(catId: '1');
+                        },
+                        theme: theme),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    // Obx(() => (controller.specialOffers.isNotEmpty)
+                    //     ? _buildNewOfferCard(
+                    //         offerModels: controller.specialOffers,
+                    //         theme: theme,
+                    //       )
+                    Obx(() => (controller.todayOffers.isNotEmpty)
+                        ? _buildNewOfferCard(
+                            offerModels: controller.todayOffers,
+                            theme: theme,
+                            context: context)
+                        : _shimmerForListViewForOffer(height: 260)),
+
+                    const SizedBox(
+                      height: 16,
+                    ),
+
+                    Obx(() => CustomIndicatorCarousel(
+                        list: controller.todayOffers,
+                        currentBanner: controller.currentBannerNewOffer.value)),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                  ]),
+            )));
   }
 
   ////////////////////////////////////////////////
@@ -245,6 +231,10 @@ class ExploreTab extends GetView<HomeController> {
         Row(
           children: [
             Obx(() => appBarIcon(
+                onPressed: (){
+                  Get.put(SearchOfferController(Get.find()));
+                  Get.to(()=> SearchScreen(typeOfSearch: TypeOfSearch.globalSearchWithCity, categoryId: -1),binding: SearchBinding());
+                },
                 icon: Icons.search,
                 containerColor: controller.appBarItemContainerColor.value,
                 iconColor: controller.appBarItemColor.value)),
@@ -252,6 +242,7 @@ class ExploreTab extends GetView<HomeController> {
               width: 6,
             ),
             Obx(() => appBarIcon(
+              onPressed: (){},
                 icon: Icons.notifications,
                 containerColor: controller.appBarItemContainerColor.value,
                 iconColor: controller.appBarItemColor.value)),
@@ -259,6 +250,9 @@ class ExploreTab extends GetView<HomeController> {
               width: 6,
             ),
             Obx(() => appBarIcon(
+                onPressed: (){
+                  Get.to(()=>const CartScreen(comingForCart: ComingForCart.homPage,));
+                },
                 icon: Icons.shopping_cart_rounded,
                 containerColor: controller.appBarItemContainerColor.value,
                 iconColor: controller.appBarItemColor.value)),
@@ -292,9 +286,7 @@ class ExploreTab extends GetView<HomeController> {
             ),
             const SizedBox(width: 3),
             Text(
-              SharedPreferencesClass.getLanguageCode() == 'ar'
-                  ? city.arName
-                  : city.enName,
+                Utils.getTranslatedText(arText: city.arName, enText: city.enName),
               style: TextStyle(
                 color: controller.appBarItemColor.value,
                 fontFamily: 'Noto Kufi Arabic',
@@ -315,160 +307,149 @@ class ExploreTab extends GetView<HomeController> {
 
   //to detect ( language - country - city)
   _buildBottomSheet({required BuildContext context}) {
-    Get.bottomSheet(Directionality(
-      textDirection: Utils.direction,
-      child: Container(
-          padding: const EdgeInsets.all(16),
-          height: 570,
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              )),
-          child: ListView(
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            // mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _buildDropHeader(
-                  text: SharedPreferencesClass.getLanguageCode() == 'ar'
-                      ? 'اللغة'
-                      : "Language"),
-              const SizedBox(
-                height: 8,
-              ),
-              Obx(() => Utils.drawDropDownListStringsBtn(
-                  optionName: 'اللغة',
-                  dropDownValue: controller.dropLanguageData.value,
-                  onChanged: (value) {
-                    controller.dropLanguageData.value = value;
-                  },
-                  menu: [
-                    'العربية',
-                    'English',
-                  ],
-                  context: context,
-                  iconSize: 34,
-                  containerBorderColor: ColorConstants.greyColor,
-                  textColor: ColorConstants.black0)),
-              const SizedBox(
-                height: 14,
-              ),
-              _buildDropHeader(
-                  text: SharedPreferencesClass.getLanguageCode() == 'ar'
-                      ? 'اختر الدولة'
-                      : 'Select the country'),
-              const SizedBox(
-                height: 8,
-              ),
-              Obx(
-                () => Utils.drawDropDownListCountriesBtn(
-                    optionName: SharedPreferencesClass.getLanguageCode() == 'ar'
-                        ? 'اختر الدولة'
-                        : 'Select the country',
-                    dropDownValue: controller.dropCountryData.value,
-                    onChanged: (country) {
-                      controller.dropCountryData.value =
-                          SharedPreferencesClass.getLanguageCode() == 'ar'
-                              ? country.arName
-                              : country.enName;
-
-                      Controllers.userAuthenticationController
-                          .getCities(countryId: country.id.toString());
-
-                      controller.dropCityData.value = "";
-
-                      SharedPreferencesClass.setUserCountryId(
-                          countryId: country.id.toString());
-                    },
-                    menu: Controllers.directionalityController.countries,
-                    context: context,
-                    iconSize: 34,
-                    containerBorderColor: ColorConstants.greyColor,
-                    textColor: ColorConstants.black0),
-              ),
-              const SizedBox(
-                height: 14,
-              ),
-              _buildDropHeader(
-                  text: SharedPreferencesClass.getLanguageCode() == 'ar'
-                      ? 'اختر المدينة'
-                      : 'Select the city'),
-              const SizedBox(
-                height: 8,
-              ),
-              Obx(
-                () => Utils.drawDropDownListCitiesBtn(
-                    optionName: SharedPreferencesClass.getLanguageCode() == 'ar'
-                        ? 'اختر المدينة'
-                        : 'Select the city',
-                    dropDownValue: controller.dropCityData.value,
-                    onChanged: (city) {
-                      controller.dropCityData.value =
-                          SharedPreferencesClass.getLanguageCode() == 'ar'
-                              ? city.arName
-                              : city.enName;
-
-                      SharedPreferencesClass.setUserCity(
-                          cityId: city.id.toString());
-                    },
-                    menu: Controllers.directionalityController.cities,
-                    context: context,
-                    iconSize: 34,
-                    containerBorderColor: ColorConstants.greyColor,
-                    textColor: ColorConstants.black0),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              CustomButton(
-                  btnText: SharedPreferencesClass.getLanguageCode() == 'ar'
-                      ? 'حفظ'
-                      : 'Save',
-                  textColor: Colors.white,
-                  textSize: 17,
-                  btnBackgroundColor: ColorConstants.mainColor,
-                  btnOnpressed: () async {
-                    if (SharedPreferencesClass.getCountryId() != null &&
-                        SharedPreferencesClass.getCountryId() != '' &&
-                        SharedPreferencesClass.getCityId() != null &&
-                        SharedPreferencesClass.getCityId() != '') {
-                      SharedPreferencesClass.setUserLanguageCode(
-                          language:
-                              (controller.dropLanguageData.value == 'العربية')
-                                  ? 'ar'
-                                  : 'en');
-                      SharedPreferencesClass.setUserLanguageName(
-                          language: controller.dropLanguageData.value);
-                      if (controller.dropLanguageData.value == 'العربية') {
-                        Controllers.directionalityController.direction.value =
-                            TextDirection.rtl;
-                        Controllers.directionalityController.textAlign.value =
-                            TextAlign.right;
-                      } else {
-                        Controllers.directionalityController.direction.value =
-                            TextDirection.ltr;
-                        Controllers.directionalityController.textAlign.value =
-                            TextAlign.left;
-                      }
-                      await Restart.restartApp();
-                    } else {
-                      Utils.snackBar(
-                          context: context,
-                          msg: SharedPreferencesClass.getLanguageCode() == 'ar'
-                              ? 'أكمل البيانات'
-                              : 'Complete the data');
-                    }
-                  }),
-            ],
+    Get.bottomSheet(isDismissible: false,
+        Container(
+      padding: const EdgeInsets.all(16),
+      height: 400,
+      decoration:  BoxDecoration(
+          color: Get.isDarkMode? ColorConstants.darkMainColor: Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
           )),
+      child: ListView(
+        children: [
+          _buildDropHeader(
+              text: translation.language.tr,),
+          const SizedBox(
+            height: 8,
+          ),
+          Obx(() => Utils.drawDropDownListStringsBtn(
+              optionName: translation.language.tr,
+              dropDownValue:
+                  Controllers.directionalityController.dropLanguageData.value,
+              onChanged: (value) {
+                Controllers.directionalityController.dropLanguageData.value =
+                    value;
+
+                if (Controllers
+                        .directionalityController.dropLanguageData.value ==
+                    'العربية') {
+                  Controllers.directionalityController.changeLanguage('ar');
+                } else if (Controllers
+                        .directionalityController.dropLanguageData.value ==
+                    'English') {
+                  Controllers.directionalityController.changeLanguage('en');
+                }
+
+                Utils.updatePadding();
+
+                SharedPreferencesClass.setUserLanguageCode(
+                    language: (Controllers
+                        .directionalityController.dropLanguageData.value == 'العربية')
+                        ? 'ar'
+                        : 'en');
+                SharedPreferencesClass.setUserLanguageName(
+                    language: Controllers
+                        .directionalityController.dropLanguageData.value);
+
+                Controllers.directionalityController.dropCountryData.value = '';
+                Controllers.directionalityController.dropCityData.value = '';
+              },
+              menu: [
+                'العربية',
+                'English',
+              ],
+              context: context,
+              iconSize: 34,
+              containerBorderColor: ColorConstants.greyColor,
+              textColor: ColorConstants.black0)),
+          const SizedBox(
+            height: 14,
+          ),
+          _buildDropHeader(
+              text:translation.selectCountry.tr),
+          const SizedBox(
+            height: 8,
+          ),
+          Obx(
+            () => Utils.drawDropDownListCountriesBtn(
+                optionName: translation.selectCountry.tr,
+                dropDownValue: controller.dropCountryData.value,
+                onChanged: (country) {
+                  Controllers.directionalityController.dropCountryData.value =
+                  Utils.getTranslatedText(arText:  country.arName, enText: country.enName);
+
+                  Controllers.userAuthenticationController
+                      .getCities(countryId: country.id.toString());
+
+                  Controllers.directionalityController.dropCityData.value = "";
+
+                  SharedPreferencesClass.setUserCountryId(
+                      countryId: country.id.toString());
+                },
+                menu: Controllers.directionalityController.countries,
+                context: context,
+                iconSize: 34,
+                containerBorderColor: ColorConstants.greyColor,
+                textColor: ColorConstants.black0),
+          ),
+          const SizedBox(
+            height: 14,
+          ),
+          _buildDropHeader(
+              text: translation.selectCity.tr),
+          const SizedBox(
+            height: 8,
+          ),
+          Obx(
+            () => Utils.drawDropDownListCitiesBtn(
+                optionName: translation.selectCity.tr,
+                dropDownValue:
+                    Controllers.directionalityController.dropCityData.value,
+                onChanged: (city) {
+                  Controllers.directionalityController.dropCityData.value =
+                  Utils.getTranslatedText(arText: city.arName, enText: city.enName);
+
+                  SharedPreferencesClass.setUserCity(
+                      cityId: city.id.toString());
+                },
+                menu: Controllers.directionalityController.cities,
+                context: context,
+                iconSize: 34,
+                containerBorderColor: ColorConstants.greyColor,
+                textColor: ColorConstants.black0),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          // CustomButton(
+          //     btnText: translation.saveText.tr,
+          //     textColor: Colors.white,
+          //     textSize: 17,
+          //     btnBackgroundColor: ColorConstants.mainColor,
+          //     btnOnpressed: () {
+          //       if (SharedPreferencesClass.getCountryId() != null &&
+          //           SharedPreferencesClass.getCountryId() != '' &&
+          //           SharedPreferencesClass.getCityId() != null &&
+          //           SharedPreferencesClass.getCityId() != '') {
+          //
+          //       } else {
+          //         Utils.snackBar(
+          //             context: context,
+          //             background: ColorConstants.redColor,
+          //             msg: translation.completeDataText.tr);
+          //       }
+          //     }),
+        ],
+      ),
     ));
   }
 
   Widget _buildDropHeader({required String text}) {
     return Text(text,
         style: TextStyle(
-          color: ColorConstants.black0,
+          color:Get.isDarkMode? Colors.white: ColorConstants.black0,
           fontSize: 17,
           fontWeight: FontWeight.w500,
           fontFamily: 'Noto Kufi Arabic',
@@ -478,17 +459,21 @@ class ExploreTab extends GetView<HomeController> {
   Widget appBarIcon(
       {required IconData icon,
       required Color containerColor,
-      required Color iconColor}) {
-    return Container(
-        width: 37,
-        height: 37,
-        decoration:
-            BoxDecoration(shape: BoxShape.circle, color: containerColor),
-        child: Icon(
-          icon,
-          color: iconColor,
-          size: 24,
-        ));
+      required Color iconColor,
+      required dynamic onPressed}) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+          width: 37,
+          height: 37,
+          decoration:
+              BoxDecoration(shape: BoxShape.circle, color: containerColor),
+          child: Icon(
+            icon,
+            color: iconColor,
+            size: 24,
+          )),
+    );
   }
 
   // build Carousel for offers
@@ -533,14 +518,14 @@ class ExploreTab extends GetView<HomeController> {
                 }),
           ),
           Transform.translate(
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
             child: Align(
               alignment: Alignment.bottomRight,
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 height: 18,
                 decoration: BoxDecoration(
-                    color: ColorConstants.backgroundContainer,
+                    color: Get.isDarkMode? ColorConstants.darkMainColor:ColorConstants.backgroundContainer,
                     borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(12),
                         topLeft: Radius.circular(12))),
@@ -562,21 +547,20 @@ class ExploreTab extends GetView<HomeController> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(12)),
-              image: DecorationImage(
-                  image: AssetImage(
-                    'assets/images/cashback_background.png',
-                  ),
-                  fit: BoxFit.cover)),
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [ColorConstants.mainColor, Colors.white],
+            ),
+          ),
           child: Directionality(
-            textDirection:TextDirection.rtl,
+            textDirection: TextDirection.rtl,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  SharedPreferencesClass.getLanguageCode() == 'ar'
-                      ? 'استرجاع نقدي 2% على كل مشترياتك'
-                      : '2% cash back on all your purchases',
+                 translation.cashbackSentence.tr,
                   style: TextStyle(
                       color: ColorConstants.black0,
                       fontSize: 14.5,
@@ -594,13 +578,11 @@ class ExploreTab extends GetView<HomeController> {
                             backgroundColor: Colors.white,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(6),
                             )),
                         onPressed: () {},
                         child: Text(
-                          SharedPreferencesClass.getLanguageCode() == 'ar'
-                              ? 'استخدم الآن'
-                              : 'Use now',
+                          translation.useNow.tr,
                           style: const TextStyle(
                               color: ColorConstants.mainColor,
                               fontSize: 12,
@@ -629,12 +611,11 @@ class ExploreTab extends GetView<HomeController> {
 
   // build carousel item
   Widget _buildCarouselItem(OfferModel offer, BuildContext context) {
-    CompanyModel companyModel = CompanyModel.fromJson(offer.company!);
+    CompanyModel companyModel = CompanyModel.fromJson(offer.company!.map((key, value) => MapEntry(key.toString(), value)));
     return GestureDetector(
       onTap: () {
-        // Get.toNamed('/product/${offer.id}');
-        Get.put(OfferController());
-        Get.to(() => OfferDescriptionPage(offerModel: offer));
+        Get.put(OfferController(Get.find()));
+        Get.to(() => OfferDetail(offerModel: offer));
       },
       child: Stack(
         children: [
@@ -657,12 +638,8 @@ class ExploreTab extends GetView<HomeController> {
               child: Padding(
                 padding: EdgeInsets.only(
                     bottom: 50,
-                    left: SharedPreferencesClass.getLanguageCode() == 'ar'
-                        ? 0
-                        : 16,
-                    right: SharedPreferencesClass.getLanguageCode() == 'ar'
-                        ? 16
-                        : 0),
+                    right: Utils.rightPadding16Right,
+                    left: Utils.leftPadding16Left),
                 child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Column(
@@ -670,9 +647,9 @@ class ExploreTab extends GetView<HomeController> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        SharedPreferencesClass.getLanguageCode() == 'ar'
-                            ? companyModel.arName.toString()
-                            : companyModel.enName.toString(),
+                        translation.companyName.trParams({
+                          'companyName': Utils.getTranslatedText(arText: companyModel.arName.toString(), enText: companyModel.enName.toString())
+                        }),
                         style: const TextStyle(
                             color: Colors.white,
                             fontSize: 10,
@@ -690,9 +667,10 @@ class ExploreTab extends GetView<HomeController> {
                               width: MediaQuery.of(context).size.width * 0.66,
                               height: 60,
                               child: Text(
-                                SharedPreferencesClass.getLanguageCode() == 'ar'
-                                    ? offer.arTitle.toString()
-                                    : offer.enTitle.toString(),
+                                  translation.companyName.trParams({
+                                    'companyName': Utils.getTranslatedText(arText: offer.arTitle.toString(), enText:  offer.enTitle.toString())
+                                  })
+                               ,
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 17,
@@ -704,30 +682,34 @@ class ExploreTab extends GetView<HomeController> {
                             decoration: BoxDecoration(
                                 color: ColorConstants.mainColor,
                                 borderRadius: BorderRadius.only(
-                                    topRight: SharedPreferencesClass
-                                                .getLanguageCode() ==
-                                            'ar'
+                                    topRight: Controllers
+                  .directionalityController.languageBox.value
+                  .read('language') ==
+                                        'ar'
                                         ? Radius.circular(12)
                                         : Radius.circular(0),
-                                    bottomRight: SharedPreferencesClass
-                                                .getLanguageCode() ==
-                                            'ar'
+                                    bottomRight:Controllers
+                  .directionalityController.languageBox.value
+                  .read('language') ==
+                                        'ar'
                                         ? Radius.circular(12)
                                         : Radius.circular(0),
-                                    topLeft: SharedPreferencesClass
-                                                .getLanguageCode() ==
-                                            'ar'
+                                    topLeft: Controllers
+                  .directionalityController.languageBox.value
+                  .read('language') ==
+                                        'ar'
                                         ? Radius.circular(0)
                                         : Radius.circular(12),
-                                    bottomLeft: SharedPreferencesClass
-                                                .getLanguageCode() ==
-                                            'ar'
+                                    bottomLeft: Controllers
+                  .directionalityController.languageBox.value
+                  .read('language') ==
+                                        'ar'
                                         ? Radius.circular(0)
                                         : Radius.circular(12))),
                             padding: const EdgeInsets.only(
                                 left: 8, right: 8, top: 5, bottom: 5),
                             child: Text(
-                              '${offer.enDiscount}% \n${SharedPreferencesClass.getLanguageCode() == 'ar' ? "خصم" : 'Discount'}',
+                              '${offer.enDiscount}% \n${translation.discountName.tr}',
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,
@@ -744,15 +726,12 @@ class ExploreTab extends GetView<HomeController> {
                         children: [
                           _buildPriceContainer(
                               text:
-                                  '${offer.priceAfterDiscount.toString()}${SharedPreferencesClass.getLanguageCode() == 'ar' ? ' جنية' : ' EGP'}'),
+                                  '${offer.priceAfterDiscount.toString()}${translation.currencyName.tr}'),
                           const SizedBox(
                             width: 9,
                           ),
                           CustomTextLineThrough(
-                              text: SharedPreferencesClass.getLanguageCode() ==
-                                      'ar'
-                                  ? '${offer.priceBeforDiscount.toString()} جنية'
-                                  : '${offer.priceBeforDiscount.toString()} EGP',
+                              text:offer.priceAfterDiscount.toString(),
                               textColor: Colors.white),
                         ],
                       ),
@@ -789,11 +768,11 @@ class ExploreTab extends GetView<HomeController> {
   _buildSubCategoryOutings(ThemeData theme) {
     return SizedBox(
         height: 84,
-        child: Obx(() => (controller.subCategories.isNotEmpty)
+        child: Obx(() => (controller.subCategoryOutings.isNotEmpty)
             ? ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 scrollDirection: Axis.horizontal,
-                itemCount: controller.subCategories.length,
+                itemCount: controller.subCategoryOutings.length,
                 itemBuilder: (context, index) {
                   return SizedBox(
                     width: 210,
@@ -801,16 +780,21 @@ class ExploreTab extends GetView<HomeController> {
                       onTap: () {
                         controller.getOffersForSubCategories(
                           subCategoryId:
-                              controller.subCategories[index].id.toString(),
+                              controller.subCategoryOutings[index].id.toString(),
                         );
-                        Get.to(() => OfferListForSubCategoryPage(
-                              mainCategoryName:
-                                  controller.subCategories[index].enName,
-                            ));
-                      },
+                        Get.to(() =>
+                            // HomePage(recentPage:
+                        OfferListForSubCategoryPage(
+                          mainCategoryName:
+                          Utils.getTranslatedText(arText: controller.subCategoryOutings[index].arName, enText: controller.subCategoryOutings[index].enName),
+                          categoryId: controller.subCategoryOutings[index].id,
+                        ) ,
+                            // selectedIndex: 0)
+                        );
+                        },
                       child: Container(
                           clipBehavior: Clip.hardEdge,
-                          margin: const EdgeInsets.only(right: 8),
+                          margin: const EdgeInsets.only(right: 4, left: 4),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             color: Get.isDarkMode
@@ -829,7 +813,7 @@ class ExploreTab extends GetView<HomeController> {
                                 width: double.infinity,
                                 child: CachedNetworkImage(
                                   imageUrl: ApiConstants.storageURL +
-                                      controller.subCategories[index].imageUrl
+                                      controller.subCategoryOutings[index].imageUrl
                                           .toString(),
                                   fit: BoxFit.cover,
                                 ),
@@ -850,23 +834,25 @@ class ExploreTab extends GetView<HomeController> {
                                         right: 17,
                                       ),
                                       child: Align(
-                                        alignment: SharedPreferencesClass
-                                                    .getLanguageCode() ==
+                                        alignment: Controllers
+                  .directionalityController.languageBox.value
+                  .read('language') ==
                                                 'ar'
                                             ? Alignment.bottomRight
                                             : Alignment.bottomLeft,
                                         child: SizedBox(
                                           height: 28,
                                           child: Text(
-                                              SharedPreferencesClass
-                                                          .getLanguageCode() ==
-                                                      'ar'
+                                              Controllers
+                  .directionalityController.languageBox.value
+                  .read('language') ==
+                                                  'ar'
                                                   ? controller
-                                                      .subCategories[index]
+                                                      .subCategoryOutings[index]
                                                       .arName
                                                       .toString()
                                                   : controller
-                                                      .subCategories[index]
+                                                      .subCategoryOutings[index]
                                                       .enName
                                                       .toString(),
                                               style: theme.textTheme.headline6!
@@ -894,8 +880,8 @@ class ExploreTab extends GetView<HomeController> {
       required ThemeData theme}) {
     return Padding(
       padding: EdgeInsets.only(
-          left: SharedPreferencesClass.getLanguageCode() == 'ar' ? 0.0 : 16.0,
-          right: SharedPreferencesClass.getLanguageCode() == 'ar' ? 16.0 : 0.0),
+          left: Utils.leftPadding16Left,
+          right: Utils.rightPadding16Right),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -916,9 +902,7 @@ class ExploreTab extends GetView<HomeController> {
               child: Row(
                 children: [
                   Text(
-                    SharedPreferencesClass.getLanguageCode() == 'ar'
-                        ? 'عروض أكثر'
-                        : 'More offers',
+                    translation.moreOffersText.tr,
                     style: const TextStyle(
                         color: ColorConstants.mainColor,
                         fontSize: 12,
@@ -943,12 +927,7 @@ class ExploreTab extends GetView<HomeController> {
 
   // build list of categories
   Widget _buildCategories(ThemeData theme) {
-    List<String> categoryImageIcon = [
-      'assets/images/outings.png',
-      'assets/images/eats_drinks.png',
-      'assets/images/entertainment.png',
-      'assets/images/services.png',
-    ];
+
     return SizedBox(
         height: 116,
         child: Obx(() => ListView.builder(
@@ -960,7 +939,7 @@ class ExploreTab extends GetView<HomeController> {
             itemBuilder: (context, index) {
               return _buildCategory(
                   category: controller.mainCategories[index],
-                  imageIcon: categoryImageIcon[index],
+                  imageIcon: Utils.categoryImageIcon[index],
                   index: index,
                   theme: theme);
             })));
@@ -977,12 +956,20 @@ class ExploreTab extends GetView<HomeController> {
         controller.getOffersForMainCategories(
           categoryId: category.id.toString(),
         );
-        Get.to(() => OfferListForMainCategoryPage(
-              mainCategoryName: SharedPreferencesClass.getLanguageCode() == 'ar'
-                  ? category.arName
-                  : category.enName,
-              offers: controller.offersForMainCategory,
-            ));
+        controller.getSubCategories(categoryId: category.id.toString());
+        Get.to(() =>
+        // HomePage(recentPage:
+        OfferListForMainCategoryPage(
+          typeOfCategory: TypeOfCategory.mainCategory,
+          mainCategoryName:  translation.categoryName.trParams({
+            'categoryName': Utils.getTranslatedText(arText:  category.arName.toString(), enText:  category.enName.toString())
+          }),
+          categoryId: int.parse(category.id.toString()),
+          offers: controller.offersForMainCategory,
+        )
+          // selectedIndex: 0)
+        );
+        Get.put(OfferController(Get.find())).getMerchant(catId: category.id.toString());
       },
       child: ZoomTapAnimation(
         beginDuration: const Duration(milliseconds: 300),
@@ -995,8 +982,8 @@ class ExploreTab extends GetView<HomeController> {
             borderRadius: BorderRadius.circular(12),
           ),
           margin: EdgeInsets.only(
-              right: SharedPreferencesClass.getLanguageCode() == 'ar' ? 0 : 8,
-              left: SharedPreferencesClass.getLanguageCode() == 'ar' ? 8 : 0),
+              right: Utils.rightPadding8FromRight,
+              left: Utils.leftPadding8FromLeft),
           child: Stack(
             children: [
               Container(
@@ -1030,13 +1017,19 @@ class ExploreTab extends GetView<HomeController> {
                           color: Colors.white,
                         ),
                         Text(
-                          SharedPreferencesClass.getLanguageCode() == 'ar'
-                              ? category.arName
-                              : category.enName,
-                          textAlign: Controllers
-                              .directionalityController.textAlign.value,
+                          translation.categoryName.trParams({
+                            'categoryName': Controllers
+                  .directionalityController.languageBox.value
+                  .read('language') ==
+                                'ar'
+                                ? category.arName.toString()
+                                : category.enName.toString()
+                          }),
                           style: theme.textTheme.subtitle1?.copyWith(
-                              color: Colors.white, fontSize: 13.0, height: 1.2, fontWeight:FontWeight.bold),
+                              color: Colors.white,
+                              fontSize: 13.0,
+                              height: 1.2,
+                              fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -1064,11 +1057,11 @@ class ExploreTab extends GetView<HomeController> {
             borderRadius: BorderRadius.circular(12),
           ),
           margin: EdgeInsets.only(
-              right: SharedPreferencesClass.getLanguageCode() == 'ar' ? 16 : 0,
-              left: SharedPreferencesClass.getLanguageCode() == 'ar' ? 0 : 16),
+              right: Utils.rightPadding16Right,
+              left: Utils.leftPadding16Left),
           child: Stack(
             children: [
-              Container(
+              SizedBox(
                 width: 132,
                 height: 118,
                 child: Image.asset(
@@ -1099,13 +1092,12 @@ class ExploreTab extends GetView<HomeController> {
                           color: Colors.white,
                         ),
                         Text(
-                          SharedPreferencesClass.getLanguageCode() == 'ar'
-                              ? 'العروض القريبة منك'
-                              : 'Offers near you',
-                          textAlign: Controllers
-                              .directionalityController.textAlign.value,
+                          translation.nearOffersText.tr,
                           style: theme.textTheme.subtitle1?.copyWith(
-                              color: Colors.white, fontSize: 9.5, height: 1.2,fontWeight:FontWeight.bold),
+                              color: Colors.white,
+                              fontSize: 9.5,
+                              height: 1.2,
+                              fontWeight: FontWeight.bold),
                         ),
                         Container(
                           width: 112,
@@ -1117,9 +1109,7 @@ class ExploreTab extends GetView<HomeController> {
                                 Radius.circular(12),
                               )),
                           child: Text(
-                            SharedPreferencesClass.getLanguageCode() == 'ar'
-                                ? 'اكتشف الأماكن'
-                                : 'Explore places',
+                           translation.exploreLocationText.tr,
                             style: const TextStyle(
                                 color: ColorConstants.mainColor,
                                 fontSize: 12,
@@ -1139,14 +1129,14 @@ class ExploreTab extends GetView<HomeController> {
   }
 
   // build list of offers
-  Widget _buildTheStrongestOffers(
+  Widget _buildTheHotOffers(
       {required List<OfferModel> offerModels, required ThemeData theme}) {
     return SizedBox(
       height: 230,
       child: ListView.builder(
         padding: EdgeInsets.only(
-            left: SharedPreferencesClass.getLanguageCode() == 'ar' ? 0 : 16,
-            right: SharedPreferencesClass.getLanguageCode() == 'ar' ? 16 : 0,
+            right: Utils.rightPadding8FromLeft,
+            left: Utils.leftPadding8FromRight,
             top: 0,
             bottom: 0),
         scrollDirection: Axis.horizontal,
@@ -1154,8 +1144,9 @@ class ExploreTab extends GetView<HomeController> {
         itemBuilder: (context, index) {
           return Padding(
             padding: EdgeInsets.only(
-                right: SharedPreferencesClass.getLanguageCode() == 'ar' ? 0 : 8,
-                left: SharedPreferencesClass.getLanguageCode() == 'ar' ? 8 : 0),
+              right: Utils.rightPadding8FromLeft,
+              left:  Utils.leftPadding8FromRight,
+            ),
             child: OfferCard(
               offerModel: offerModels[index],
               width: 265,
@@ -1188,23 +1179,17 @@ class ExploreTab extends GetView<HomeController> {
             itemCount: offerModels.length,
             itemBuilder: (BuildContext contextCarousel, int itemIndex,
                 int pageViewIndex) {
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                        right: 16,
-                        // SharedPreferencesClass.getLanguageCode() == 'ar'
-                        //     ? 0
-                        //     : 8,
-                        left: 16,
-                        // SharedPreferencesClass.getLanguageCode() == 'ar'
-                        //     ? 8
-                        //     : 0
-                    ),
-                    child: NewOfferCard(
-                      offerModel: offerModels[itemIndex],
-                      width: MediaQuery.of(context).size.width,
-                      // 336,
-                      height: 123,
-                    ),
+              return Padding(
+                padding: const EdgeInsets.only(
+                  right: 16,
+                  left: 16,
+                ),
+                child: NewOfferCard(
+                  offerModel: offerModels[itemIndex],
+                  width: MediaQuery.of(context).size.width,
+                  // 336,
+                  height: 123,
+                ),
               );
             }));
   }
@@ -1216,8 +1201,8 @@ class ExploreTab extends GetView<HomeController> {
       height: 230,
       child: ListView.builder(
         padding: EdgeInsets.only(
-            left: SharedPreferencesClass.getLanguageCode() == 'ar' ? 0 : 16,
-            right: SharedPreferencesClass.getLanguageCode() == 'ar' ? 16 : 0,
+            right: Utils.rightPadding8FromLeft,
+            left: Utils.leftPadding8FromRight,
             top: 0,
             bottom: 0),
         scrollDirection: Axis.horizontal,
@@ -1225,8 +1210,8 @@ class ExploreTab extends GetView<HomeController> {
         itemBuilder: (context, index) {
           return Padding(
             padding: EdgeInsets.only(
-                right: SharedPreferencesClass.getLanguageCode() == 'ar' ? 0 : 8,
-                left: SharedPreferencesClass.getLanguageCode() == 'ar' ? 8 : 0),
+              right: Utils.rightPadding8FromLeft,
+              left: Utils.leftPadding8FromRight,),
             child: MostSellerOfferCard(
               offerModel: offerModels[index],
               width: 265,
@@ -1245,8 +1230,8 @@ class ExploreTab extends GetView<HomeController> {
       height: height,
       topPadding: 0,
       bottomPadding: 0,
-      leftPadding: SharedPreferencesClass.getLanguageCode() == 'ar' ? 4 : 0,
-      rightPadding: SharedPreferencesClass.getLanguageCode() == 'ar' ? 0 : 4,
+      leftPadding: Utils.leftPadding4FromLeft,
+      rightPadding: Utils.rightPadding4FromRight,
     );
   }
 }

@@ -22,7 +22,7 @@ OfferRateModel _$OfferRateModelFromJson(Map<String, dynamic> json) {
 mixin _$OfferRateModel {
   String? get username => throw _privateConstructorUsedError;
   double? get rate => throw _privateConstructorUsedError;
-  String? get creation => throw _privateConstructorUsedError;
+  DateTime? get creation => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +36,7 @@ abstract class $OfferRateModelCopyWith<$Res> {
           OfferRateModel value, $Res Function(OfferRateModel) then) =
       _$OfferRateModelCopyWithImpl<$Res, OfferRateModel>;
   @useResult
-  $Res call({String? username, double? rate, String? creation});
+  $Res call({String? username, double? rate, DateTime? creation});
 }
 
 /// @nodoc
@@ -68,7 +68,7 @@ class _$OfferRateModelCopyWithImpl<$Res, $Val extends OfferRateModel>
       creation: freezed == creation
           ? _value.creation
           : creation // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -81,7 +81,7 @@ abstract class _$$_OfferRateModelCopyWith<$Res>
       __$$_OfferRateModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? username, double? rate, String? creation});
+  $Res call({String? username, double? rate, DateTime? creation});
 }
 
 /// @nodoc
@@ -111,7 +111,7 @@ class __$$_OfferRateModelCopyWithImpl<$Res>
       creation: freezed == creation
           ? _value.creation
           : creation // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
     ));
   }
 }
@@ -129,7 +129,7 @@ class _$_OfferRateModel implements _OfferRateModel {
   @override
   final double? rate;
   @override
-  final String? creation;
+  final DateTime? creation;
 
   @override
   String toString() {
@@ -170,7 +170,7 @@ abstract class _OfferRateModel implements OfferRateModel {
   factory _OfferRateModel(
       {final String? username,
       final double? rate,
-      final String? creation}) = _$_OfferRateModel;
+      final DateTime? creation}) = _$_OfferRateModel;
 
   factory _OfferRateModel.fromJson(Map<String, dynamic> json) =
       _$_OfferRateModel.fromJson;
@@ -180,7 +180,7 @@ abstract class _OfferRateModel implements OfferRateModel {
   @override
   double? get rate;
   @override
-  String? get creation;
+  DateTime? get creation;
   @override
   @JsonKey(ignore: true)
   _$$_OfferRateModelCopyWith<_$_OfferRateModel> get copyWith =>

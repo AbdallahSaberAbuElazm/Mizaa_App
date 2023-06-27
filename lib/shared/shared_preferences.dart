@@ -1,5 +1,4 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_ecommerce_app/models/location/country/CountryModel.dart';
 import 'package:test_ecommerce_app/models/user/user_login_data.dart';
 
 class SharedPreferencesClass{
@@ -45,6 +44,7 @@ class SharedPreferencesClass{
   static String? getUserId() => _sharedPreferences!.getString('userId');
   static String? getPhoneNumber() =>_sharedPreferences!.getString('phoneNumber');
   static String? getFirstName() =>_sharedPreferences!.getString('firstName');
+  static String? getToken() =>_sharedPreferences!.getString('token');
   static String? getCountryId() =>_sharedPreferences!.getString('countryId');
   static String? getCityId() =>_sharedPreferences!.getString('cityId');
   static String? getLanguageCode() =>_sharedPreferences!.getString('languageCode');

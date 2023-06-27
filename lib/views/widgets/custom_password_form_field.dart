@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
@@ -22,13 +23,6 @@ class _CustomPasswordFormFieldState extends State<CustomPasswordFormField> {
   @override
   void initState() {
     super.initState();
-    Utils.direction = Utils.getDirection(
-        (SharedPreferencesClass.getLanguageCode() == null ||
-                SharedPreferencesClass.getLanguageCode() == '')
-            ? 'ar'
-            : SharedPreferencesClass.getLanguageCode().toString());
-    TextAlign textAlign =
-        Utils.getTextAlign(SharedPreferencesClass.getLanguageCode().toString());
   }
 
   void _validatePassword(String password) {
@@ -47,16 +41,14 @@ class _CustomPasswordFormFieldState extends State<CustomPasswordFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: Utils.direction,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    return  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(widget.hintText,
             style: TextStyle(
                 fontSize: 18,
-                color: ColorConstants.black0,
+                color: Get.isDarkMode? Colors.white: ColorConstants.black0,
                 fontFamily: 'Noto Kufi Arabic',
                 height: 1),
-            textAlign: Controllers.directionalityController.textAlign.value),
+            ),
         const SizedBox(
           height: 10,
         ),
@@ -66,7 +58,6 @@ class _CustomPasswordFormFieldState extends State<CustomPasswordFormField> {
             scrollPadding: EdgeInsets.zero,
             cursorColor: Colors.black,
             controller: widget.controller,
-            textDirection: Utils.direction,
             validator: (value) {
               if (value!.length < 4) {
                 return SharedPreferencesClass.getLanguageCode() == 'ar'
@@ -97,7 +88,7 @@ class _CustomPasswordFormFieldState extends State<CustomPasswordFormField> {
                   (_passwordVisible == true)
                       ? Icons.visibility
                       : Icons.visibility_off,
-                  color: Colors.black, size: 22,
+                  color:Get.isDarkMode? Colors.white: Colors.black, size: 22,
                 ),
                 onPressed: () {
                   // Update the state i.e. toogle the state of passwordVisible variable
@@ -112,7 +103,7 @@ class _CustomPasswordFormFieldState extends State<CustomPasswordFormField> {
             enableSuggestions: false,
             autocorrect: false,
             style: Theme.of(context).textTheme.subtitle1,
-            textAlign: Utils.textAlign,
+            // textAlign: Utils.textAlign,
           ),
         ),
         (widget.controller.text.isNotEmpty && widget.controller.text.length < 4)
@@ -122,7 +113,7 @@ class _CustomPasswordFormFieldState extends State<CustomPasswordFormField> {
                     color: ColorConstants.mainColor, fontSize: 11),
               )
             : const SizedBox(),
-      ]),
-    );
+      ])
+    ;
   }
 }

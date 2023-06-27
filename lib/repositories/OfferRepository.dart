@@ -1,15 +1,15 @@
 import 'dart:convert';
 
+import 'package:test_ecommerce_app/models/companies/CompanyModel.dart';
+import 'package:test_ecommerce_app/models/merchant/merchant_model.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
+import 'package:test_ecommerce_app/models/offers/offer_rate/OfferRateModel.dart';
 import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
 import 'package:test_ecommerce_app/shared/error/exception.dart';
 import 'package:http/http.dart' as http;
+import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 
 class OfferRepository {
-  // final ApiService _apiService;
-  // OfferRepository(this._apiService);
-
-
 
   Future<List<OfferModel>> getCarouselOffers({required String cityId}) async {
     var response =  await http.get(Uri.parse('${ApiConstants.carouselHomePageOfferByCityUrl}$cityId'));
@@ -77,13 +77,40 @@ class OfferRepository {
     }
   }
 
+  Future<List<OfferRateModel>> getOfferRate({required String id})async{
+    var response =  await http.get(Uri.parse('${ApiConstants.offerRateUrl}$id'));
+    if (response.statusCode == 200) {
+      final List<dynamic> body = json.decode(response.body);
+      return  body.map((json) => OfferRateModel.fromJson(json)).toList();
 
-  // Future<JSON> getOfferId(int id) async {
-  //   var products = await getTodayOffers();
-  //   var product = products.firstWhere((element) => element['id'] == id);
-  //
-  //   return product;
-  // }
+    }else {
+      throw ServerException();
+    }
+  }
+
+  Future<List<MerchantModel>> getMerchants({required String categoryId, required String cityId})async{
+    var response =  await http.get(Uri.parse('${ApiConstants.companiesByCityIdAndCatId}$cityId/$categoryId'));
+    if (response.statusCode == 200) {
+      final List<dynamic> body = json.decode(response.body);
+      return  body.map((json) => MerchantModel.fromJson(json)).toList();
+
+    }else {
+      throw ServerException();
+    }
+  }
+
+
+  Future<OfferModel> getOffer({required String offerKey} )async {
+
+    var response =  await http.get(Uri.parse('${ApiConstants.offerDetailsByOfferKeyUrl}$offerKey/TOKEN/${SharedPreferencesClass.getPhoneNumber()}'));
+    if (response.statusCode == 200) {
+      final  body = json.decode(response.body);
+      return OfferModel.fromJson(body)  ;
+
+    }else {
+      throw ServerException();
+    }
+  }
 
 
 }

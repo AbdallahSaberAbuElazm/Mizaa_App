@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 
 class CustomTextFormField extends StatefulWidget {
@@ -24,15 +23,13 @@ class CustomTextFormField extends StatefulWidget {
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: Utils.direction,
-      child: Column(
+    return  Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             widget.name,
             style:  TextStyle(
-                fontSize: 17, color: ColorConstants.black0, fontFamily: 'Noto Kufi Arabic',fontWeight: FontWeight.w500),textAlign: Controllers.directionalityController.textAlign.value,
+                fontSize: 17, color: ColorConstants.black0, fontFamily: 'Noto Kufi Arabic',fontWeight: FontWeight.w500),
           ),
           const SizedBox(
             height: 10,
@@ -59,7 +56,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                     hintStyle: Theme.of(context).textTheme.subtitle2),
                 style: Theme.of(context).textTheme.subtitle1,
                     // : Theme.of(context).textTheme.subtitle1,
-              textAlign: Utils.textAlign,
+              // textAlign: Utils.textAlign,
                 onChanged: (value){
                   // setState(() {
                   //   widget.controller.text = value;
@@ -67,8 +64,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                 },
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return SharedPreferencesClass.getLanguageCode() == 'ar'
-                        ? 'ادخل ${widget.name}':'Please, ${widget.name}';
+                    return
+                      Utils.getTranslatedText(arText:'ادخل ${widget.name}' , enText: 'Please, ${widget.name}')
+                      ;
                   }
 
                   if (widget.name == 'Email' &&
@@ -81,7 +79,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               ))
       // )
         ],
-      ),
+
     );
   }
 }

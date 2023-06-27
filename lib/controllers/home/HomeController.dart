@@ -6,6 +6,7 @@ import 'package:test_ecommerce_app/providers/CategoryProvider.dart';
 import 'package:test_ecommerce_app/providers/OfferProvider.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
+import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:test_ecommerce_app/views/home/tabs/order_tab.dart';
 import 'package:test_ecommerce_app/views/home/tabs/offer_tab.dart';
 import 'package:test_ecommerce_app/views/home/tabs/favorite_tab.dart';
@@ -38,14 +39,15 @@ class HomeController extends GetxController {
 
   // home page categories
   var mainCategories = <CategoryModel>[].obs;
+  var subCategoryOutings = <SubCategoriesModel>[].obs;
   var subCategories = <SubCategoriesModel>[].obs;
+  final selectedSubCategories = ''.obs;
 
   // category's offers
   var isLoadingOffersMainCategory = true.obs;
   var offersForMainCategory = <OfferModel>[].obs;
   var isLoadingOffersSubCategory = true.obs;
   var offersForSubCategory = <OfferModel>[].obs;
-
 
   // app bar for offer page
   late ScrollController scrollController;
@@ -54,33 +56,26 @@ class HomeController extends GetxController {
   final appBarItemContainerColor = Colors.white.obs;
   final appBarItemColor = ColorConstants.mainColor.obs;
 
-
   // set language - country - city
-  final dropLanguageData ='${SharedPreferencesClass.getLanguageName()}'.obs;
+  final dropLanguageData = '${SharedPreferencesClass.getLanguageName()}'.obs;
   final dropCountryData = ''.obs;
   final dropCityData = ''.obs;
-
-
-
 
   List<Widget> pages = [
     ExploreTab(),
     const OrderTab(),
-    const CategoriesTab(),
+     CategoriesTab(),
     const FavoriteTab(),
     UserTab(),
   ];
 
   @override
   void onInit() {
-
     pageController = PageController(initialPage: 0);
     carouselController = CarouselController();
-    carouselNewOfferController=CarouselController();
+    carouselNewOfferController = CarouselController();
     scrollController = ScrollController();
-    scrollController = ScrollController()
-      ..addListener(_onScroll);
-
+    scrollController = ScrollController()..addListener(_onScroll);
 
     getCarouselOffers();
     getTodayOffers();
@@ -88,49 +83,54 @@ class HomeController extends GetxController {
     getMostSalesOffers();
     getMostSalesOffers();
     getMainCategories();
-    getSubCategories(categoryId: '1');
+    getSubCategoryOutings(categoryId: '1');
     super.onInit();
   }
 
   void getCarouselOffers() {
-    _offerProvider.getCarouselOffers(cityId: SharedPreferencesClass.getCityId().toString()).then((offers) {
+    _offerProvider
+        .getCarouselOffers(
+            cityId: SharedPreferencesClass.getCityId().toString())
+        .then((offers) {
       activeCarouselOffers.value = offers;
     });
   }
 
   void _onScroll() {
     if (scrollController.offset > 80 && !isScrolled.value) {
-
-        isScrolled.value = true;
-        appBarColor.value = Colors.white;
-        appBarItemContainerColor.value = ColorConstants.mainColor;
-        appBarItemColor.value = Colors.white;
-
+      isScrolled.value = true;
+      appBarColor.value = Get.isDarkMode? ColorConstants.bottomAppBarDarkColor: Colors.white;
+      appBarItemContainerColor.value = ColorConstants.mainColor;
+      appBarItemColor.value = Colors.white;
     } else if (scrollController.offset <= 80 && isScrolled.value) {
-
-        isScrolled.value = false;
-        appBarColor.value = Colors.transparent;
-        appBarItemContainerColor.value = Colors.white;
-        appBarItemColor.value =  ColorConstants.mainColor;
-
+      isScrolled.value = false;
+      appBarColor.value = Colors.transparent;
+      appBarItemContainerColor.value = Colors.white;
+      appBarItemColor.value = ColorConstants.mainColor;
     }
   }
 
-
   void getTodayOffers() {
-    _offerProvider.getTodayOffers(cityId:  SharedPreferencesClass.getCityId().toString()).then((offers) {
+    _offerProvider
+        .getTodayOffers(cityId: SharedPreferencesClass.getCityId().toString())
+        .then((offers) {
       todayOffers.value = offers;
     });
   }
 
   void getSpecialOffers() {
-    _offerProvider.getSpecialOffers(cityId:  SharedPreferencesClass.getCityId().toString()).then((offers) {
+    _offerProvider
+        .getSpecialOffers(cityId: SharedPreferencesClass.getCityId().toString())
+        .then((offers) {
       specialOffers.value = offers;
     });
   }
 
   void getMostSalesOffers() {
-    _offerProvider.getMostSalesOffers(cityId:  SharedPreferencesClass.getCityId().toString()).then((offers) {
+    _offerProvider
+        .getMostSalesOffers(
+            cityId: SharedPreferencesClass.getCityId().toString())
+        .then((offers) {
       mostSellerOffers.value = offers;
     });
   }
@@ -141,29 +141,69 @@ class HomeController extends GetxController {
     });
   }
 
-
-  void getSubCategories({required String categoryId}) {
-    _categoryProvider.getSubCategoriesByMainCategoryId(mainCategoryId: '1').then((subCategoriesList) {
-      subCategories.value = subCategoriesList;
+  void getSubCategoryOutings({required String categoryId}) {
+    _categoryProvider
+        .getSubCategoriesByMainCategoryId(
+            mainCategoryId: SharedPreferencesClass.getCityId().toString())
+        .then((subCategoriesList) {
+      subCategoryOutings.value = subCategoriesList;
     });
   }
 
-  void getOffersForMainCategories({required String categoryId,}) {
+  void getSubCategories({required String categoryId}) {
+    _categoryProvider
+        .getSubCategoriesByMainCategoryId(mainCategoryId: categoryId)
+        .then((subCategoriesList) {
+      subCategories.value = subCategoriesList;
+      // selectedSubCategories.value =  Utils.getTranslatedText(arText:  subCategoriesList[0].arName.toString(), enText:  subCategoriesList[0].enName.toString()) ;
+    });
+  }
+
+  void getOffersForMainCategories({
+    required String categoryId,
+  }) {
     isLoadingOffersMainCategory.value = true;
-    _offerProvider.getOffersForMainCategories(categoryId: categoryId,city: '1').then((offers) {
+    _offerProvider
+        .getOffersForMainCategories(
+            categoryId: categoryId,
+            city: SharedPreferencesClass.getCityId().toString())
+        .then((offers) {
       offersForMainCategory.value = offers;
       isLoadingOffersMainCategory.value = false;
     });
   }
 
   void getOffersForSubCategories({required String subCategoryId}) {
-    isLoadingOffersSubCategory.value = true;
-    _offerProvider.getOffersForSubCategories(subCategoryId: subCategoryId,city: '1').then((offers) {
-      offersForSubCategory.value = offers;
-      isLoadingOffersSubCategory.value = false;
+    isLoadingOffersMainCategory.value = true;
+    _offerProvider
+        .getOffersForSubCategories(
+            subCategoryId: subCategoryId,
+            city: SharedPreferencesClass.getCityId().toString())
+        .then((offers) {
+      // offersForSubCategory.value = offers;
+      offersForMainCategory.value = offers;
+      isLoadingOffersMainCategory.value = false;
     });
   }
 
+  void getOffersForFiltrationSubCategories(
+      {
+        // required String categoryId,
+        required List<String> subCategoryIds}) {
+    isLoadingOffersMainCategory.value = true;
+
+      // _offerProvider
+      //     .getOffersForMainCategories(
+      //     categoryId: categoryId,
+      //     city: SharedPreferencesClass.getCityId().toString())
+      //     .then((offers) {
+      //   // offersForSubCategory.value = offers;
+      //   offersForMainCategory.value = offers.where((offer) => subCategoryIds.contains(offer.id.toString()))
+      //       .toList();
+      //   isLoadingOffersSubCategory.value = false;
+      // });
+
+  }
 
   // void getDiscountedProducts() {
   //   _offerProvider.getHotDealOffers().then((offers) {
@@ -184,8 +224,6 @@ class HomeController extends GetxController {
   void changeBannerNewOffer(int index) {
     currentBannerNewOffer.value = index;
   }
-
-
 
   @override
   void dispose() {

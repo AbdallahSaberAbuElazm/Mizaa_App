@@ -49,12 +49,12 @@ _$_OfferModel _$$_OfferModelFromJson(Map<String, dynamic> json) =>
       longitude: json['longitude'],
       subCategoryId: json['subCategoryId'] as int?,
       salesCount: json['salesCount'] as int?,
-      company: json['company'] as Map<String, dynamic>?,
+      company: json['company'] as Map<dynamic, dynamic>?,
       offerImages: (json['offerImages'] as List<dynamic>?)
-          ?.map((e) => e as Map<String, dynamic>)
+          ?.map((e) => e as Map<dynamic, dynamic>)
           .toList(),
       offerOptions: (json['offerOptions'] as List<dynamic>?)
-          ?.map((e) => e as Map<String, dynamic>)
+          ?.map((e) => e as Map<dynamic, dynamic>)
           .toList(),
       subCategory: json['subCategory'] as Map<String, dynamic>?,
       userOfferActionHistories: json['userOfferActionHistories'],

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_ecommerce_app/controllers/user/user_authentication_controller.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:test_ecommerce_app/views/widgets/build_intro_text.dart';
 import 'package:test_ecommerce_app/views/widgets/custom_button.dart';
@@ -10,6 +9,8 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:get/get.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
+import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+as translation;
 
 class OTPVerifyScreen extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -38,33 +39,13 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
     myFocusNode.requestFocus();
 
     SmsAutoFill().listenForCode.call();
-    //
-    // autoFill = PinFieldAutoFill(
-    //   decoration: UnderlineDecoration(
-    //     textStyle: const TextStyle(fontSize: 20, color: Colors.black),
-    //     colorBuilder: FixedColorBuilder(Colors.black.withOpacity(0.3)),
-    //   ),
-    //   currentCode: _otpCode,
-    //   codeLength: _otpCodeLength,
-    //   onCodeSubmitted: (code) {},
-    //   onCodeChanged: (code) {
-    //     print(code);
-    //     if (code!.length == _otpCodeLength) {
-    //       _otpCode = code;
-    //       _enableButton = true;
-    //       FocusScope.of(context).requestFocus(FocusNode());
-    //     }
-    //   },
-    // );
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Directionality(
-          textDirection:Utils.direction,
-          child: Scaffold(
-              backgroundColor: Colors.white,
+      child:  Scaffold(
+              backgroundColor:Get.isDarkMode? ColorConstants.darkMainColor:   Colors.white,
               body: Form(
                   key: _fomrKey,
                   child: Container(
@@ -77,23 +58,23 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                             Utils.buildLogo(),
                             const SizedBox(height: 22),
                              BuildIntroText(
-                              headerText: SharedPreferencesClass.getLanguageCode() == 'ar'?'تأكيد رقم الموبايل':'Confirm the mobile number',
+                              headerText: translation.confirmPhoneNumber.tr,
                             ),
                             const SizedBox(height: 40),
                              Text(
-                               SharedPreferencesClass.getLanguageCode() == 'ar'?'الرجاء كتابة الرمز الذي تلقيته على الرقم':'Please type the code that you received on the number',
-                              style: const TextStyle(
+                               translation.typeCodeReceived.tr,
+                              style:  TextStyle(
                                   fontSize: 15,
-                                  color: Colors.black,
+                                  color: Get.isDarkMode? Colors.white:Colors.black,
                                   fontFamily: 'Noto Kufi Arabic'),
                             ),
                             Row(
                               children: [
                                 Text(
                                   '${widget.data['mobileNo']}',
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                       fontSize: 18,
-                                      color: Colors.black,
+                                      color: Get.isDarkMode? Colors.white:Colors.black,
                                       fontFamily: 'Noto Kufi Arabic'),
                                 ),
                                 TextButton(
@@ -106,7 +87,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
 
                                     },
                                     child:  Text(
-                                      SharedPreferencesClass.getLanguageCode() == 'ar'?  'تعديل':'Edit',
+                                      translation.editText.tr,
                                       style: const TextStyle(
                                           fontSize: 15,
                                           color: ColorConstants.mainColor),
@@ -120,7 +101,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                               length: 6,
                               obscureText: false,
                               autoFocus: true,
-                              cursorColor: Colors.black,
+                              cursorColor:Get.isDarkMode? Colors.white: Colors.black,
                               keyboardType: TextInputType.number,
                               animationType: AnimationType.scale,
                               pinTheme: PinTheme(
@@ -156,7 +137,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                             const SizedBox(height: 30),
                             Obx(
                               () => CustomButton(
-                                  btnText:SharedPreferencesClass.getLanguageCode() == 'ar'? 'تأكيد التفعيل':'Activate confirmation',
+                                  btnText:translation.activateConfirmation.tr,
                                   textColor: Colors.white,
                                   textSize: 17,
                                   btnBackgroundColor: ColorConstants.mainColor,
@@ -199,7 +180,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                             ),
                             const SizedBox(height: 30),
                             // countDown(),
-                          ]))))),
+                          ])))),
     );
   }
 
@@ -216,7 +197,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               },
               child: Center(
                   child: Text(
-                    SharedPreferencesClass.getLanguageCode() == 'ar'?  'إعادة إرسال الكود ':'Resend the code',
+                   translation.resendCode.tr,
                 style: Theme.of(context).textTheme.subtitle1,
               )));
         } else {

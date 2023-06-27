@@ -25,8 +25,8 @@ _$_CompanyModel _$$_CompanyModelFromJson(Map<String, dynamic> json) =>
       youtube: json['youtube'] as String?,
       website: json['website'] as String?,
       creationDate: json['creationDate'] as String?,
-      companyBranches: (json['companyBranches'] as List<dynamic>?)
-          ?.map((e) => CompanyBranchesModel.fromJson(e as Map<String, dynamic>))
+      companyBrunches: (json['companyBrunches'] as List<dynamic>?)
+          ?.map((e) => e as Map<String, dynamic>)
           .toList(),
     );
 
@@ -49,5 +49,5 @@ Map<String, dynamic> _$$_CompanyModelToJson(_$_CompanyModel instance) =>
       'youtube': instance.youtube,
       'website': instance.website,
       'creationDate': instance.creationDate,
-      'companyBranches': instance.companyBranches,
+      'companyBrunches': instance.companyBrunches,
     };

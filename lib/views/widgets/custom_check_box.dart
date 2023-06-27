@@ -30,7 +30,7 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
        });
       },
       child: SizedBox(
-        width: 115,
+        width: 135,
         height: 54,
         child: Row(
           children: [

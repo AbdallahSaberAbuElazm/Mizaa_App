@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/controllers/theme/directionality_controller.dart';
 import 'package:test_ecommerce_app/controllers/user/user_authentication_controller.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
@@ -45,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ? '1'
             : SharedPreferencesClass.getCountryId().toString());
     return Scaffold(
-      backgroundColor: ColorConstants.mainColor,
+      backgroundColor: Get.isDarkMode? ColorConstants.darkMainColor : ColorConstants.mainColor,
       body: Stack(
         children: [
           Image.asset(

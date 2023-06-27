@@ -29,9 +29,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: Utils.direction,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    return  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -39,7 +37,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
               widget.headerName,
               style: TextStyle(
                   fontSize: 18,
-                  color: ColorConstants.black0,height: 1,
+                  color: Get.isDarkMode? Colors.white: ColorConstants.black0,height: 1,
                   fontFamily: 'Noto Kufi Arabic'),
             ),
           ],
@@ -171,7 +169,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
                   // autofocus: true,
                   textAlignVertical: TextAlignVertical.center,
                   scrollPadding: EdgeInsets.zero,
-                  cursorColor: Colors.black,
+                  cursorColor:Get.isDarkMode? Colors.white: Colors.black,
                   controller: widget.controller,
                   keyboardType: TextInputType.phone,
                   // maxLength: userAuthenticationController
@@ -183,9 +181,9 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
                   ],
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      fillColor: Colors.black,
-                      focusColor: Colors.black,
-                      hoverColor: Colors.black,
+                      fillColor:Get.isDarkMode? Colors.white: Colors.black,
+                      focusColor:Get.isDarkMode? Colors.white: Colors.black,
+                      hoverColor:Get.isDarkMode? Colors.white: Colors.black,
                       hintText: 'e.g.01234567890',
                       // SharedPreferencesClass.getLanguageCode() == 'ar'?'ادخل رقم الموبايل':'Enter phone number',
                       hintStyle: Theme.of(context).textTheme.subtitle2),
@@ -227,7 +225,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
             ),
           ],
         ),
-      ]),
+      ]
     );
   }
 

@@ -58,13 +58,11 @@ mixin _$OfferModel {
   int? get subCategoryId => throw _privateConstructorUsedError;
   int? get salesCount =>
       throw _privateConstructorUsedError; // CompanyModel? company,
-  Map<String, dynamic>? get company => throw _privateConstructorUsedError;
-  List<Map<String, dynamic>>? get offerImages =>
+  Map<dynamic, dynamic>? get company => throw _privateConstructorUsedError;
+  List<Map<dynamic, dynamic>>? get offerImages =>
       throw _privateConstructorUsedError;
-  List<Map<String, dynamic>>? get offerOptions =>
-      throw _privateConstructorUsedError; // List<OfferImages>? offerImages,
-// List<OfferOptions>? offerOptions,
-// SubCategoriesModel? subCategory,
+  List<Map<dynamic, dynamic>>? get offerOptions =>
+      throw _privateConstructorUsedError;
   Map<String, dynamic>? get subCategory => throw _privateConstructorUsedError;
   dynamic get userOfferActionHistories => throw _privateConstructorUsedError;
   bool? get isShowInHomePage => throw _privateConstructorUsedError;
@@ -125,9 +123,9 @@ abstract class $OfferModelCopyWith<$Res> {
       dynamic longitude,
       int? subCategoryId,
       int? salesCount,
-      Map<String, dynamic>? company,
-      List<Map<String, dynamic>>? offerImages,
-      List<Map<String, dynamic>>? offerOptions,
+      Map<dynamic, dynamic>? company,
+      List<Map<dynamic, dynamic>>? offerImages,
+      List<Map<dynamic, dynamic>>? offerOptions,
       Map<String, dynamic>? subCategory,
       dynamic userOfferActionHistories,
       bool? isShowInHomePage,
@@ -354,15 +352,15 @@ class _$OfferModelCopyWithImpl<$Res, $Val extends OfferModel>
       company: freezed == company
           ? _value.company
           : company // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
+              as Map<dynamic, dynamic>?,
       offerImages: freezed == offerImages
           ? _value.offerImages
           : offerImages // ignore: cast_nullable_to_non_nullable
-              as List<Map<String, dynamic>>?,
+              as List<Map<dynamic, dynamic>>?,
       offerOptions: freezed == offerOptions
           ? _value.offerOptions
           : offerOptions // ignore: cast_nullable_to_non_nullable
-              as List<Map<String, dynamic>>?,
+              as List<Map<dynamic, dynamic>>?,
       subCategory: freezed == subCategory
           ? _value.subCategory
           : subCategory // ignore: cast_nullable_to_non_nullable
@@ -449,9 +447,9 @@ abstract class _$$_OfferModelCopyWith<$Res>
       dynamic longitude,
       int? subCategoryId,
       int? salesCount,
-      Map<String, dynamic>? company,
-      List<Map<String, dynamic>>? offerImages,
-      List<Map<String, dynamic>>? offerOptions,
+      Map<dynamic, dynamic>? company,
+      List<Map<dynamic, dynamic>>? offerImages,
+      List<Map<dynamic, dynamic>>? offerOptions,
       Map<String, dynamic>? subCategory,
       dynamic userOfferActionHistories,
       bool? isShowInHomePage,
@@ -676,15 +674,15 @@ class __$$_OfferModelCopyWithImpl<$Res>
       company: freezed == company
           ? _value._company
           : company // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
+              as Map<dynamic, dynamic>?,
       offerImages: freezed == offerImages
           ? _value._offerImages
           : offerImages // ignore: cast_nullable_to_non_nullable
-              as List<Map<String, dynamic>>?,
+              as List<Map<dynamic, dynamic>>?,
       offerOptions: freezed == offerOptions
           ? _value._offerOptions
           : offerOptions // ignore: cast_nullable_to_non_nullable
-              as List<Map<String, dynamic>>?,
+              as List<Map<dynamic, dynamic>>?,
       subCategory: freezed == subCategory
           ? _value._subCategory
           : subCategory // ignore: cast_nullable_to_non_nullable
@@ -766,9 +764,9 @@ class _$_OfferModel implements _OfferModel {
       this.longitude,
       this.subCategoryId,
       this.salesCount,
-      final Map<String, dynamic>? company,
-      final List<Map<String, dynamic>>? offerImages,
-      final List<Map<String, dynamic>>? offerOptions,
+      final Map<dynamic, dynamic>? company,
+      final List<Map<dynamic, dynamic>>? offerImages,
+      final List<Map<dynamic, dynamic>>? offerOptions,
       final Map<String, dynamic>? subCategory,
       this.userOfferActionHistories,
       this.isShowInHomePage,
@@ -861,10 +859,10 @@ class _$_OfferModel implements _OfferModel {
   @override
   final int? salesCount;
 // CompanyModel? company,
-  final Map<String, dynamic>? _company;
+  final Map<dynamic, dynamic>? _company;
 // CompanyModel? company,
   @override
-  Map<String, dynamic>? get company {
+  Map<dynamic, dynamic>? get company {
     final value = _company;
     if (value == null) return null;
     if (_company is EqualUnmodifiableMapView) return _company;
@@ -872,9 +870,9 @@ class _$_OfferModel implements _OfferModel {
     return EqualUnmodifiableMapView(value);
   }
 
-  final List<Map<String, dynamic>>? _offerImages;
+  final List<Map<dynamic, dynamic>>? _offerImages;
   @override
-  List<Map<String, dynamic>>? get offerImages {
+  List<Map<dynamic, dynamic>>? get offerImages {
     final value = _offerImages;
     if (value == null) return null;
     if (_offerImages is EqualUnmodifiableListView) return _offerImages;
@@ -882,9 +880,9 @@ class _$_OfferModel implements _OfferModel {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<Map<String, dynamic>>? _offerOptions;
+  final List<Map<dynamic, dynamic>>? _offerOptions;
   @override
-  List<Map<String, dynamic>>? get offerOptions {
+  List<Map<dynamic, dynamic>>? get offerOptions {
     final value = _offerOptions;
     if (value == null) return null;
     if (_offerOptions is EqualUnmodifiableListView) return _offerOptions;
@@ -892,13 +890,7 @@ class _$_OfferModel implements _OfferModel {
     return EqualUnmodifiableListView(value);
   }
 
-// List<OfferImages>? offerImages,
-// List<OfferOptions>? offerOptions,
-// SubCategoriesModel? subCategory,
   final Map<String, dynamic>? _subCategory;
-// List<OfferImages>? offerImages,
-// List<OfferOptions>? offerOptions,
-// SubCategoriesModel? subCategory,
   @override
   Map<String, dynamic>? get subCategory {
     final value = _subCategory;
@@ -1133,9 +1125,9 @@ abstract class _OfferModel implements OfferModel {
       final dynamic longitude,
       final int? subCategoryId,
       final int? salesCount,
-      final Map<String, dynamic>? company,
-      final List<Map<String, dynamic>>? offerImages,
-      final List<Map<String, dynamic>>? offerOptions,
+      final Map<dynamic, dynamic>? company,
+      final List<Map<dynamic, dynamic>>? offerImages,
+      final List<Map<dynamic, dynamic>>? offerOptions,
       final Map<String, dynamic>? subCategory,
       final dynamic userOfferActionHistories,
       final bool? isShowInHomePage,
@@ -1224,14 +1216,12 @@ abstract class _OfferModel implements OfferModel {
   @override
   int? get salesCount;
   @override // CompanyModel? company,
-  Map<String, dynamic>? get company;
+  Map<dynamic, dynamic>? get company;
   @override
-  List<Map<String, dynamic>>? get offerImages;
+  List<Map<dynamic, dynamic>>? get offerImages;
   @override
-  List<Map<String, dynamic>>? get offerOptions;
-  @override // List<OfferImages>? offerImages,
-// List<OfferOptions>? offerOptions,
-// SubCategoriesModel? subCategory,
+  List<Map<dynamic, dynamic>>? get offerOptions;
+  @override
   Map<String, dynamic>? get subCategory;
   @override
   dynamic get userOfferActionHistories;

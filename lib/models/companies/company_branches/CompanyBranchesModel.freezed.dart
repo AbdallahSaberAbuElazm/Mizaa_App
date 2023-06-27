@@ -20,14 +20,20 @@ CompanyBranchesModel _$CompanyBranchesModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$CompanyBranchesModel {
-  int get id => throw _privateConstructorUsedError;
-  String get key => throw _privateConstructorUsedError;
-  String get areaAr => throw _privateConstructorUsedError;
-  String get areaEn => throw _privateConstructorUsedError;
-  String get addressAr => throw _privateConstructorUsedError;
-  String get addressEn => throw _privateConstructorUsedError;
-  String get longitude => throw _privateConstructorUsedError;
-  String get latitude => throw _privateConstructorUsedError;
+  int? get id => throw _privateConstructorUsedError;
+  String? get key => throw _privateConstructorUsedError;
+  int? get companyId => throw _privateConstructorUsedError;
+  String? get title => throw _privateConstructorUsedError;
+  String? get enTitle => throw _privateConstructorUsedError;
+  String? get address => throw _privateConstructorUsedError;
+  String? get enAddress => throw _privateConstructorUsedError;
+  dynamic get location => throw _privateConstructorUsedError;
+  String? get lat => throw _privateConstructorUsedError;
+  String? get long => throw _privateConstructorUsedError;
+  dynamic get mobile => throw _privateConstructorUsedError;
+  dynamic get phone => throw _privateConstructorUsedError;
+  dynamic get whatsapp => throw _privateConstructorUsedError;
+  int? get cityId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,14 +48,20 @@ abstract class $CompanyBranchesModelCopyWith<$Res> {
       _$CompanyBranchesModelCopyWithImpl<$Res, CompanyBranchesModel>;
   @useResult
   $Res call(
-      {int id,
-      String key,
-      String areaAr,
-      String areaEn,
-      String addressAr,
-      String addressEn,
-      String longitude,
-      String latitude});
+      {int? id,
+      String? key,
+      int? companyId,
+      String? title,
+      String? enTitle,
+      String? address,
+      String? enAddress,
+      dynamic location,
+      String? lat,
+      String? long,
+      dynamic mobile,
+      dynamic phone,
+      dynamic whatsapp,
+      int? cityId});
 }
 
 /// @nodoc
@@ -66,48 +78,78 @@ class _$CompanyBranchesModelCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? key = null,
-    Object? areaAr = null,
-    Object? areaEn = null,
-    Object? addressAr = null,
-    Object? addressEn = null,
-    Object? longitude = null,
-    Object? latitude = null,
+    Object? id = freezed,
+    Object? key = freezed,
+    Object? companyId = freezed,
+    Object? title = freezed,
+    Object? enTitle = freezed,
+    Object? address = freezed,
+    Object? enAddress = freezed,
+    Object? location = freezed,
+    Object? lat = freezed,
+    Object? long = freezed,
+    Object? mobile = freezed,
+    Object? phone = freezed,
+    Object? whatsapp = freezed,
+    Object? cityId = freezed,
   }) {
     return _then(_value.copyWith(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      key: null == key
+              as int?,
+      key: freezed == key
           ? _value.key
           : key // ignore: cast_nullable_to_non_nullable
-              as String,
-      areaAr: null == areaAr
-          ? _value.areaAr
-          : areaAr // ignore: cast_nullable_to_non_nullable
-              as String,
-      areaEn: null == areaEn
-          ? _value.areaEn
-          : areaEn // ignore: cast_nullable_to_non_nullable
-              as String,
-      addressAr: null == addressAr
-          ? _value.addressAr
-          : addressAr // ignore: cast_nullable_to_non_nullable
-              as String,
-      addressEn: null == addressEn
-          ? _value.addressEn
-          : addressEn // ignore: cast_nullable_to_non_nullable
-              as String,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as String,
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      companyId: freezed == companyId
+          ? _value.companyId
+          : companyId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      enTitle: freezed == enTitle
+          ? _value.enTitle
+          : enTitle // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: freezed == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String?,
+      enAddress: freezed == enAddress
+          ? _value.enAddress
+          : enAddress // ignore: cast_nullable_to_non_nullable
+              as String?,
+      location: freezed == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      lat: freezed == lat
+          ? _value.lat
+          : lat // ignore: cast_nullable_to_non_nullable
+              as String?,
+      long: freezed == long
+          ? _value.long
+          : long // ignore: cast_nullable_to_non_nullable
+              as String?,
+      mobile: freezed == mobile
+          ? _value.mobile
+          : mobile // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      phone: freezed == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      whatsapp: freezed == whatsapp
+          ? _value.whatsapp
+          : whatsapp // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      cityId: freezed == cityId
+          ? _value.cityId
+          : cityId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -121,14 +163,20 @@ abstract class _$$_CompanyBranchesModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int id,
-      String key,
-      String areaAr,
-      String areaEn,
-      String addressAr,
-      String addressEn,
-      String longitude,
-      String latitude});
+      {int? id,
+      String? key,
+      int? companyId,
+      String? title,
+      String? enTitle,
+      String? address,
+      String? enAddress,
+      dynamic location,
+      String? lat,
+      String? long,
+      dynamic mobile,
+      dynamic phone,
+      dynamic whatsapp,
+      int? cityId});
 }
 
 /// @nodoc
@@ -142,48 +190,78 @@ class __$$_CompanyBranchesModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? key = null,
-    Object? areaAr = null,
-    Object? areaEn = null,
-    Object? addressAr = null,
-    Object? addressEn = null,
-    Object? longitude = null,
-    Object? latitude = null,
+    Object? id = freezed,
+    Object? key = freezed,
+    Object? companyId = freezed,
+    Object? title = freezed,
+    Object? enTitle = freezed,
+    Object? address = freezed,
+    Object? enAddress = freezed,
+    Object? location = freezed,
+    Object? lat = freezed,
+    Object? long = freezed,
+    Object? mobile = freezed,
+    Object? phone = freezed,
+    Object? whatsapp = freezed,
+    Object? cityId = freezed,
   }) {
     return _then(_$_CompanyBranchesModel(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      key: null == key
+              as int?,
+      key: freezed == key
           ? _value.key
           : key // ignore: cast_nullable_to_non_nullable
-              as String,
-      areaAr: null == areaAr
-          ? _value.areaAr
-          : areaAr // ignore: cast_nullable_to_non_nullable
-              as String,
-      areaEn: null == areaEn
-          ? _value.areaEn
-          : areaEn // ignore: cast_nullable_to_non_nullable
-              as String,
-      addressAr: null == addressAr
-          ? _value.addressAr
-          : addressAr // ignore: cast_nullable_to_non_nullable
-              as String,
-      addressEn: null == addressEn
-          ? _value.addressEn
-          : addressEn // ignore: cast_nullable_to_non_nullable
-              as String,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as String,
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      companyId: freezed == companyId
+          ? _value.companyId
+          : companyId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      enTitle: freezed == enTitle
+          ? _value.enTitle
+          : enTitle // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: freezed == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String?,
+      enAddress: freezed == enAddress
+          ? _value.enAddress
+          : enAddress // ignore: cast_nullable_to_non_nullable
+              as String?,
+      location: freezed == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      lat: freezed == lat
+          ? _value.lat
+          : lat // ignore: cast_nullable_to_non_nullable
+              as String?,
+      long: freezed == long
+          ? _value.long
+          : long // ignore: cast_nullable_to_non_nullable
+              as String?,
+      mobile: freezed == mobile
+          ? _value.mobile
+          : mobile // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      phone: freezed == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      whatsapp: freezed == whatsapp
+          ? _value.whatsapp
+          : whatsapp // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      cityId: freezed == cityId
+          ? _value.cityId
+          : cityId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -192,38 +270,56 @@ class __$$_CompanyBranchesModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_CompanyBranchesModel implements _CompanyBranchesModel {
   _$_CompanyBranchesModel(
-      {required this.id,
-      required this.key,
-      required this.areaAr,
-      required this.areaEn,
-      required this.addressAr,
-      required this.addressEn,
-      required this.longitude,
-      required this.latitude});
+      {this.id,
+      this.key,
+      this.companyId,
+      this.title,
+      this.enTitle,
+      this.address,
+      this.enAddress,
+      this.location,
+      this.lat,
+      this.long,
+      this.mobile,
+      this.phone,
+      this.whatsapp,
+      this.cityId});
 
   factory _$_CompanyBranchesModel.fromJson(Map<String, dynamic> json) =>
       _$$_CompanyBranchesModelFromJson(json);
 
   @override
-  final int id;
+  final int? id;
   @override
-  final String key;
+  final String? key;
   @override
-  final String areaAr;
+  final int? companyId;
   @override
-  final String areaEn;
+  final String? title;
   @override
-  final String addressAr;
+  final String? enTitle;
   @override
-  final String addressEn;
+  final String? address;
   @override
-  final String longitude;
+  final String? enAddress;
   @override
-  final String latitude;
+  final dynamic location;
+  @override
+  final String? lat;
+  @override
+  final String? long;
+  @override
+  final dynamic mobile;
+  @override
+  final dynamic phone;
+  @override
+  final dynamic whatsapp;
+  @override
+  final int? cityId;
 
   @override
   String toString() {
-    return 'CompanyBranchesModel(id: $id, key: $key, areaAr: $areaAr, areaEn: $areaEn, addressAr: $addressAr, addressEn: $addressEn, longitude: $longitude, latitude: $latitude)';
+    return 'CompanyBranchesModel(id: $id, key: $key, companyId: $companyId, title: $title, enTitle: $enTitle, address: $address, enAddress: $enAddress, location: $location, lat: $lat, long: $long, mobile: $mobile, phone: $phone, whatsapp: $whatsapp, cityId: $cityId)';
   }
 
   @override
@@ -233,22 +329,40 @@ class _$_CompanyBranchesModel implements _CompanyBranchesModel {
             other is _$_CompanyBranchesModel &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.key, key) || other.key == key) &&
-            (identical(other.areaAr, areaAr) || other.areaAr == areaAr) &&
-            (identical(other.areaEn, areaEn) || other.areaEn == areaEn) &&
-            (identical(other.addressAr, addressAr) ||
-                other.addressAr == addressAr) &&
-            (identical(other.addressEn, addressEn) ||
-                other.addressEn == addressEn) &&
-            (identical(other.longitude, longitude) ||
-                other.longitude == longitude) &&
-            (identical(other.latitude, latitude) ||
-                other.latitude == latitude));
+            (identical(other.companyId, companyId) ||
+                other.companyId == companyId) &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.enTitle, enTitle) || other.enTitle == enTitle) &&
+            (identical(other.address, address) || other.address == address) &&
+            (identical(other.enAddress, enAddress) ||
+                other.enAddress == enAddress) &&
+            const DeepCollectionEquality().equals(other.location, location) &&
+            (identical(other.lat, lat) || other.lat == lat) &&
+            (identical(other.long, long) || other.long == long) &&
+            const DeepCollectionEquality().equals(other.mobile, mobile) &&
+            const DeepCollectionEquality().equals(other.phone, phone) &&
+            const DeepCollectionEquality().equals(other.whatsapp, whatsapp) &&
+            (identical(other.cityId, cityId) || other.cityId == cityId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, key, areaAr, areaEn,
-      addressAr, addressEn, longitude, latitude);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      key,
+      companyId,
+      title,
+      enTitle,
+      address,
+      enAddress,
+      const DeepCollectionEquality().hash(location),
+      lat,
+      long,
+      const DeepCollectionEquality().hash(mobile),
+      const DeepCollectionEquality().hash(phone),
+      const DeepCollectionEquality().hash(whatsapp),
+      cityId);
 
   @JsonKey(ignore: true)
   @override
@@ -267,34 +381,52 @@ class _$_CompanyBranchesModel implements _CompanyBranchesModel {
 
 abstract class _CompanyBranchesModel implements CompanyBranchesModel {
   factory _CompanyBranchesModel(
-      {required final int id,
-      required final String key,
-      required final String areaAr,
-      required final String areaEn,
-      required final String addressAr,
-      required final String addressEn,
-      required final String longitude,
-      required final String latitude}) = _$_CompanyBranchesModel;
+      {final int? id,
+      final String? key,
+      final int? companyId,
+      final String? title,
+      final String? enTitle,
+      final String? address,
+      final String? enAddress,
+      final dynamic location,
+      final String? lat,
+      final String? long,
+      final dynamic mobile,
+      final dynamic phone,
+      final dynamic whatsapp,
+      final int? cityId}) = _$_CompanyBranchesModel;
 
   factory _CompanyBranchesModel.fromJson(Map<String, dynamic> json) =
       _$_CompanyBranchesModel.fromJson;
 
   @override
-  int get id;
+  int? get id;
   @override
-  String get key;
+  String? get key;
   @override
-  String get areaAr;
+  int? get companyId;
   @override
-  String get areaEn;
+  String? get title;
   @override
-  String get addressAr;
+  String? get enTitle;
   @override
-  String get addressEn;
+  String? get address;
   @override
-  String get longitude;
+  String? get enAddress;
   @override
-  String get latitude;
+  dynamic get location;
+  @override
+  String? get lat;
+  @override
+  String? get long;
+  @override
+  dynamic get mobile;
+  @override
+  dynamic get phone;
+  @override
+  dynamic get whatsapp;
+  @override
+  int? get cityId;
   @override
   @JsonKey(ignore: true)
   _$$_CompanyBranchesModelCopyWith<_$_CompanyBranchesModel> get copyWith =>

@@ -9,14 +9,20 @@ part of 'CompanyBranchesModel.dart';
 _$_CompanyBranchesModel _$$_CompanyBranchesModelFromJson(
         Map<String, dynamic> json) =>
     _$_CompanyBranchesModel(
-      id: json['id'] as int,
-      key: json['key'] as String,
-      areaAr: json['areaAr'] as String,
-      areaEn: json['areaEn'] as String,
-      addressAr: json['addressAr'] as String,
-      addressEn: json['addressEn'] as String,
-      longitude: json['longitude'] as String,
-      latitude: json['latitude'] as String,
+      id: json['id'] as int?,
+      key: json['key'] as String?,
+      companyId: json['companyId'] as int?,
+      title: json['title'] as String?,
+      enTitle: json['enTitle'] as String?,
+      address: json['address'] as String?,
+      enAddress: json['enAddress'] as String?,
+      location: json['location'],
+      lat: json['lat'] as String?,
+      long: json['long'] as String?,
+      mobile: json['mobile'],
+      phone: json['phone'],
+      whatsapp: json['whatsapp'],
+      cityId: json['cityId'] as int?,
     );
 
 Map<String, dynamic> _$$_CompanyBranchesModelToJson(
@@ -24,10 +30,16 @@ Map<String, dynamic> _$$_CompanyBranchesModelToJson(
     <String, dynamic>{
       'id': instance.id,
       'key': instance.key,
-      'areaAr': instance.areaAr,
-      'areaEn': instance.areaEn,
-      'addressAr': instance.addressAr,
-      'addressEn': instance.addressEn,
-      'longitude': instance.longitude,
-      'latitude': instance.latitude,
+      'companyId': instance.companyId,
+      'title': instance.title,
+      'enTitle': instance.enTitle,
+      'address': instance.address,
+      'enAddress': instance.enAddress,
+      'location': instance.location,
+      'lat': instance.lat,
+      'long': instance.long,
+      'mobile': instance.mobile,
+      'phone': instance.phone,
+      'whatsapp': instance.whatsapp,
+      'cityId': instance.cityId,
     };

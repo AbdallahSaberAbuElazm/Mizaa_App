@@ -1,25 +1,37 @@
 import 'package:test_ecommerce_app/controllers/home/HomeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconly/iconly.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/shared/utils.dart';
+import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+as translation;
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../shared/constants/ColorConstants.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({ Key? key }) : super(key: key);
+class HomePage extends StatefulWidget {
+  Widget recentPage;
+  int selectedIndex;
+  HomePage({ Key? key, required this.recentPage, required this.selectedIndex}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
 
   final HomeController _homeController = Get.find();
+
+  void updateTabSelection(int index) {
+    setState(() {
+      widget.selectedIndex = index;
+      widget.recentPage = _homeController.pages[index];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    return Directionality(
-      textDirection: Utils.direction,
-      child: Scaffold(
+
+    return  Scaffold(
         bottomNavigationBar: BottomAppBar(
           elevation: 0,
           notchMargin: 10,
@@ -29,23 +41,24 @@ class HomePage extends StatelessWidget {
             child: Obx(() => Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _bottomAppBarItem(icon: Icons.home_rounded,text:SharedPreferencesClass.getLanguageCode() == 'ar'?  'العروض':'Offers',page: 0),
-                _bottomAppBarItem(icon: Icons.shopping_basket,text:SharedPreferencesClass.getLanguageCode() == 'ar'?  'طلباتي':'Orders', page: 1),
-                _bottomAppBarItem(icon: Icons.category_rounded,text:SharedPreferencesClass.getLanguageCode() == 'ar'?  'تصنيفات':'Categories', page: 2),
-                _bottomAppBarItem(icon: Icons.favorite,text:SharedPreferencesClass.getLanguageCode() == 'ar'?  'المفضلة':'Favourite', page: 3),
-                _bottomAppBarItem(icon: Icons.person ,text:SharedPreferencesClass.getLanguageCode() == 'ar'?  'حسابي':'Profile', page: 4),
+                _bottomAppBarItem(icon: Icons.home_rounded,text:translation.offersText.tr,page: 0),
+                  _bottomAppBarItem(icon: Icons.shopping_basket,text:translation.ordersText.tr, page: 1),
+                _bottomAppBarItem(icon: Icons.category_rounded,text:translation.categoriesText.tr, page: 2),
+                _bottomAppBarItem(icon: Icons.favorite,text:translation.favouriteText.tr, page: 3),
+                _bottomAppBarItem(icon: Icons.person ,text:translation.profileText.tr, page: 4),
               ],
             ),
           )),
         ),
-        body: PageView(
-          controller: _homeController.pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            ..._homeController.pages
-          ],
-        )
-      ),
+        body:widget.recentPage
+      //   PageView(
+      //     controller: _homeController.pageController,
+      //     physics: const NeverScrollableScrollPhysics(),
+      //     children: [
+      //       ..._homeController.pages
+      //     ],
+      //
+      // ),
     );
   }
 
@@ -53,7 +66,7 @@ class HomePage extends StatelessWidget {
     return SizedBox(
       height: 50,
       child: ZoomTapAnimation(
-        onTap: () => _homeController.goToTab(page),
+        onTap: () {  updateTabSelection(page);},
         child:
         Column(
           mainAxisAlignment: MainAxisAlignment.end,

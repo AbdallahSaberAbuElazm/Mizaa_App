@@ -7,7 +7,7 @@ class Themes {
     scaffoldBackgroundColor: ColorConstants.backgroundContainer,
       primaryColor: ColorConstants.mainColor,
     brightness: Brightness.light,
-    appBarTheme:  AppBarTheme(
+    appBarTheme: const AppBarTheme(
       titleTextStyle: TextStyle(
         color: Colors.black,fontSize: 16,
         fontWeight: FontWeight.w600
@@ -18,6 +18,7 @@ class Themes {
       backgroundColor: Colors.white,
       elevation: 0
     ),
+      bottomAppBarColor: Colors.white,
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
         borderSide: BorderSide.none,
@@ -34,31 +35,28 @@ class Themes {
       headline1: TextStyle(
         fontSize: 23, color: ColorConstants.blackColor, fontWeight: FontWeight.bold,fontFamily: 'Noto Kufi Arabic',
       ),
-      headline2: TextStyle(
+      headline2: const TextStyle(
         letterSpacing: -1.0,
         fontSize: 40,
         color: Colors.black,fontFamily: 'Noto Kufi Arabic',
         fontWeight: FontWeight.bold
       ),
-      headline3: TextStyle(
+      headline3: const TextStyle(
         letterSpacing: -1.0,
         fontSize: 32,
         color: Colors.black,fontFamily: 'Noto Kufi Arabic',
         fontWeight: FontWeight.bold
       ),
       headline4: TextStyle(
-        letterSpacing: -1.0,
-        color: Colors.black,
-        fontSize: 28,fontFamily: 'Noto Kufi Arabic',
-        fontWeight: FontWeight.w600
+        color: ColorConstants.greyColor,
+        fontSize: 13,fontFamily: 'Noto Kufi Arabic',
       ),
-      headline5:const TextStyle(
-        letterSpacing: -1.0,
-        color: Colors.black,
-        fontSize: 24,fontFamily: 'Noto Kufi Arabic',
-        fontWeight: FontWeight.w500
-      ),
-      headline6:const TextStyle(
+      headline5:  TextStyle(
+            color: ColorConstants.black0,
+            fontSize: 13,fontFamily: 'Noto Kufi Arabic',
+            fontWeight: FontWeight.w600),
+
+      headline6: const TextStyle(
         color: Colors.black,
         fontSize: 18,fontFamily: 'Noto Kufi Arabic',
         fontWeight: FontWeight.w500
@@ -83,7 +81,7 @@ class Themes {
         fontSize: 14,fontFamily: 'Noto Kufi Arabic',
         fontWeight: FontWeight.w400
       ),
-      button: TextStyle(
+      button: const TextStyle(
         color: Colors.white,
         fontSize: 14,fontFamily: 'Noto Kufi Arabic',
         fontWeight: FontWeight.w600
@@ -106,15 +104,15 @@ class Themes {
     primaryColor: Colors.blue,
     primarySwatch: Colors.blue,
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: ColorConstants.gray700,
+    scaffoldBackgroundColor: ColorConstants.darkMainColor,
     appBarTheme: AppBarTheme(
-      backgroundColor: ColorConstants.gray700,
+      backgroundColor: ColorConstants.bottomAppBarDarkColor,
       elevation: 0,
       iconTheme: const IconThemeData(
         color: Colors.white
       ),
     ),
-    bottomAppBarColor: ColorConstants.gray700,
+    bottomAppBarColor: ColorConstants.bottomAppBarDarkColor,
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
         borderSide: BorderSide.none,
@@ -128,11 +126,8 @@ class Themes {
       color: Colors.white
     ),
     textTheme: TextTheme(
-      headline1: TextStyle(
-        letterSpacing: -1.5,
-        fontSize: 48,
-        color: Colors.grey.shade50,
-        fontWeight: FontWeight.bold
+      headline1: const TextStyle(
+        fontSize: 23, color: Colors.white, fontWeight: FontWeight.bold,fontFamily: 'Noto Kufi Arabic',
       ),
       headline2: TextStyle(
         letterSpacing: -1.0,

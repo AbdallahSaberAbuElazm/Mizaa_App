@@ -10,7 +10,7 @@ class OfferRateModel with _$OfferRateModel{
   factory OfferRateModel({
     String? username,
     double? rate,
-    String? creation,
+    DateTime? creation,
 
   }) = _OfferRateModel;
 

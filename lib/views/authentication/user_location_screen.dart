@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/controllers/user/user_authentication_controller.dart';
+import 'package:test_ecommerce_app/main.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:test_ecommerce_app/views/widgets/custom_button.dart';
 import 'package:get/get.dart';
+import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+    as translation;
 
 class UserLocationScreen extends StatefulWidget {
   UserLocationScreen({Key? key}) : super(key: key);
@@ -16,285 +18,215 @@ class UserLocationScreen extends StatefulWidget {
 
 class _UserLocationScreenState extends State<UserLocationScreen> {
 
+
   @override
   void initState() {
+    Controllers.directionalityController.dropLanguageData.value =
+        languageBox.read('language') == 'en' ? 'English' : 'العربية';
+    print('user location language is ${languageBox.read('language')}');
+    Controllers
+        .directionalityController.languageBox.value
+        .write('language',languageBox.read('language') == 'ar' ?'ar':'en');
     super.initState();
-
-    setState(() {
-      SharedPreferencesClass.setUserLanguageCode(language: 'ar');
-      SharedPreferencesClass.setUserLanguageName(language: 'العربية');
-
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-
-    return Obx(() => Directionality(
-          textDirection: Controllers.directionalityController.direction.value,
-          child: Scaffold(
-            backgroundColor: ColorConstants.mainColor,
-            body: Stack(
-              children: [
-                Image.asset(
-                  'assets/images/splash_screen.png',
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  fit: BoxFit.cover,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 88, left: 16, right: 16),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          'assets/images/mizaaLogo.png',
-                          height: 140,
-                          fit: BoxFit.cover,
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          SharedPreferencesClass.getLanguageCode() == 'ar'
-                              ? '( لإكتشاف العروض القريبة منك )'
-                              : '( To discover offers near you )',
-                          style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        // Stack(
-                        //   children: [
-                        const SizedBox(
-                          height: 45,
-                        ),
-                        // Obx(() => (Controllers.directionalityController
-                        //         .countries.isNotEmpty)
-                        //     ? const SizedBox()
-                        //     : const Center(
-                        //         child: CircularProgressIndicator(
-                        //         color: Colors.white,
-                        //       ))),
-                        //   ],
-                        // ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildDropHeader(
-                                text:
-                                    SharedPreferencesClass.getLanguageCode() ==
-                                            'ar'
-                                        ? 'اللغة'
-                                        : "Language"),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Utils.drawDropDownListStringsBtn(
-                                optionName: 'اللغة',
-                                dropDownValue: Controllers
-                                    .directionalityController
-                                    .dropLanguageData
-                                    .value,
-                                onChanged: (value) {
-                                  Controllers.directionalityController
-                                      .dropLanguageData.value = value;
-
-                                  if (Controllers.directionalityController
-                                          .dropLanguageData.value ==
-                                      'العربية') {
-                                    Controllers.directionalityController
-                                        .direction.value = TextDirection.rtl;
-                                    Controllers.directionalityController
-                                        .textAlign.value = TextAlign.right;
-                                    setState(() {
-                                      Utils.direction = TextDirection.rtl;
-                                      Utils.textAlign = TextAlign.right;
-                                    });
-                                  } else {
-                                    Controllers.directionalityController
-                                        .direction.value = TextDirection.ltr;
-                                    Controllers.directionalityController
-                                        .textAlign.value = TextAlign.left;
-                                    Utils.direction = TextDirection.ltr;
-                                    Utils.textAlign = TextAlign.left;
-                                  }
-
-                                  setState(() {
-                                    SharedPreferencesClass.setUserLanguageCode(
-                                        language: (Controllers
-                                                    .directionalityController
-                                                    .dropLanguageData ==
-                                                'العربية')
-                                            ? 'ar'
-                                            : 'en');
-                                    SharedPreferencesClass.setUserLanguageName(
-                                        language: Controllers
-                                            .directionalityController
-                                            .dropLanguageData
-                                            .value);
-                                  });
-                                  Controllers
-                                      .directionalityController
-                                      .dropCountryData
-                                      .value ='';
-                                  Controllers
-                                      .directionalityController
-                                      .dropCityData
-                                      .value ='';
-                                },
-                                menu: [
-                                  'العربية',
-                                  'English',
-                                ],
-                                context: context,
-                                iconSize: 34,
-                                containerBorderColor: Colors.white,
-                                textColor: ColorConstants.mainColor),
-                            const SizedBox(
-                              height: 14,
-                            ),
-                            _buildDropHeader(
-                                text:
-                                    SharedPreferencesClass.getLanguageCode() ==
-                                            'ar'
-                                        ? 'اختر الدولة'
-                                        : 'Select the country'),
-                            const SizedBox(
-                              height: 8,
-                            ),
-
-                            Obx(
-                              () =>Utils.drawDropDownListCountriesBtn(
-                                        optionName: SharedPreferencesClass
-                                                    .getLanguageCode() ==
-                                                'ar'
-                                            ? 'اختر الدولة'
-                                            : 'Select the country',
-                                        dropDownValue: Controllers
-                                            .directionalityController
-                                            .dropCountryData
-                                            .value,
-                                        onChanged: (country) {
-                                          Controllers
-                                              .directionalityController
-                                              .dropCountryData
-                                              .value = SharedPreferencesClass
-                                                      .getLanguageCode() ==
-                                                  'ar'
-                                              ? country.arName
-                                              : country.enName;
-                                          // setState(() {
-                                            SharedPreferencesClass
-                                                .setUserCountryId(
-                                                    countryId:
-                                                        country.id.toString());
-                                          // });
-
-                                          Controllers.userAuthenticationController
-                                              .getCities(
-                                                  countryId:
-                                                      country.id.toString());
-
-                                          Controllers.directionalityController
-                                              .dropCityData.value = "";
-                                        },
-                                        menu:
-                                        Controllers
-                                            .directionalityController.countries,
-                                        context: context,
-                                        iconSize: 34,
-                                        containerBorderColor: Colors.white,
-                                        textColor: ColorConstants.mainColor)
-                                  ),
-                            const SizedBox(
-                              height: 14,
-                            ),
-                            _buildDropHeader(
-                                text:
-                                    SharedPreferencesClass.getLanguageCode() ==
-                                            'ar'
-                                        ? 'اختر المدينة'
-                                        : 'Select the city'),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Obx(
-                              () => Utils.drawDropDownListCitiesBtn(
-                                  optionName: SharedPreferencesClass
-                                              .getLanguageCode() ==
-                                          'ar'
-                                      ? 'اختر المدينة'
-                                      : 'Select the city',
-                                  dropDownValue: Controllers
-                                      .directionalityController
-                                      .dropCityData
-                                      .value,
-                                  onChanged: (city) {
-                                    Controllers
-                                        .directionalityController
-                                        .dropCityData
-                                        .value = SharedPreferencesClass
-                                                .getLanguageCode() ==
-                                            'ar'
-                                        ? city.arName
-                                        : city.enName;
-                                    // setState(() {
-                                      SharedPreferencesClass.setUserCity(
-                                          cityId: city.id.toString());
-                                    // });
-                                  },
-                                  menu: Controllers
-                                      .directionalityController.cities,
-                                  context: context,
-                                  iconSize: 34,
-                                  containerBorderColor: Colors.white,
-                                  textColor: ColorConstants.mainColor),
-                            ),
-                            const SizedBox(
-                              height: 45,
-                            ),
-                            CustomButton(
-                                btnText:
-                                    SharedPreferencesClass.getLanguageCode() ==
-                                            'ar'
-                                        ? 'متابعة'
-                                        : 'Next',
-                                textColor: ColorConstants.mainColor,
-                                textSize: 17,
-                                btnBackgroundColor: Colors.white,
-                                btnOnpressed: () {
-                                  print(
-                                      'user loc ${SharedPreferencesClass.getLanguageCode()} ${SharedPreferencesClass.getCountryId()}  ${SharedPreferencesClass.getCityId()}');
-                                  if (SharedPreferencesClass
-                                              .getLanguageCode() !=
-                                          null &&
-                                      SharedPreferencesClass.getCountryId() !=
-                                          null &&
-                                      SharedPreferencesClass.getCityId() !=
-                                          null) {
-                                    Get.offAllNamed('/login');
-                                  } else {
-                                    Utils.snackBar(
-                                        context: context,
-                                        msg: SharedPreferencesClass
-                                                    .getLanguageCode() ==
-                                                'ar'
-                                            ? 'أكمل البيانات'
-                                            : 'Complete the data');
-                                  }
-                                }),
-                          ],
-                        )
-                      ],
-                    ),
+    return Scaffold(
+      backgroundColor:Get.isDarkMode? ColorConstants.darkMainColor : ColorConstants.mainColor,
+      body: Stack(
+        children: [
+          Image.asset(
+            'assets/images/splash_screen.png',
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            fit: BoxFit.cover,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 88, left: 16, right: 16),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/mizaaLogo.png',
+                    height: 140,
+                    fit: BoxFit.cover,
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    translation.userLocationScreenHeader.tr,
+                    style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  // Stack(
+                  //   children: [
+                  const SizedBox(
+                    height: 45,
+                  ),
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildDropHeader(text: translation.language.tr),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Obx(() => Utils.drawDropDownListStringsBtn(
+                          optionName: translation.language.tr,
+                          dropDownValue: Controllers
+                              .directionalityController.dropLanguageData.value,
+                          onChanged: (value) {
+                            Controllers.directionalityController
+                                .dropLanguageData.value = value;
+
+                            if (Controllers.directionalityController
+                                    .dropLanguageData.value ==
+                                'العربية') {
+                              Controllers.directionalityController
+                                  .changeLanguage('ar');
+                            } else if (Controllers.directionalityController
+                                    .dropLanguageData.value ==
+                                'English') {
+                              Controllers.directionalityController
+                                  .changeLanguage('en');
+                            }
+
+                            Utils.updatePadding();
+
+                            SharedPreferencesClass.setUserLanguageCode(
+                                language: (Controllers.directionalityController
+                                            .dropLanguageData.value ==
+                                        'العربية')
+                                    ? 'ar'
+                                    : 'en');
+                            SharedPreferencesClass.setUserLanguageName(
+                                language: Controllers.directionalityController
+                                    .dropLanguageData.value);
+
+                            Controllers.directionalityController.dropCountryData
+                                .value = '';
+                            Controllers.directionalityController.dropCityData
+                                .value = '';
+                          },
+                          menu: [
+                            'العربية',
+                            'English',
+                          ],
+                          context: context,
+                          iconSize: 34,
+                          containerBorderColor: Colors.white,
+                          textColor: ColorConstants.mainColor)),
+                      const SizedBox(
+                        height: 14,
+                      ),
+                      _buildDropHeader(text: translation.selectCountry.tr),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Obx(() => Utils.drawDropDownListCountriesBtn(
+                          optionName: translation.selectCountry.tr,
+                          dropDownValue: Controllers
+                              .directionalityController.dropCountryData.value,
+                          onChanged: (country) {
+                            Controllers.directionalityController.dropCountryData
+                                    .value =
+                                Utils.getTranslatedText(
+                                    arText: country.arName,
+                                    enText: country.enName);
+
+                            // setState(() {
+                            SharedPreferencesClass.setUserCountryId(
+                                countryId: country.id.toString());
+                            // });
+
+                            Controllers.userAuthenticationController
+                                .getCities(countryId: country.id.toString());
+
+                            Controllers.directionalityController.dropCityData
+                                .value = "";
+                          },
+                          menu: Controllers.directionalityController.countries,
+                          context: context,
+                          iconSize: 34,
+                          containerBorderColor: Colors.white,
+                          textColor: ColorConstants.mainColor)),
+                      const SizedBox(
+                        height: 14,
+                      ),
+                      _buildDropHeader(text: translation.selectCity.tr),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Obx(
+                        () => Utils.drawDropDownListCitiesBtn(
+                            optionName: translation.selectCity.tr,
+                            dropDownValue: Controllers
+                                .directionalityController.dropCityData.value,
+                            onChanged: (city) {
+                              Controllers.directionalityController.dropCityData
+                                      .value =
+                                  Utils.getTranslatedText(
+                                      arText: city.arName, enText: city.enName);
+
+                              // setState(() {
+                              SharedPreferencesClass.setUserCity(
+                                  cityId: city.id.toString());
+                              // });
+                            },
+                            menu: Controllers.directionalityController.cities,
+                            context: context,
+                            iconSize: 34,
+                            containerBorderColor: Colors.white,
+                            textColor: ColorConstants.mainColor),
+                      ),
+                      const SizedBox(
+                        height: 45,
+                      ),
+             CustomButton(
+                          btnText: translation.userLocationScreenBtn.tr,
+                          textColor: ColorConstants.mainColor,
+                          textSize: 17,
+                          btnBackgroundColor: Colors.white,
+                          btnOnpressed: () {
+                            print(
+                                'user loc ${SharedPreferencesClass.getLanguageCode()} ${SharedPreferencesClass.getCountryId()}  ${SharedPreferencesClass.getCityId()}');
+                            if (SharedPreferencesClass.getCountryId() != null &&
+                                SharedPreferencesClass.getCityId() != null) {
+                              if (Controllers
+                                  .directionalityController.dropLanguageData.value ==
+                                  'العربية') {
+                                Controllers.directionalityController.changeLanguage('ar');
+                              } else if (Controllers
+                                  .directionalityController.dropLanguageData.value ==
+                                  'English') {
+                                print('english');
+                                Controllers.directionalityController.changeLanguage('en');
+                              }
+
+                                Utils.updatePadding();
+                              Get.offAllNamed('/login');
+                            } else {
+                              Utils.snackBar(
+                                  context: context,
+                                  textColor: Colors.white,
+                                  background: ColorConstants.redColor,
+                                  msg: translation.completeDataText.tr, );
+                            }
+                          }),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
-        ));
+        ],
+      ),
+    );
   }
 
   Widget _buildDropHeader({required String text}) {
@@ -306,8 +238,6 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
         fontWeight: FontWeight.w500,
         fontFamily: 'Noto Kufi Arabic',
       ),
-      textAlign: Controllers.directionalityController.textAlign.value,
     );
   }
-
 }

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:test_ecommerce_app/controllers/offers/OfferController.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/models/companies/CompanyModel.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
-import 'package:test_ecommerce_app/views/offer/OfferDescriptionPage.dart';
+import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
+import 'package:test_ecommerce_app/views/offer/offer_detail.dart';
 import 'package:test_ecommerce_app/views/widgets/custom_text_line_through.dart';
 import 'package:test_ecommerce_app/views/offer/widget/merchant_logo.dart';
+import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+as translation;
 
 class OfferCard extends StatefulWidget {
   final OfferModel offerModel;
@@ -30,7 +33,7 @@ class _OfferCardState extends State<OfferCard> {
   late CompanyModel companyModel;
   @override
   void initState() {
-    companyModel = CompanyModel.fromJson(widget.offerModel.company!);
+    companyModel = CompanyModel.fromJson(widget.offerModel.company!.map((key, value) => MapEntry(key.toString(), value)));
     super.initState();
   }
 
@@ -39,8 +42,20 @@ class _OfferCardState extends State<OfferCard> {
     final theme = Theme.of(context);
     return GestureDetector(
         onTap: () {
-          Get.put(OfferController());
-          Get.to(() => OfferDescriptionPage(offerModel: widget.offerModel));
+          // Get.put(OfferController(Get.find()));
+          // Get.to(() => OfferDetail(offerModel: widget.offerModel));
+          showDialog(
+              context: context,
+              builder: (context) => const Center(
+                  child: CircularProgressIndicator(
+                    color: ColorConstants.mainColor,
+                  )));
+          Controllers.offerController.getOffer(offerKey: widget.offerModel.key.toString())
+          .then((offer) {
+            Get.back();
+            Get.put(OfferController(Get.find()));
+            Get.to(() => OfferDetail(offerModel:  offer));
+          });
         },
         child: Container(
           width: widget.width,
@@ -151,21 +166,17 @@ class _OfferCardState extends State<OfferCard> {
                     children: [
                       SizedBox(
                         height: 22,
-                        child: Text(
-                          SharedPreferencesClass.getLanguageCode() == 'ar'
-                              ? companyModel.arName.toString()
-                              : companyModel.enName.toString(),
+                        child: Text( Utils.getTranslatedText(arText: companyModel.arName.toString(), enText: companyModel.enName.toString()),
                           style: TextStyle(
                               fontSize: 13, color: ColorConstants.greyColor,fontWeight: FontWeight.w500),
                         ),
                       ),
                       SizedBox(
                         height: 28,
-                        width: widget.width - 73,
+                        width: widget.width - 105,
                         child: Text(
-                          SharedPreferencesClass.getLanguageCode() == 'ar'
-                              ? widget.offerModel.arTitle.toString()
-                              : widget.offerModel.enTitle.toString(),
+                          Utils.getTranslatedText(arText: widget.offerModel.arTitle.toString(), enText:  widget.offerModel.enTitle.toString())
+                         ,
                           style: TextStyle(
                               fontSize: 12, color: ColorConstants.black0,fontWeight: FontWeight.bold),
                         ),
@@ -174,19 +185,18 @@ class _OfferCardState extends State<OfferCard> {
                   ),
                 ],
               ),
-              const SizedBox(height: 2,),
+              const SizedBox(height: 5,),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   _buildPriceContainer(
-                      text: '${widget.offerModel.priceAfterDiscount.toString()}${SharedPreferencesClass.getLanguageCode() == 'ar'
-                          ? ' جنية': ' EGP'}'),
+                      text: '${widget.offerModel.priceAfterDiscount.toString()} ${translation.currencyName.tr}'),
                   const SizedBox(width: 9,),
                   CustomTextLineThrough(
-                    text: SharedPreferencesClass.getLanguageCode() == 'ar'
-                        ? '${widget.offerModel.priceBeforDiscount.toString()} جنية'
-                        : '${widget.offerModel.priceBeforDiscount.toString()} EGP',textColor:ColorConstants.greyColor
+                    text:
+                         '${widget.offerModel.priceBeforDiscount.toString()} ${translation.currencyName.tr}'
+                        ,textColor:ColorConstants.greyColor
                   ),
                 ],
               ),

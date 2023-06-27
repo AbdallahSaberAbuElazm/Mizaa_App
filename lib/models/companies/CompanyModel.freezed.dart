@@ -37,7 +37,7 @@ mixin _$CompanyModel {
   String? get youtube => throw _privateConstructorUsedError;
   String? get website => throw _privateConstructorUsedError;
   String? get creationDate => throw _privateConstructorUsedError;
-  List<CompanyBranchesModel>? get companyBranches =>
+  List<Map<String, dynamic>>? get companyBrunches =>
       throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -70,7 +70,7 @@ abstract class $CompanyModelCopyWith<$Res> {
       String? youtube,
       String? website,
       String? creationDate,
-      List<CompanyBranchesModel>? companyBranches});
+      List<Map<String, dynamic>>? companyBrunches});
 }
 
 /// @nodoc
@@ -103,7 +103,7 @@ class _$CompanyModelCopyWithImpl<$Res, $Val extends CompanyModel>
     Object? youtube = freezed,
     Object? website = freezed,
     Object? creationDate = freezed,
-    Object? companyBranches = freezed,
+    Object? companyBrunches = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -174,10 +174,10 @@ class _$CompanyModelCopyWithImpl<$Res, $Val extends CompanyModel>
           ? _value.creationDate
           : creationDate // ignore: cast_nullable_to_non_nullable
               as String?,
-      companyBranches: freezed == companyBranches
-          ? _value.companyBranches
-          : companyBranches // ignore: cast_nullable_to_non_nullable
-              as List<CompanyBranchesModel>?,
+      companyBrunches: freezed == companyBrunches
+          ? _value.companyBrunches
+          : companyBrunches // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, dynamic>>?,
     ) as $Val);
   }
 }
@@ -208,7 +208,7 @@ abstract class _$$_CompanyModelCopyWith<$Res>
       String? youtube,
       String? website,
       String? creationDate,
-      List<CompanyBranchesModel>? companyBranches});
+      List<Map<String, dynamic>>? companyBrunches});
 }
 
 /// @nodoc
@@ -239,7 +239,7 @@ class __$$_CompanyModelCopyWithImpl<$Res>
     Object? youtube = freezed,
     Object? website = freezed,
     Object? creationDate = freezed,
-    Object? companyBranches = freezed,
+    Object? companyBrunches = freezed,
   }) {
     return _then(_$_CompanyModel(
       id: freezed == id
@@ -310,10 +310,10 @@ class __$$_CompanyModelCopyWithImpl<$Res>
           ? _value.creationDate
           : creationDate // ignore: cast_nullable_to_non_nullable
               as String?,
-      companyBranches: freezed == companyBranches
-          ? _value._companyBranches
-          : companyBranches // ignore: cast_nullable_to_non_nullable
-              as List<CompanyBranchesModel>?,
+      companyBrunches: freezed == companyBrunches
+          ? _value._companyBrunches
+          : companyBrunches // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, dynamic>>?,
     ));
   }
 }
@@ -339,8 +339,8 @@ class _$_CompanyModel implements _CompanyModel {
       this.youtube,
       this.website,
       this.creationDate,
-      final List<CompanyBranchesModel>? companyBranches})
-      : _companyBranches = companyBranches;
+      final List<Map<String, dynamic>>? companyBrunches})
+      : _companyBrunches = companyBrunches;
 
   factory _$_CompanyModel.fromJson(Map<String, dynamic> json) =>
       _$$_CompanyModelFromJson(json);
@@ -379,19 +379,19 @@ class _$_CompanyModel implements _CompanyModel {
   final String? website;
   @override
   final String? creationDate;
-  final List<CompanyBranchesModel>? _companyBranches;
+  final List<Map<String, dynamic>>? _companyBrunches;
   @override
-  List<CompanyBranchesModel>? get companyBranches {
-    final value = _companyBranches;
+  List<Map<String, dynamic>>? get companyBrunches {
+    final value = _companyBrunches;
     if (value == null) return null;
-    if (_companyBranches is EqualUnmodifiableListView) return _companyBranches;
+    if (_companyBrunches is EqualUnmodifiableListView) return _companyBrunches;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
 
   @override
   String toString() {
-    return 'CompanyModel(id: $id, key: $key, arName: $arName, enName: $enName, description: $description, enDescription: $enDescription, headerPhoto: $headerPhoto, logo: $logo, facebook: $facebook, twitter: $twitter, whatsapp: $whatsapp, instegram: $instegram, snapchat: $snapchat, tiktok: $tiktok, youtube: $youtube, website: $website, creationDate: $creationDate, companyBranches: $companyBranches)';
+    return 'CompanyModel(id: $id, key: $key, arName: $arName, enName: $enName, description: $description, enDescription: $enDescription, headerPhoto: $headerPhoto, logo: $logo, facebook: $facebook, twitter: $twitter, whatsapp: $whatsapp, instegram: $instegram, snapchat: $snapchat, tiktok: $tiktok, youtube: $youtube, website: $website, creationDate: $creationDate, companyBrunches: $companyBrunches)';
   }
 
   @override
@@ -425,7 +425,7 @@ class _$_CompanyModel implements _CompanyModel {
             (identical(other.creationDate, creationDate) ||
                 other.creationDate == creationDate) &&
             const DeepCollectionEquality()
-                .equals(other._companyBranches, _companyBranches));
+                .equals(other._companyBrunches, _companyBrunches));
   }
 
   @JsonKey(ignore: true)
@@ -449,7 +449,7 @@ class _$_CompanyModel implements _CompanyModel {
       youtube,
       website,
       creationDate,
-      const DeepCollectionEquality().hash(_companyBranches));
+      const DeepCollectionEquality().hash(_companyBrunches));
 
   @JsonKey(ignore: true)
   @override
@@ -484,7 +484,7 @@ abstract class _CompanyModel implements CompanyModel {
       final String? youtube,
       final String? website,
       final String? creationDate,
-      final List<CompanyBranchesModel>? companyBranches}) = _$_CompanyModel;
+      final List<Map<String, dynamic>>? companyBrunches}) = _$_CompanyModel;
 
   factory _CompanyModel.fromJson(Map<String, dynamic> json) =
       _$_CompanyModel.fromJson;
@@ -524,7 +524,7 @@ abstract class _CompanyModel implements CompanyModel {
   @override
   String? get creationDate;
   @override
-  List<CompanyBranchesModel>? get companyBranches;
+  List<Map<String, dynamic>>? get companyBrunches;
   @override
   @JsonKey(ignore: true)
   _$$_CompanyModelCopyWith<_$_CompanyModel> get copyWith =>

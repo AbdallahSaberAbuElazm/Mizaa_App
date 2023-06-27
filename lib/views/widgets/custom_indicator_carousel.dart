@@ -16,9 +16,9 @@ class CustomIndicatorCarousel extends StatelessWidget {
       list.asMap().entries.map((entry) {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 500),
-          width: 26.0,
+          width: 24.0,
           height: 6.0,
-          margin: const EdgeInsets.symmetric(horizontal: 4.0),
+          margin: const EdgeInsets.symmetric(horizontal: 3.0),
           decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(6)),
               color:

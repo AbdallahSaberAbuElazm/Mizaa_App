@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
@@ -23,9 +24,9 @@ class ShimmerContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor:   Colors.grey.shade300,
+      baseColor: Get.isDarkMode? ColorConstants.darkMainColor: Colors.grey.shade300,
       // ColorConstants.shimmerBackgroundGrey,
-      highlightColor: Colors.grey.shade100,
+      highlightColor:Get.isDarkMode? Colors.grey.shade400: Colors.grey.shade100,
       enabled: true,
       period: const Duration(milliseconds: 800),
       child:

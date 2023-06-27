@@ -3,13 +3,14 @@ import 'package:get/get.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:test_ecommerce_app/controllers/user/user_authentication_controller.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:test_ecommerce_app/views/widgets/build_intro_text.dart';
 import 'package:test_ecommerce_app/views/widgets/custom_button.dart';
 import 'package:test_ecommerce_app/views/widgets/custom_password_form_field.dart';
 import 'package:test_ecommerce_app/views/widgets/custom_confirm_password_field.dart';
 import 'package:test_ecommerce_app/views/widgets/phone_number_field.dart';
+import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+as translation;
 
 class RecoverPassword extends GetView<UserAuthenticationController> {
   final _formKey = GlobalKey<FormState>();
@@ -26,13 +27,11 @@ class RecoverPassword extends GetView<UserAuthenticationController> {
         return true;
       },
       child: SafeArea(
-        child:Directionality(
-          textDirection: Utils.direction,
-          child: Scaffold(
-              backgroundColor: Colors.white,
+        child: Scaffold(
+              backgroundColor: Get.isDarkMode? ColorConstants.darkMainColor:  Colors.white,
               appBar: AppBar(
                 elevation: 0,
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.transparent,
                 toolbarHeight: 90,
                 leadingWidth: 200,
                 leading: Padding(
@@ -61,11 +60,9 @@ class RecoverPassword extends GetView<UserAuthenticationController> {
                           width: 10,
                         ),
                         Text(
-                          SharedPreferencesClass.getLanguageCode() == 'ar'
-                              ? 'رجوع'
-                              : "Back",
-                          style: const TextStyle(
-                              color: Colors.black,
+                          translation.backText.tr,
+                          style:  TextStyle(
+                              color: Get.isDarkMode? Colors.white:Colors.black,
                               fontSize: 16,
                               fontFamily: 'Noto Kufi Arabic',
                               fontWeight: FontWeight.w600),
@@ -90,31 +87,24 @@ class RecoverPassword extends GetView<UserAuthenticationController> {
                     children: [
                       BuildIntroText(
                         headerText:
-                            SharedPreferencesClass.getLanguageCode() == 'ar'
-                                ? 'إعادة تغيير كلمة المرور'
-                                : 'Re-set password',
+                        translation.recoverHeader.tr,
                       ),
                       const SizedBox(height: 40),
                       PhoneNumberField(
                         controller: controller.phoneNumberController,
                         countries: controller.countries,
-                        headerName:  SharedPreferencesClass.getLanguageCode() == 'ar'
-                            ? 'رقم الموبايل':'Phone number',
+                        headerName: translation.phoneNumber.tr,
                       ),
                       const SizedBox(height: 4),
                       CustomPasswordFormField(
                         hintText:
-                            SharedPreferencesClass.getLanguageCode() == 'ar'
-                                ? 'كلمة المرور'
-                                : "Password",
+                        translation.password.tr,
                         controller: controller.passwordController,
                       ),
                       const SizedBox(height: 20),
                       CustomConfirmPasswordFormField(
                         hintText:
-                            SharedPreferencesClass.getLanguageCode() == 'ar'
-                                ? 'تأكيد كلمة المرور'
-                                : "Confirm password",
+                        translation.confirmPassword.tr,
                         controller: controller.confirmPasswordController,
                         passwordController: controller.passwordController,
                       ),
@@ -123,7 +113,7 @@ class RecoverPassword extends GetView<UserAuthenticationController> {
                     ],
                   ),
                 ),
-              )),
+              )
         ),
       ),
     );
@@ -132,7 +122,7 @@ class RecoverPassword extends GetView<UserAuthenticationController> {
   Widget recoverPasswordBtn(BuildContext context) {
     return Obx(
       () => CustomButton(
-          btnText: 'استمرار',
+          btnText: translation.continueText.tr,
           textColor: Colors.white,
           textSize: 17,
           btnBackgroundColor: ColorConstants.mainColor,

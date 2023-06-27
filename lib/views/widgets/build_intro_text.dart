@@ -8,7 +8,7 @@ class BuildIntroText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return
-        Text(headerText, style: Theme.of(context).textTheme.headline1,textAlign: Utils.textAlign,
+        Text(headerText, style: Theme.of(context).textTheme.headline1,
     );
   }
 }
