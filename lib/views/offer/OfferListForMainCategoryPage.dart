@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
+import 'package:test_ecommerce_app/controllers/companies/company_controller.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:test_ecommerce_app/controllers/home/HomeController.dart';
 import 'package:test_ecommerce_app/controllers/offers/OfferController.dart';
@@ -10,11 +11,14 @@ import 'package:test_ecommerce_app/controllers/offers/search_binding.dart';
 import 'package:test_ecommerce_app/controllers/offers/search_offer_controller.dart';
 import 'package:test_ecommerce_app/models/merchant/merchant_model.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
+import 'package:test_ecommerce_app/providers/company_provider.dart';
+import 'package:test_ecommerce_app/repositories/company_repository.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
     as translation;
 import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:test_ecommerce_app/views/cart/cart_screen.dart';
+import 'package:test_ecommerce_app/views/merchant/merchant_detail.dart';
 import 'package:test_ecommerce_app/views/offer/offer_detail.dart';
 import 'package:test_ecommerce_app/views/offer/widget/filtration_screen.dart';
 import 'package:test_ecommerce_app/views/offer/widget/merchant_logo.dart';
@@ -414,7 +418,7 @@ class _OfferTabState extends State<OfferTab> {
                     ),
                   );
                 }): Padding(
-                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.width/3 ),
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.width/2 ),
                   child: CenterImageForEmptyData(imagePath: 'assets/images/offer_empty.png', text: translation.noOffersAvailable.tr),
                 ),
 
@@ -438,70 +442,90 @@ class MerchantTab extends GetView<OfferController> {
 
   Widget _buildMerchantCard(
       {required BuildContext context, required MerchantModel companyModel}) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        height: 88,
-        padding: const EdgeInsets.symmetric(
-          vertical: 16,
-        ),
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-          color: Colors.white,
-        ),
-        child: ListTile(
-          leading: MerchantLogo(
-              merchantLogo: companyModel.logo.toString(),
-              containerWidth: 55,
-              containerHeight: 60,
-              logoWidth: 32,
-              logoHeight: 32),
-          trailing: Controllers.directionalityController.languageBox.value.read('language') ==
-              'ar'
-              ?   Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: ColorConstants.greyColor,
-            size: 18,
-          ): Icon(
-            Icons.arrow_forward_ios_rounded,
-            color: ColorConstants.greyColor,
-            size: 18,
-          ),
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CustomTexts.textTitle(
-                  text: translation.offerName.trParams({
-                'offerName': Utils.getTranslatedText(
-                    arText: companyModel.arname.toString(),
-                    enText: companyModel.enname.toString())
-              })),
-              const SizedBox(
-                height: 5,
-              ),
-              Container(
-                height: 22,
-                width: 70,
-                decoration: const BoxDecoration(
+    return GestureDetector(
+      onTap: (){
+        // print('merchant key is ${searchModel.key.toString()}');
+        showDialog(
+            context: context,
+            builder: (context) => const Center(
+                child: CircularProgressIndicator(
                   color: ColorConstants.mainColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(6),
-                  ),
-                ),
-                child:  Center(
-                    child: Text(
-                  '${companyModel.count} ${translation.offersText.tr}',
-                  style:const TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontFamily: 'Noto Kufi Arabic',
-                      height: 1.4),
-                  // textAlign: TextAlign.center,
-                )),
-              )
-            ],
+                )));
+        Controllers.searchOfferController.getMerchant(merchantKey: companyModel.key.toString()).then((companyModel) {
+          Get.back();
+          Get.put(CompanyRepository());
+          Get.put(CompanyProvider(Get.find()));
+          Get.put(CompanyController(Get.find()));
+
+          Get.to(() => MerchantDetail(companyModel: companyModel,),);
+        });
+
+      },
+      child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 88,
+          padding: const EdgeInsets.symmetric(
+            vertical: 16,
           ),
-        ));
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            color: Colors.white,
+          ),
+          child: ListTile(
+            leading: MerchantLogo(
+                merchantLogo: companyModel.logo.toString(),
+                containerWidth: 55,
+                containerHeight: 60,
+                logoWidth: 32,
+                logoHeight: 32),
+            trailing: Controllers.directionalityController.languageBox.value.read('language') ==
+                'ar'
+                ?   Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: ColorConstants.greyColor,
+              size: 18,
+            ): Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: ColorConstants.greyColor,
+              size: 18,
+            ),
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomTexts.textTitle(
+                    text: translation.offerName.trParams({
+                  'offerName': Utils.getTranslatedText(
+                      arText: companyModel.arname.toString(),
+                      enText: companyModel.enname.toString())
+                })),
+                const SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  height: 22,
+                  width: 70,
+                  decoration: const BoxDecoration(
+                    color: ColorConstants.mainColor,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(6),
+                    ),
+                  ),
+                  child:  Center(
+                      child: Text(
+                    '${companyModel.count} ${translation.offersText.tr}',
+                    style:const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontFamily: 'Noto Kufi Arabic',
+                        height: 1.4),
+                    // textAlign: TextAlign.center,
+                  )),
+                )
+              ],
+            ),
+          )),
+    );
   }
 }

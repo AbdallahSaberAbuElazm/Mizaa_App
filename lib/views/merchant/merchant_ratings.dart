@@ -132,61 +132,70 @@ class MerchantRatings extends GetView<OfferController> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 29,
-                height: 27,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(6)),
-                    color: ColorConstants.greyContainerBackground),
-                child: Center(
-                    child: Text(
-                  offerRate.username![0].toString(),
-                  style: TextStyle(
-                      color: ColorConstants.black0,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600),
-                )),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
               Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width - 93,
-                        child: Row(
-                          children: [
-                            Text(offerRate.username.toString(),
-                                style:  TextStyle(
-                                    color: ColorConstants.black0,
-                                    fontSize: 13,fontFamily: 'Noto Kufi Arabic',
-                                    fontWeight: FontWeight.w600)),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              '(${offerRate.rate ?? 0.0})',
-                              style: const TextStyle(
-                                color: ColorConstants.mainColor,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        )),
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width - 93,
-                        child: Text(
-                          Utils.getDateTime(
-                              dateTime: offerRate.creation ?? DateTime.now()),
-                          style: TextStyle(
-                            color: ColorConstants.greyColor,
-                            fontSize: 13,fontFamily: 'Noto Kufi Arabic',
-                          ),
-                        ))
-                  ])
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                 Row(
+
+                   children: [
+                     Container(
+                       width: 29,
+                       height: 27,
+                       alignment: Alignment.center,
+                       decoration: BoxDecoration(
+                           borderRadius: const BorderRadius.all(Radius.circular(6)),
+                           color: ColorConstants.greyContainerBackground),
+                       child: Center(
+                           child: Text(
+                             offerRate.username![0].toString(),
+                             style: TextStyle(
+                                 color: ColorConstants.black0,
+                                 fontSize: 14,
+                                 fontWeight: FontWeight.w600),
+                           )),
+                     ),
+                     const SizedBox(
+                       width: 10,
+                     ),
+
+                     SizedBox(
+                         width: MediaQuery.of(context).size.width - 93,
+                         child: Row(
+                           children: [
+                             Text(offerRate.username.toString(),
+                                 style:  TextStyle(
+                                     color: ColorConstants.black0,
+                                     fontSize: 13,fontFamily: 'Noto Kufi Arabic',
+                                     fontWeight: FontWeight.w600)),
+                             const SizedBox(
+                               width: 5,
+                             ),
+                             Text(
+                               '(${offerRate.rate ?? 0.0})',
+                               style: const TextStyle(
+                                 color: ColorConstants.mainColor,
+                                 fontSize: 15,
+                               ),
+                             ),
+                           ],
+                         )),
+                   ],
+                 ),
+                  const SizedBox(height: 2,),
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width - 93,
+                      child: Text(
+                        Utils.getDateTime(
+                            dateTime: offerRate.creation ?? DateTime.now()),
+                        style: TextStyle(
+                          color: ColorConstants.greyColor,
+                          fontSize: 13,fontFamily: 'Noto Kufi Arabic',
+                        ),
+                      ))
+                ],
+              ),
+
             ],
           ),
         ],

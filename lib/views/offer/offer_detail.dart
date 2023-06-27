@@ -445,7 +445,7 @@ class OfferDetail extends GetView<OfferController> {
                 height: 1.3,
                 fontSize: 15,
                 fontFamily: 'Noto Kufi Arabic',
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(

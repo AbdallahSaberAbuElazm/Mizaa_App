@@ -237,15 +237,16 @@ class _WalletScreenState extends State<WalletScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         _buildSpendingData(
-            text: translation.spending.tr,
-            price: 0.0,
-            icon: Icons.arrow_upward_sharp,
-            containerBackground: ColorConstants.spendingBackground),
-        _buildSpendingData(
             text: translation.income.tr,
             price: 0.0,
             icon: Icons.arrow_downward_sharp,
             containerBackground: ColorConstants.incomeBackground),
+        _buildSpendingData(
+            text: translation.spending.tr,
+            price: 0.0,
+            icon: Icons.arrow_upward_sharp,
+            containerBackground: ColorConstants.spendingBackground),
+
       ],
     );
   }

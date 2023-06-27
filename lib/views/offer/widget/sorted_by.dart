@@ -77,7 +77,7 @@ class _SortedByState extends State<SortedBy> {
           Padding(
             padding: const EdgeInsets.only(bottom: 10, top: 13),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                  Center(
                   child: Text(
@@ -85,27 +85,27 @@ class _SortedByState extends State<SortedBy> {
                     style: TextStyle(fontWeight: FontWeight.bold, color: Get.isDarkMode? Colors.white:ColorConstants.black0),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 11),
-                  child: GestureDetector(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Container(
-                      width: 25,
-                      height: 25,
-                      decoration: const BoxDecoration(
-                        color: ColorConstants.mainColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.close_rounded,
-                        color: Colors.white,
-                        size: 17,
-                      ),
-                    ),
-                  ),
-                )
+                // Padding(
+                //   padding: const EdgeInsets.only(left: 11),
+                //   child: GestureDetector(
+                //     onTap: () {
+                //       Get.back();
+                //     },
+                //     child: Container(
+                //       width: 25,
+                //       height: 25,
+                //       decoration: const BoxDecoration(
+                //         color: ColorConstants.mainColor,
+                //         shape: BoxShape.circle,
+                //       ),
+                //       child: const Icon(
+                //         Icons.close_rounded,
+                //         color: Colors.white,
+                //         size: 17,
+                //       ),
+                //     ),
+                //   ),
+                // )
               ],
             ),
           ),

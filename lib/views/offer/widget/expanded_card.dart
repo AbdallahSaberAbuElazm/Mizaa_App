@@ -28,7 +28,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
   Widget build(BuildContext context) {
     return ExpansionTileCard(expandedColor: Colors.white,baseColor: Colors.white,
       trailing: Icon(
-          isExpanded? Icons.arrow_drop_up_outlined: Icons.arrow_drop_down,
+          isExpanded? Icons.arrow_drop_up_outlined: Icons.arrow_right_outlined,
           color: isExpanded? ColorConstants.mainColor: ColorConstants.greyColor
       ), onExpansionChanged: (value) {
         setState(() {

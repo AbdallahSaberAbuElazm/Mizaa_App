@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/controllers/companies/company_controller.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:test_ecommerce_app/models/merchant/merchant_detail_model/merchant_detail_model.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
 import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
@@ -76,8 +75,10 @@ class MerchantDetail extends GetView<CompanyController> {
                 child: Text(
                   translation.offerName.trParams({
                     'offerName': Utils.getTranslatedText(
-                        arText: companyModel.description.toString(),
-                        enText: companyModel.enDescription.toString())
+                        arText: translation.offersText.tr + companyModel.arName.toString(),
+                        // companyModel.description.toString(),
+                        enText: translation.offersText.tr + companyModel.enName.toString()
+                    )
                   }),
                   style: TextStyle(
                       color:Get.isDarkMode? Colors.white:  ColorConstants.black0,
