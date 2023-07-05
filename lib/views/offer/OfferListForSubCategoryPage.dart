@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
@@ -7,6 +8,7 @@ import 'package:test_ecommerce_app/controllers/offers/OfferController.dart';
 import 'package:test_ecommerce_app/controllers/offers/search_binding.dart';
 import 'package:test_ecommerce_app/controllers/offers/search_offer_controller.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
+import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:test_ecommerce_app/views/cart/cart_screen.dart';
 import 'package:test_ecommerce_app/views/offer/offer_detail.dart';
@@ -18,16 +20,14 @@ import 'package:test_ecommerce_app/views/widgets/search_screen.dart';
 import 'package:test_ecommerce_app/views/widgets/shimmer_container.dart';
 import 'package:test_ecommerce_app/views/offer/OfferCard.dart';
 import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
-as translation;
+    as translation;
 
 class OfferListForSubCategoryPage extends StatefulWidget {
   final String mainCategoryName;
   final int categoryId;
-  const OfferListForSubCategoryPage({
-    Key? key,
-    required this.mainCategoryName,
-    required this.categoryId
-  }) : super(key: key);
+  const OfferListForSubCategoryPage(
+      {Key? key, required this.mainCategoryName, required this.categoryId})
+      : super(key: key);
 
   @override
   State<OfferListForSubCategoryPage> createState() =>
@@ -36,7 +36,6 @@ class OfferListForSubCategoryPage extends StatefulWidget {
 
 class _OfferListForSubCategoryPageState
     extends State<OfferListForSubCategoryPage> {
-
   @override
   void initState() {
     super.initState();
@@ -55,6 +54,14 @@ class _OfferListForSubCategoryPageState
           elevation: 0,
           // backgroundColor: ColorConstants.backgroundContainer,
           backgroundColor: Colors.transparent,
+          flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle(
+                statusBarIconBrightness:
+                Get.isDarkMode ? Brightness.light : Brightness.dark,
+                statusBarBrightness:
+                Get.isDarkMode ? Brightness.light : Brightness.dark,
+              ),
+              child: Container()),
           toolbarHeight: 78,
           leading: Utils.buildLeadingAppBar(title: widget.mainCategoryName),
           leadingWidth: 260,
@@ -68,14 +75,16 @@ class _OfferListForSubCategoryPageState
           ],
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(48.0),
-            child: SearchInSubCategories(
-                searchOnPressed: () {
-                  Get.put(SearchOfferController(Get.find()));
-                  Get.to(()=> SearchScreen(typeOfSearch: TypeOfSearch.offersInMainCategory, categoryId: widget.categoryId),binding: SearchBinding());
-                },
-                sortedByOnPressed: () {
-                  Get.bottomSheet(const SortedBy());
-                }),
+            child: SearchInSubCategories(searchOnPressed: () {
+              Get.put(SearchOfferController(Get.find()));
+              Get.to(
+                  () => SearchScreen(
+                      typeOfSearch: TypeOfSearch.offersInMainCategory,
+                      categoryId: widget.categoryId),
+                  binding: SearchBinding());
+            }, sortedByOnPressed: () {
+              Get.bottomSheet(const SortedBy());
+            }),
           )),
       floatingActionButton: const ChattingBtn(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -95,14 +104,58 @@ class _OfferListForSubCategoryPageState
         const SizedBox(
           width: 8,
         ),
-        GestureDetector(
-          onTap: (){
-            Get.put(CartController(Get.find()));
-            Get.to(()=>const CartScreen(comingForCart: ComingForCart.offerListCategory,));
-          },
-          child: appBarIcon(
-              icon: Icons.shopping_cart_rounded,
-              iconColor: ColorConstants.mainColor),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            GestureDetector(
+              onTap: () {
+                if (SharedPreferencesClass.getToken() == null ||
+                    SharedPreferencesClass.getToken() == '') {
+                  Utils.showAlertDialogForRegisterLogin(context: context);
+                } else {
+                  Get.put(CartController(Get.find()));
+                  Get.to(() => const CartScreen(
+                        comingForCart: ComingForCart.offerListCategory,
+                      ));
+                }
+              },
+              child: appBarIcon(
+                  icon: Icons.shopping_cart_rounded,
+                  iconColor: ColorConstants.mainColor),
+            ),
+            Transform.translate(
+              offset: const Offset(-9,-18),
+              child: Align(
+                  alignment: Controllers.directionalityController.languageBox.value
+                      .read('language') ==
+                      'ar'
+                      ?
+                  Alignment.centerLeft: Alignment.centerRight ,
+                  child:Obx(()=>Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        width: 19,height: 19,
+                        alignment: Alignment.center,
+                        // padding: const EdgeInsets.all(2),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                      ),
+                       Align(
+                          alignment: Alignment.center,
+                          child:  Text(Controllers.cartController.cartItems.length.toString(),
+                                style: const TextStyle(color: ColorConstants.mainColor, fontSize: 12, fontWeight: FontWeight.bold)),
+
+
+                      ),
+                    ],
+                  )
+                  )
+              ),
+            )
+          ],
         ),
       ],
     );
@@ -131,7 +184,8 @@ class _OfferTabState extends State<OfferTab> {
   @override
   void initState() {
     setState(() {
-      Controllers.offerController.filteredListOfferMainCategory.value = homeController.offersForMainCategory;
+      Controllers.offerController.filteredListOfferMainCategory.value =
+          homeController.offersForMainCategory;
     });
     super.initState();
   }
@@ -159,33 +213,38 @@ class _OfferTabState extends State<OfferTab> {
             ),
           )
         : Controllers.offerController.filteredListOfferMainCategory.isNotEmpty
-            ?
-    ListView.builder(
+            ? ListView.builder(
                 scrollDirection: Axis.vertical,
-                itemCount: Controllers.offerController.filteredListOfferMainCategory.length,
+                itemCount: Controllers
+                    .offerController.filteredListOfferMainCategory.length,
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
                       Get.put(OfferController(Get.find()));
                       Get.to(() => OfferDetail(
-                          offerModel:
-                          Controllers.offerController.filteredListOfferMainCategory[index]));
+                          offerModel: Controllers.offerController
+                              .filteredListOfferMainCategory[index]));
                     },
                     child: OfferCard(
-                      offerModel: Controllers.offerController.filteredListOfferMainCategory[index],
-                      width:  MediaQuery.of(context).size.width,
-                      height: 230,
+                      offerModel: Controllers
+                          .offerController.filteredListOfferMainCategory[index],
+                      width: MediaQuery.of(context).size.width,
+                      height: 248,
                     ),
                   );
                 })
-            : CenterImageForEmptyData(imagePath: 'assets/images/offer_empty.png', text: translation.noOffersAvailable.tr));
+            : CenterImageForEmptyData(
+                imagePath: 'assets/images/offer_empty.png',
+                text: translation.noOffersAvailable.tr));
   }
 }
 
 class MerchantTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return CenterImageForEmptyData(imagePath: 'assets/images/merchant_empty.png', text: translation.noMerchantsAvailable.tr);
+    return CenterImageForEmptyData(
+        imagePath: 'assets/images/merchant_empty.png',
+        text: translation.noMerchantsAvailable.tr);
   }
 }

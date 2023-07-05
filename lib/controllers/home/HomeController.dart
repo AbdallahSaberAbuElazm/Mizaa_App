@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_controller.dart';
+import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:test_ecommerce_app/models/categories/CategoryModel.dart';
 import 'package:test_ecommerce_app/models/categories/sub_categories/SubCategoriesModel.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
@@ -60,6 +61,8 @@ class HomeController extends GetxController {
   final dropLanguageData = '${SharedPreferencesClass.getLanguageName()}'.obs;
   final dropCountryData = ''.obs;
   final dropCityData = ''.obs;
+  final countryId = ''.obs;
+  final cityId = ''.obs;
 
   List<Widget> pages = [
     ExploreTab(),
@@ -84,6 +87,10 @@ class HomeController extends GetxController {
     getMostSalesOffers();
     getMainCategories();
     getSubCategoryOutings(categoryId: '1');
+    if( SharedPreferencesClass.getToken() != null ||
+        SharedPreferencesClass.getToken() != ''){
+      Controllers.cartController.getCartApi();
+    }
     super.onInit();
   }
 
@@ -97,6 +104,7 @@ class HomeController extends GetxController {
   }
 
   void _onScroll() {
+    print('inside scroll controller');
     if (scrollController.offset > 80 && !isScrolled.value) {
       isScrolled.value = true;
       appBarColor.value = Get.isDarkMode? ColorConstants.bottomAppBarDarkColor: Colors.white;

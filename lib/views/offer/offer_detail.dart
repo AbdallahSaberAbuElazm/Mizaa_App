@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/services.dart';
 import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
 import 'package:test_ecommerce_app/controllers/companies/company_binding.dart';
 import 'package:test_ecommerce_app/controllers/companies/company_controller.dart';
@@ -33,6 +34,7 @@ import 'package:test_ecommerce_app/views/widgets/custom_indicator_carousel.dart'
 import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
     as translation;
 
+
 class OfferDetail extends GetView<OfferController> {
   final OfferModel offerModel;
   OfferDetail({Key? key, required this.offerModel}) : super(key: key);
@@ -45,186 +47,299 @@ class OfferDetail extends GetView<OfferController> {
 
   // final OfferController offerController = Get.find();
 
-  late CompanyModel companyModel = CompanyModel.fromJson(offerModel.company!.map((key, value) => MapEntry(key.toString(), value)));
+  late CompanyModel companyModel = CompanyModel.fromJson(
+      offerModel.company!.map((key, value) => MapEntry(key.toString(), value)));
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    controller.checkIfUserRatedBefore(offerKey: offerModel.key!, offerId: offerModel.id!);
     // final isDarkMode = Get.isDarkMode;
     controller.cartItemsOfferDetail.clear();
 
     List<OfferImages> offerImages = offerModel.offerImages!
-        .map((offerImage) => OfferImages.fromJson(offerImage as Map<String,dynamic>))
+        .map((offerImage) =>
+            OfferImages.fromJson(offerImage as Map<String, dynamic>))
         .toList();
     return Obx(
       () => WillPopScope(
-        onWillPop: ()async{
+        onWillPop: () async {
           Controllers.offerController.cartItemsOfferDetail.clear();
           return true;
         },
         child: Scaffold(
-            extendBodyBehindAppBar: true,
-            appBar: AppBar(
-              backgroundColor: controller.appBarOfferDescriptionColor.value,
-              elevation: 0,
-              toolbarHeight: 80,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            backgroundColor: controller.appBarOfferDescriptionColor.value,
+            flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
+                value: SystemUiOverlayStyle(
+                  statusBarIconBrightness:
+                      Get.isDarkMode ? Brightness.light : Brightness.dark,
+                  statusBarBrightness:
+                      Get.isDarkMode ? Brightness.light : Brightness.dark,
                 ),
+                child: Container()),
+            elevation: 0,
+            toolbarHeight: 80,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
               ),
-              leadingWidth: 70,
-              leading: GestureDetector(
-                onTap: () {
-                  Controllers.offerController.cartItemsOfferDetail.clear();
-                  Get.back();},
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    width: 37,
-                    height: 37,
-                    // margin: const EdgeInsets.only(left: 16,right: 16),
-                    decoration: const BoxDecoration(
-                      color: ColorConstants.mainColor,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.arrow_back_ios_rounded,
-                      color: Colors.white,
-                      size: 20,
-                    ),
+            ),
+            leadingWidth: 70,
+            leading: GestureDetector(
+              onTap: () {
+                Controllers.offerController.cartItemsOfferDetail.clear();
+                Get.back();
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  width: 37,
+                  height: 37,
+                  // margin: const EdgeInsets.only(left: 16,right: 16),
+                  decoration: const BoxDecoration(
+                    color: ColorConstants.mainColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: Colors.white,
+                    size: 20,
                   ),
                 ),
               ),
-              actions: [
-                const SizedBox(
-                  width: 16,
-                ),
-                appBarIcon(
-                  onTap: (){},
-                    icon: Icons.share,
-                    iconColor: controller.appBarItemOfferDescriptionColor.value,
-                    containerColor: controller
-                        .appBarItemContainerOfferDescriptionColor.value),
-                const SizedBox(
-                  width: 8,
-                ),
-                appBarIcon(
-                  onTap: (){
-                    Controllers.offerController.cartItemsOfferDetail.clear();
-                      Get.put(CartController(Get.find()));
-                      Get.to(()=>const CartScreen(comingForCart: ComingForCart.offerDetail,),);
-                  },
-                    icon: Icons.shopping_cart_rounded,
-                    iconColor: controller.appBarItemOfferDescriptionColor.value,
-                    containerColor: controller
-                        .appBarItemContainerOfferDescriptionColor.value),
-                const SizedBox(
-                  width: 16,
-                ),
-              ],
             ),
-            bottomNavigationBar: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-                height: 110,
-                decoration:  BoxDecoration(
-                  color: Get.isDarkMode? ColorConstants.bottomAppBarDarkColor:  Colors.white,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 1.3,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '${translation.discountName.tr}  ${offerModel.enDiscount}',
-                            style: const TextStyle(
-                                color: ColorConstants.mainColor,
-                                fontSize: 12,
-                                fontFamily: 'Noto Kufi Arabic',
-                                fontWeight: FontWeight.w600),
-                          ),
-                          // const SizedBox(width: 20,),
-                          Text(
-                            ' ${translation.couponText.tr} ${Utils.getDateTime(dateTime: offerModel.expireDate!)}',
-                            style: const TextStyle(
-                                color: ColorConstants.mainColor,
-                                fontSize: 12,
-                                fontFamily: 'Noto Kufi Arabic',
-                                fontWeight: FontWeight.w600),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
+            actions: [
+              const SizedBox(
+                width: 16,
+              ),
+              appBarIcon(
+                  onTap: () {},
+                  icon: Icons.share,
+                  iconColor: controller.appBarItemOfferDescriptionColor.value,
+                  containerColor: controller
+                      .appBarItemContainerOfferDescriptionColor.value),
+              const SizedBox(
+                width: 8,
+              ),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  appBarIcon(
+                      onTap: () {
+                        if (SharedPreferencesClass.getToken() == null ||
+                            SharedPreferencesClass.getToken() == '') {
+                          Utils.showAlertDialogForRegisterLogin(
+                              context: context);
+                        } else {
+                          Controllers.offerController.cartItemsOfferDetail
+                              .clear();
+                          Get.put(CartController(Get.find()));
+                          Get.to(
+                            () => const CartScreen(
+                              comingForCart: ComingForCart.offerDetail,
+                            ),
+                          );
+                        }
+                      },
+                      icon: Icons.shopping_cart_rounded,
+                      iconColor:
+                          controller.appBarItemOfferDescriptionColor.value,
+                      containerColor: controller
+                          .appBarItemContainerOfferDescriptionColor.value),
+                  Transform.translate(
+                      offset: const Offset(-9, -18),
+                      child: Align(
+                        alignment: Controllers
+                                    .directionalityController.languageBox.value
+                                    .read('language') ==
+                                'ar'
+                            ? Alignment.centerLeft
+                            : Alignment.centerRight,
+                        child: Obx(() => Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Container(
+                                  width: 19,
+                                  height: 19,
+                                  alignment: Alignment.center,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                      Controllers
+                                          .cartController.cartItems.length
+                                          .toString(),
+                                      style: const TextStyle(
+                                          color: ColorConstants.mainColor,
+                                          fontSize: 12,
+                                          fontFamily: 'Noto Kufi Arabic',
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            )),
+                      ))
+                ],
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+            ],
+          ),
+          bottomNavigationBar: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+              height: 110,
+              decoration: BoxDecoration(
+                color: Get.isDarkMode
+                    ? ColorConstants.bottomAppBarDarkColor
+                    : Colors.white,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: Controllers
+                                .directionalityController.languageBox.value
+                                .read('language') ==
+                            'ar'
+                        ? MediaQuery.of(context).size.width / 1.3
+                        : MediaQuery.of(context).size.width / 1.2,
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 1.3,
-                          child: BuildButtonWithIcon(
-                            onPressed:  () async{
-                              int counter = 0;
-                              List<CartItemModel> items= [];
-                              for(int i=0; i< Controllers.offerController.cartItemsOfferDetail.length; i++){
-                                if(Controllers.offerController.cartItemsOfferDetail[i].count >0) {
-                                  Controllers.offerController.cartItemsOfferDetail[i].totalPrice = Controllers.offerController.cartItemsOfferDetail[i].pricePerItem * Controllers.offerController.cartItemsOfferDetail[i].count.value;
-                                  items.add(Controllers.offerController.cartItemsOfferDetail[i]);
-                                  counter++;
+                        Text(
+                          '${translation.discountName.tr}  ${offerModel.enDiscount}',
+                          style: const TextStyle(
+                              color: ColorConstants.mainColor,
+                              fontSize: 12,
+                              fontFamily: 'Noto Kufi Arabic',
+                              fontWeight: FontWeight.w600),
+                        ),
+                        // const SizedBox(width: 20,),
+                        Text(
+                          ' ${translation.couponText.tr} ${Utils.getDateTime(dateTime: offerModel.expireDate!)}',
+                          style: const TextStyle(
+                              color: ColorConstants.mainColor,
+                              fontSize: 12,
+                              fontFamily: 'Noto Kufi Arabic',
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 1.3,
+                        child: BuildButtonWithIcon(
+                            onPressed: () async {
+                              if (SharedPreferencesClass.getToken() == null ||
+                                  SharedPreferencesClass.getToken() == '') {
+                                Utils.showAlertDialogForRegisterLogin(
+                                    context: context);
+                              } else {
+                                int counter = 0;
+                                List<CartItemModel> items = [];
+                                for (int i = 0;
+                                    i <
+                                        Controllers.offerController
+                                            .cartItemsOfferDetail.length;
+                                    i++) {
+                                  if (Controllers.offerController
+                                          .cartItemsOfferDetail[i].count >
+                                      0) {
+                                    Controllers
+                                        .offerController
+                                        .cartItemsOfferDetail[i]
+                                        .totalPrice = Controllers
+                                            .offerController
+                                            .cartItemsOfferDetail[i]
+                                            .pricePerItem *
+                                        Controllers
+                                            .offerController
+                                            .cartItemsOfferDetail[i]
+                                            .count
+                                            .value;
+                                    items.add(Controllers.offerController
+                                        .cartItemsOfferDetail[i]);
+                                    counter++;
+                                  }
+                                }
+
+                                if (counter == 0) {
+                                  Utils.snackBar(
+                                    context: context,
+                                    msg: translation.addOfferOption.tr,
+                                    background: ColorConstants.yellowColor,
+                                    textColor: ColorConstants.black0,
+                                  );
+                                } else {
+                                  print(
+                                      'items are ${items.map((e) => print('e is ${e.arOfferTitle}'))}');
+                                  Controllers.cartController.addToCartApi(
+                                      cartModel: CartModel(
+                                    cartId: '0',
+                                    items: items,
+                                  ));
+                                  Utils.snackBar(
+                                    context: context,
+                                    msg: translation.offerAddedToCart.tr,
+                                    background: ColorConstants.greenColor,
+                                    textColor: Colors.white,
+                                  );
                                 }
                               }
-
-                              if(counter ==0){
-                                Utils.snackBar(context: context, msg: translation.addOfferOption.tr, background: ColorConstants.yellowColor,textColor: ColorConstants.black0,);
-                              }else{
-                                print('items are ${items.map((e) => print('e is ${e.arOfferTitle}'))}');
-                                Controllers.cartController.addToCartApi(cartModel: CartModel(cartId: '0', items:items,
-                                ));
-                                Utils.snackBar(context: context, msg: translation.offerAddedToCart.tr, background: ColorConstants.greenColor, textColor: Colors.white,);
-                              }
-                            },text: translation.addToCart.tr,icon:  Icons.shopping_cart_rounded
-                          ),
+                            },
+                            text: translation.addToCart.tr,
+                            icon: Icons.shopping_cart_rounded),
+                      ),
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          color: ColorConstants.mainColor,
+                          shape: BoxShape.circle,
                         ),
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: const BoxDecoration(
-                            color: ColorConstants.mainColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.chat_outlined,
-                            color: Colors.white,
-                            size: 25,
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                )),
-            body: ListView(
-                controller: controller.scrollOfferDescriptionController,
-                padding: EdgeInsets.zero,
-                children: [
-                  _buildCarousel(context: context, offerImages: offerImages),
-                  Transform.translate(
-                    offset: const Offset(0, -45),
-                    child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Obx(() => CustomIndicatorCarousel(
-                              currentBanner: controller.currentBanner.value,
-                              list: offerImages,
-                            ))),
-                  ),
-                  _offerDescription(context: context, offer: offerModel, theme: theme),
-                ])),
+                        child: const Icon(
+                          Icons.chat_outlined,
+                          color: Colors.white,
+                          size: 25,
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              )),
+          body: ListView(
+              controller: controller.scrollOfferDescriptionController,
+              padding: EdgeInsets.zero,
+              children: [
+                _buildCarousel(context: context, offerImages: offerImages),
+                Transform.translate(
+                  offset: const Offset(0, -45),
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Obx(() => CustomIndicatorCarousel(
+                            currentBanner: controller.currentBanner.value,
+                            list: offerImages,
+                          ))),
+                ),
+                _offerDescription(
+                    context: context, offer: offerModel, theme: theme),
+              ]),
+        ),
       ),
     );
   }
@@ -289,14 +404,16 @@ class OfferDetail extends GetView<OfferController> {
                       }
                     })),
             Transform.translate(
-              offset: const Offset(0,5),
+              offset: const Offset(0, 5),
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: 18,
                   decoration: BoxDecoration(
-                      color: Get.isDarkMode? ColorConstants.darkMainColor:  ColorConstants.backgroundContainer,
+                      color: Get.isDarkMode
+                          ? ColorConstants.darkMainColor
+                          : ColorConstants.backgroundContainer,
                       borderRadius: const BorderRadius.only(
                           topRight: Radius.circular(12),
                           topLeft: Radius.circular(12))),
@@ -316,7 +433,8 @@ class OfferDetail extends GetView<OfferController> {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(7),
-        decoration: BoxDecoration(color: containerColor, shape: BoxShape.circle),
+        decoration:
+            BoxDecoration(color: containerColor, shape: BoxShape.circle),
         child: Icon(
           icon,
           color: iconColor,
@@ -330,16 +448,20 @@ class OfferDetail extends GetView<OfferController> {
       {required BuildContext context,
       required OfferModel offer,
       required theme}) {
-
     List<OfferOptions> offerOptions =
         (offer.offerOptions == null || offer.offerOptions == [])
             ? []
             : offer.offerOptions!
-                .map((offerOptions) => OfferOptions.fromJson(offerOptions as Map<String,dynamic>))
+                .map((offerOptions) =>
+                    OfferOptions.fromJson(offerOptions as Map<String, dynamic>))
                 .toList();
     return Container(
-        color:  Get.isDarkMode? ColorConstants.darkMainColor: ColorConstants.backgroundContainer,
-        padding: const EdgeInsets.symmetric(horizontal: 16, ),
+        color: Get.isDarkMode
+            ? ColorConstants.darkMainColor
+            : ColorConstants.backgroundContainer,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -360,7 +482,7 @@ class OfferDetail extends GetView<OfferController> {
                         text: offer.priceBeforDiscount.toString(),
                         textColor: ColorConstants.greyColor),
                     const SizedBox(
-                      width: 10,
+                      width: 30,
                     ),
                     _buildPriceContainer(
                         height: 36,
@@ -398,23 +520,29 @@ class OfferDetail extends GetView<OfferController> {
                 const SizedBox(
                   width: 10,
                 ),
-                Column(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width - 130,
-                      child: Text(
-                        Utils.getTranslatedText(arText: offer.arTitle.toString(), enText: offer.enTitle.toString())
-                        ,
-                        style:  TextStyle(
-                          color: Get.isDarkMode? Colors.white: Colors.black,
-                          height: 1.3,
-                          fontSize: 16,
-                          fontFamily: 'Noto Kufi Arabic',
-                          fontWeight: FontWeight.w600,
+                SizedBox(
+                  height: 59,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width - 130,
+                        child: Text(
+                          Utils.getTranslatedText(
+                              arText: companyModel.arName.toString(),
+                              enText: companyModel.enName.toString()),
+                          style: TextStyle(
+                            color: Get.isDarkMode ? Colors.white : Colors.black,
+                            height: 1.3,
+                            fontSize: 16,
+                            fontFamily: 'Noto Kufi Arabic',
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -427,8 +555,8 @@ class OfferDetail extends GetView<OfferController> {
                   Utils.getTranslatedText(
                       arText: offer.arSubtitle.toString(),
                       enText: offer.enSubtitle.toString()),
-                  style:  TextStyle(
-                    color:Get.isDarkMode? Colors.white: Colors.black,
+                  style: TextStyle(
+                    color: Get.isDarkMode ? Colors.white : Colors.black,
                     height: 1.8,
                     fontSize: 12.5,
                     fontFamily: 'Noto Kufi Arabic',
@@ -440,8 +568,8 @@ class OfferDetail extends GetView<OfferController> {
             ),
             Text(
               translation.displayOption.tr,
-              style:  TextStyle(
-                color:Get.isDarkMode? Colors.white: Colors.black,
+              style: TextStyle(
+                color: Get.isDarkMode ? Colors.white : Colors.black,
                 height: 1.3,
                 fontSize: 15,
                 fontFamily: 'Noto Kufi Arabic',
@@ -480,10 +608,14 @@ class OfferDetail extends GetView<OfferController> {
                   // Get.put(CompanyProvider(Get.find()));
                   // Get.put(CompanyController(Get.find()));
                   // CompanyController(Get.find()).getCompanyBranches(categoryId: offerModel.companyId.toString());
-                  Get.to(()=> MerchantBranches(companyKey: offerModel.company!['key'].toString()), binding: CompanyBinding());
+                  Get.to(
+                      () => MerchantBranches(
+                          companyKey: offerModel.company!['key'].toString()),
+                      binding: CompanyBinding());
                 },
                 text: translation.branches.tr,
-                textColor: Get.isDarkMode? Colors.white:ColorConstants.black0,
+                textColor:
+                    Get.isDarkMode ? Colors.white : ColorConstants.black0,
                 icon: Icons.location_on_outlined,
                 theme: theme),
             const Divider(
@@ -493,7 +625,7 @@ class OfferDetail extends GetView<OfferController> {
               height: 10,
             ),
             _buildMerchantCard(
-              context: context,
+                context: context,
                 logoUrl: companyModel.logo.toString(),
                 text: translation.merchantsOffers.tr),
             const SizedBox(
@@ -521,7 +653,6 @@ class OfferDetail extends GetView<OfferController> {
     );
   }
 
-
   ////// price content
   Widget _buildPriceContainer(
       {required String text, required double width, required double height}) {
@@ -538,10 +669,11 @@ class OfferDetail extends GetView<OfferController> {
       ),
       child: Center(
           child: Text(
-            text,
-            style: const TextStyle(color: Colors.white, fontSize: 13),
-            textAlign: TextAlign.center,
-          )),
+        text,
+        style: const TextStyle(
+            color: Colors.white, fontFamily: 'Noto Kufi Arabic', fontSize: 13),
+        textAlign: TextAlign.center,
+      )),
     );
   }
 
@@ -549,7 +681,7 @@ class OfferDetail extends GetView<OfferController> {
     return ListTile(
       onTap: () {
         controller.getOfferRate(offerId: offerModel.id.toString());
-        Get.to(()=> const MerchantRatings());
+        Get.to(() =>  MerchantRatings(offerModel: offerModel,));
       },
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -557,24 +689,33 @@ class OfferDetail extends GetView<OfferController> {
           Text(
             translation.ratingsText.tr,
             style: TextStyle(
-                color:Get.isDarkMode? Colors.white: ColorConstants.black0,
+                color: Get.isDarkMode ? Colors.white : ColorConstants.black0,
                 fontSize: 16,
+                fontFamily: 'Noto Kufi Arabic',
                 fontWeight: FontWeight.w500),
           ),
           Row(
-            children: [
-              // Text('(${offerModel.offerRate})'),
-              Text(
-                '${offerModel.offerRate}',
-                style: TextStyle(
-                    color:Get.isDarkMode? ColorConstants.mainColor: ColorConstants.black0,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(width: 5,),
-              Utils.buildRatings(ratings: offerModel.offerRate?? 0.0, iconSize: 18, unratedColor: Colors.grey),
-            ],
-          ),
+              children: [
+                // Text('(${offerModel.offerRate})'),
+                Text(
+                  '${offerModel.offerRate}',
+                  style: TextStyle(
+                      color: Get.isDarkMode
+                          ? ColorConstants.mainColor
+                          : ColorConstants.black0,
+                      fontSize: 16,
+                      fontFamily: 'Noto Kufi Arabic',
+                      fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Utils.buildRatings(
+                    ratings: offerModel.offerRate ?? 0.0,
+                    iconSize: 18,
+                    unratedColor: Colors.grey),
+              ],
+            ),
         ],
       ),
       leading: const Icon(
@@ -601,7 +742,10 @@ class OfferDetail extends GetView<OfferController> {
       title: Text(
         text,
         style: TextStyle(
-            color: textColor, fontSize: 16, fontWeight: FontWeight.w500),
+            color: textColor,
+            fontSize: 16,
+            fontFamily: 'Noto Kufi Arabic',
+            fontWeight: FontWeight.w500),
       ),
       leading: Icon(
         icon,
@@ -729,17 +873,27 @@ class OfferDetail extends GetView<OfferController> {
         physics: const ClampingScrollPhysics(),
         itemCount: offerOptions.length,
         itemBuilder: (context, index) {
-          Controllers.offerController.cartItemsOfferDetail.add(CartItemModel(arOfferTitle: offerModel.arTitle.toString(),
-              enOfferTitle: offerModel.enTitle.toString(), offerId: offerModel.id!,offerKey: offerModel.key.toString(),cartId: 0,offerOptionsId: offerOptions[index].id,
-              pricePerItem: offerOptions[index].priceAfterDesc, count: 0.obs, totalPrice: 0));
+          Controllers.offerController.cartItemsOfferDetail.add(CartItemModel(
+              companyName: offerModel.company!['arName'],
+              enCompanyName: offerModel.company!['enName'],
+              arOfferTitle: offerOptions[index].arOfferOptionDesc.toString(),
+              enOfferTitle: offerOptions[index].enOfferOptionDesc.toString(),
+              offerId: offerModel.id!,
+              offerKey: offerModel.key.toString(),
+              cartId: 0,
+              offerOptionsId: offerOptions[index].id,
+              pricePerItem: offerOptions[index].priceAfterDesc,
+              count: 0.obs,
+              totalPrice: 0,
+              mainImage: '',
+              companyLogo: ''));
           return Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: ExpandedCard(
-              
                 index: index,
-                title: SharedPreferencesClass.getLanguageCode() == 'ar'
-                    ? offerOptions[index].arOfferOptionDesc.toString()
-                    : offerOptions[index].enOfferOptionDesc.toString(),
+                title: Utils.getTranslatedText(
+                    arText: offerOptions[index].arOfferOptionDesc.toString(),
+                    enText: offerOptions[index].enOfferOptionDesc.toString()),
                 priceAfter: offerOptions[index].priceAfterDesc.toString(),
                 priceBefore: offerOptions[index].priceBeforDesc.toString(),
                 discount: offerOptions[index].discount.toString()),
@@ -747,26 +901,31 @@ class OfferDetail extends GetView<OfferController> {
         });
   }
 
-  Widget _buildMerchantCard({
-    required String logoUrl,
-    required String text,
-    required BuildContext context
-  }) {
+  Widget _buildMerchantCard(
+      {required String logoUrl,
+      required String text,
+      required BuildContext context}) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         showDialog(
             context: context,
             builder: (context) => const Center(
-                child: CircularProgressIndicator(
+                    child: CircularProgressIndicator(
                   color: ColorConstants.mainColor,
                 )));
-        Controllers.searchOfferController.getMerchant(merchantKey: companyModel.key.toString()).then((companyModel) {
+        Controllers.searchOfferController
+            .getMerchant(merchantKey: companyModel.key.toString())
+            .then((companyModel) {
           Get.back();
           Get.put(CompanyRepository());
           Get.put(CompanyProvider(Get.find()));
           Get.put(CompanyController(Get.find()));
 
-          Get.to(() => MerchantDetail(companyModel: companyModel,),);
+          Get.to(
+            () => MerchantDetail(
+              companyModel: companyModel,
+            ),
+          );
         });
       },
       child: Container(

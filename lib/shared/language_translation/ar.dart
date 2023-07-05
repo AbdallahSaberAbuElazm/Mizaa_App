@@ -8,6 +8,7 @@ class Ar {
         translation.language: "اللغة",
         translation.selectCountry: "اختر الدولة",
         translation.completeDataText: 'أكمل البيانات',
+        translation.selectLocation: 'حدد موقعك',
         translation.selectCity: "اختر المدينة",
         translation.loginHeader: 'ميزتها في خصوماتها!',
         translation.forgetPassword: 'نسيت كلمة المرور',
@@ -85,7 +86,7 @@ class Ar {
         translation.paymentFromWallet: 'الدفع من المحفظة؟',
         translation.appearance: 'مظهر',
         translation.settings: 'إعدادات',
-        translation.account: 'حساب',
+        translation.account: 'حسابي',
         translation.logout: 'تسجيل خروج',
         translation.applyFiltrationText: 'تطبيق الفلترة',
         translation.wallet: 'محفظتي',
@@ -105,6 +106,15 @@ class Ar {
         translation.noMerchantsAvailable: 'لايتوفر تجار في ميزة حتى الآن',
         translation.noOffersAvailable: 'لاتتوفر عروض في ميزة حتى الآن',
         translation.ratingsText:'التقييمات',
+        translation.noBalance: 'لايوجد رصيد في محفظتك',
+        translation.deleteOffer: 'هل تريد حذف هذا العرض',
+        translation.deleteAllOffer: 'هل تريد حذف كل العروض',
+        translation.cancelText: 'إلغاء',
+        translation.selectTheme: 'حدد المظهر',
+        translation.offersWithoutThe: 'عروض',
+        translation.addRatings: 'أضف تقييمك',
+        translation.enterRating: 'أدخل تقييمك',
+        translation.rateAddedSuccessfully: 'تم إضافة تقييمك بنجاح',
 
       };
 }

@@ -5,6 +5,7 @@ const selectCountry = 'selectCountry';
 const selectCity = 'selectCity';
 const backText = 'backText';
 const completeDataText = 'completeDataText';
+const selectLocation = 'selectLocation';
 
 // otp login screen
 const loginHeader = 'loginHeader';
@@ -41,6 +42,7 @@ const confirmPassword = 'confirmPassword';
 
 // home page
 const offersText = 'offerText';
+const offersWithoutThe = 'offersWithoutThe';
 const ordersText = 'ordersText';
 const categoriesText ='categoriesText';
 const favouriteText ='favouriteText';
@@ -64,6 +66,8 @@ const newOfferText = 'newOfferText';
 const moreOffersText = 'moreOffersText';
 const saveText = 'saveText';
 const searchHintText = 'searchHintText';
+const enterRating = 'enterRating';
+const rateAddedSuccessfully= 'rateAddedSuccessfully';
 
 // offer list for main category screen
 const merchantsText = 'merchantsText';
@@ -87,8 +91,10 @@ const offerAddedToCart = 'offerAddedToCart';
 const noDataYet = 'noDataYet';
 const noOtherBranches = 'noOtherBranches';
 const noRatingsAvailable = 'noRatingsAvailable';
+const addRatings = 'addRatings';
 const noMerchantsAvailable = 'noMerchantsAvailable';
 const noOffersAvailable = 'noOffersAvailable';
+
 
 // filtration screen
 const applyFiltrationText = 'applyFiltration';
@@ -110,6 +116,10 @@ const administrativeExpenses= 'administrativeExpenses';
 const totalRequested = 'totalRequested';
 const paymentFromWallet = 'paymentFromWallet';
 const deleteAllText = 'Delete All';
+const deleteOffer = 'deleteOffer';
+const deleteAllOffer = 'deleteAllOffer';
+const cancelText = 'cancelText';
+
 
 // search screen
 const searchIsEmpty = 'searchIsEmpty';
@@ -119,6 +129,9 @@ const appearance = 'appearance';
 const settings = 'settings';
 const account = 'account';
 const logout = 'logout';
+const selectTheme = 'selectTheme';
+
+// wallet screen
 const wallet = 'wallet';
 const thisWeekText = 'thisWeekText';
 const spending ='spending ';
@@ -127,6 +140,8 @@ const totalBalance = 'totalBalance';
 const all = 'all';
 const cashbackText = 'cashbackText';
 const cashbackCoupon = 'cashbackCoupon';
+const noBalance = 'noBalance';
+
 
 
 

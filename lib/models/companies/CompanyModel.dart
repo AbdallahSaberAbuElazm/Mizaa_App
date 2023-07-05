@@ -1,5 +1,4 @@
-import 'package:test_ecommerce_app/models/companies/company_branches/CompanyBranchesModel.dart';
-import 'package:test_ecommerce_app/shared/typedef.dart';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'CompanyModel.freezed.dart';

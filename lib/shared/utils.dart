@@ -6,8 +6,13 @@ import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:test_ecommerce_app/views/widgets/custom_button.dart';
+import 'package:intl/intl.dart' as intl;
 
 class Utils {
+
+
+
   static snackBar({required BuildContext context, required String? msg, required Color background, required Color textColor}) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       duration: const Duration(milliseconds: 2300),padding:const EdgeInsets.all(16),
@@ -28,6 +33,37 @@ class Utils {
       ),
       backgroundColor: background,
     ));
+  }
+
+  /////////// login / register alert dialog //////
+
+  static showAlertDialogForRegisterLogin({required BuildContext context}){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Container(
+              height: 60,
+              padding: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+                top: 16,
+              ),
+              child: SizedBox(
+                height: 60,
+                child: CustomButton(
+                    btnText: Utils.getTranslatedText(
+                        arText: 'تسجيل الدخول',
+                        enText: "Login "),
+                    textSize: 15,
+                    textColor:Get.isDarkMode? ColorConstants.bottomAppBarDarkColor: Colors.white,
+                    btnBackgroundColor: ColorConstants.mainColor,
+                    btnOnpressed: () {
+                      Get.offAllNamed('/login');
+                    }),
+              ),
+            ),
+          );});
   }
 
   ///////////// App bar ////////////////////
@@ -109,11 +145,11 @@ class Utils {
       Controllers.directionalityController.languageBox.value.read('language') ==
               'ar'
           ? 0.0
-          : 16.0;
+          : 14.0;
   static double rightPadding16Right =
       Controllers.directionalityController.languageBox.value.read('language') ==
               'ar'
-          ? 16.0
+          ? 14.0
           : 0.0;
 
   static double leftPadding10Left = Controllers.directionalityController.languageBox.value.read('language') ==
@@ -127,35 +163,57 @@ class Utils {
   static double leftPadding16Right =
       Controllers.directionalityController.languageBox.value.read('language') ==
               'ar'
-          ? 16.0
+          ? 14.0
           : 0.0;
   static double rightPadding16Left =
       Controllers.directionalityController.languageBox.value.read('language') ==
               'ar'
           ? 0.0
-          : 16.0;
+          : 14.0;
+
+  static double leftPadding10FromLeft =
+      Controllers.directionalityController.languageBox.value.read('language') ==
+              'ar'
+          ? 10.0
+          : 0.0;
+  static double rightPadding10FromRight =
+      Controllers.directionalityController.languageBox.value.read('language') ==
+              'ar'
+          ? 0.0
+          : 10.0;
+
+  static double leftPadding10FromRight =
+      Controllers.directionalityController.languageBox.value.read('language') ==
+              'ar'
+          ? 0.0
+          : 10.0;
+  static double rightPadding10FromLeft =
+      Controllers.directionalityController.languageBox.value.read('language') ==
+              'ar'
+          ? 10.0
+          : 0.0;
 
   static double leftPadding8FromLeft =
-      Controllers.directionalityController.languageBox.value.read('language') ==
-              'ar'
-          ? 8.0
-          : 0.0;
+  Controllers.directionalityController.languageBox.value.read('language') ==
+      'ar'
+      ? 8.0
+      : 0.0;
   static double rightPadding8FromRight =
-      Controllers.directionalityController.languageBox.value.read('language') ==
-              'ar'
-          ? 0.0
-          : 8.0;
+  Controllers.directionalityController.languageBox.value.read('language') ==
+      'ar'
+      ? 0.0
+      : 8.0;
 
   static double leftPadding8FromRight =
-      Controllers.directionalityController.languageBox.value.read('language') ==
-              'ar'
-          ? 0.0
-          : 8.0;
+  Controllers.directionalityController.languageBox.value.read('language') ==
+      'ar'
+      ? 0.0
+      : 8.0;
   static double rightPadding8FromLeft =
-      Controllers.directionalityController.languageBox.value.read('language') ==
-              'ar'
-          ? 8.0
-          : 0.0;
+  Controllers.directionalityController.languageBox.value.read('language') ==
+      'ar'
+      ? 8.0
+      : 0.0;
 
   static double leftPadding4FromLeft =
       Controllers.directionalityController.languageBox.value.read('language') ==
@@ -191,26 +249,26 @@ class Utils {
         ? 16.0
         : 0.0;
 
-    leftPadding8FromLeft = Controllers
+    leftPadding10FromLeft = Controllers
                 .directionalityController.languageBox.value
                 .read('language') ==
             'ar'
         ? 8.0
         : 0.0;
-    rightPadding8FromRight = Controllers
+    rightPadding10FromRight = Controllers
                 .directionalityController.languageBox.value
                 .read('language') ==
             'ar'
         ? 0.0
         : 8.0;
 
-    leftPadding8FromRight = Controllers
+    leftPadding10FromRight = Controllers
                 .directionalityController.languageBox.value
                 .read('language') ==
             'ar'
         ? 0.0
         : 8.0;
-    rightPadding8FromLeft = Controllers
+    rightPadding10FromLeft = Controllers
                 .directionalityController.languageBox.value
                 .read('language') ==
             'ar'
@@ -253,6 +311,10 @@ class Utils {
   }
 
   ////////////////////////////////////////////////
+
+  static String getMonthName({required DateTime dateTime}) {
+    return  intl.DateFormat('MMMM',Controllers.directionalityController.languageBox.value.read('language')).format(dateTime);
+  }
 
   static String getDateTime({required DateTime dateTime}) {
     return '${dateTime.year}-${dateTime.month}-${dateTime.day}';
@@ -412,15 +474,16 @@ class Utils {
           items: menu.map<DropdownMenuItem<CountryModel>>(
             (CountryModel country) {
               return DropdownMenuItem<CountryModel>(
-                alignment: Controllers
-                            .directionalityController.dropLanguageData.value ==
-                        'العربية'
+                alignment: Controllers.directionalityController.languageBox.value
+                    .read('language') ==
+                    'ar'
                     ? Alignment.topRight
                     : Alignment.topLeft,
                 value: country,
                 child: Text(
-                  Controllers.directionalityController.dropLanguageData.value ==
-                          'العربية'
+                  Controllers.directionalityController.languageBox.value
+                      .read('language') ==
+                      'ar'
                       ? country.arName
                       : country.enName,
                   textAlign: TextAlign.end,
@@ -557,16 +620,16 @@ class Utils {
             items: menu.map<DropdownMenuItem<CityModel>>(
               (CityModel city) {
                 return DropdownMenuItem<CityModel>(
-                  alignment: Controllers.directionalityController
-                              .dropLanguageData.value ==
-                          'العربية'
+                  alignment: Controllers.directionalityController.languageBox.value
+                      .read('language') ==
+                      'ar'
                       ? Alignment.topRight
                       : Alignment.topLeft,
                   value: city,
                   child: Text(
-                    Controllers.directionalityController.dropLanguageData
-                                .value ==
-                            'العربية'
+                    Controllers.directionalityController.languageBox.value
+                        .read('language') ==
+                        'ar'
                         ? city.arName
                         : city.enName,
                     textAlign: TextAlign.end,

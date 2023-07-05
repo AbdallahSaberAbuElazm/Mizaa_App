@@ -9,6 +9,7 @@ import 'package:test_ecommerce_app/models/offers/offer_model_adapter.dart';
 import 'package:test_ecommerce_app/models/offers/offer_options/offer_options_adapter.dart';
 import 'package:test_ecommerce_app/providers/cart_provider.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
+import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 
 class CartController extends GetxController{
   late CartProvider cartProvider;
@@ -26,6 +27,8 @@ class CartController extends GetxController{
   final totalCartPrice = 0.0.obs;
   final quantityInCart = 0.obs;
 
+  final  checkedData = false.obs;
+
   // app bar for merchant detail screen
   late ScrollController scrollCartScreenController;
   final isScrolledCartScreen = false.obs;
@@ -36,6 +39,7 @@ class CartController extends GetxController{
 
   @override
   void onInit() async{
+    // scrollCartScreenController = ScrollController();
     scrollCartScreenController = ScrollController()
       ..addListener(_onScrollCartScreen);
     super.onInit();
@@ -85,6 +89,7 @@ class CartController extends GetxController{
     for (CartItemModel item in cartItems) {
       totalCartPrice.value += item.totalPrice;
     }
+    update();
   }
 
   /*
@@ -168,17 +173,30 @@ class CartController extends GetxController{
   ////////////////// TODO APIs for cart
 
   addToCartApi({required CartModel cartModel}){
-    cartProvider.addToCart(cartModel: cartModel);
+    cartProvider.addToCart(cartModel: cartModel).then((value) {
+      if( SharedPreferencesClass.getToken() != null ||
+          SharedPreferencesClass.getToken() != ''){
+        getCartApi();
+      }
+    });
   }
 
   var isLoadingCartItems = true.obs;
   final cartItems = <CartItemModel>[].obs;
+  // final offerModelCartScreen = <OfferModel>[].obs;
   getCartApi(){
     isLoadingCartItems.value = true;
     cartProvider.getAllCart().then((items) {
       cartItems.value = items;
-      print('cart items are $cartItems');
+      calculateTotalPrice(items);
       isLoadingCartItems.value = false;
+    });
+  }
+
+  getCartItemsWithoutLoading(){
+    cartProvider.getAllCart().then((items) {
+      cartItems.value = items;
+      calculateTotalPrice(items);
     });
   }
 
@@ -186,6 +204,7 @@ class CartController extends GetxController{
     cartProvider.deleteCartItem(cartItemId).then((value) {
       if(value){
         cartItems.removeWhere((item) => item.id == int.parse(cartItemId));
+        // calculateTotalPrice(cartItems);
       }
     });
 
@@ -200,6 +219,7 @@ class CartController extends GetxController{
 
   updateCartItemApi({required String cartItemId, required int newQuantity}){
     cartProvider.updateCartItem(cartItemId, newQuantity);
+    // calculateTotalPrice(cartItems);
   }
 
 

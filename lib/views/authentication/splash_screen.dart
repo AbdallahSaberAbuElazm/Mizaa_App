@@ -57,6 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Image.asset(
               'assets/images/mizaaLogo.png',
               height: 150,
+              // color: Colors.white,
               fit: BoxFit.cover,
             ),
           )

@@ -51,7 +51,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
                   child: Container(
                       alignment: Alignment.topRight,
                       margin:
-                          const EdgeInsets.only(top: 35, right: 16, left: 16),
+                          const EdgeInsets.only(top: 35, right: 14, left: 14),
                       child: ListView(
                           // crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -266,14 +266,14 @@ class _CodeAutoFillTestPageState extends State<CodeAutoFillTestPage>
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
             child: Text(
               "This is the current app signature: $appSignature",
             ),
           ),
           const Spacer(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 14),
             child: Builder(
               builder: (_) {
                 if (otpCode == null) {

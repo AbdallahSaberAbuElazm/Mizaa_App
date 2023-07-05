@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/controllers/companies/company_controller.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
@@ -44,6 +45,14 @@ class SearchScreen extends GetView<SearchOfferController> {
         // backgroundColor: ColorConstants.backgroundContainer,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
+          flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle(
+                statusBarIconBrightness:
+                Get.isDarkMode ? Brightness.light : Brightness.dark,
+                statusBarBrightness:
+                Get.isDarkMode ? Brightness.light : Brightness.dark,
+              ),
+              child: Container()),
           toolbarHeight: 80,
           leadingWidth: 58,
           leading: GestureDetector(

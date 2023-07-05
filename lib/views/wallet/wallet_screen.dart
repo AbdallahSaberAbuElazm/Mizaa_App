@@ -1,36 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
+import 'package:test_ecommerce_app/controllers/user/user_authentication_controller.dart';
+import 'package:test_ecommerce_app/models/user/wallet/wallet_history/wallet_history_model.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
     as translation;
 import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:test_ecommerce_app/views/widgets/chatting_btn.dart';
 import 'package:test_ecommerce_app/views/widgets/custom_texts.dart';
+import 'package:test_ecommerce_app/views/widgets/center_image_for_empty_data.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:test_ecommerce_app/views/wallet/wallet_buttons.dart';
 
+enum TypeOfMoney { income, spending }
 
-enum TypeOfMoney{
-  income, spending
-}
+class WalletScreen extends GetView<UserAuthenticationController> {
+   WalletScreen({Key? key}) : super(key: key);
 
-class WalletScreen extends StatefulWidget {
-  const WalletScreen({Key? key}) : super(key: key);
-
-  @override
-  State<WalletScreen> createState() => _WalletScreenState();
-}
-
-class _WalletScreenState extends State<WalletScreen> {
-  int num = 0;
-  String? btnName = translation.all.tr;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        // backgroundColor: ColorConstants.backgroundContainer,
+    initializeDateFormatting(Controllers.directionalityController.languageBox.value.read('language'));
+    return Obx(() => Scaffold(
+        backgroundColor: Get.isDarkMode
+            ? ColorConstants.bottomAppBarDarkColor
+            : ColorConstants.backgroundContainer,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          // controller.appBarOfferDescriptionColor.value,
+          backgroundColor:
+          // Colors.transparent,
+          controller.appBarWalletScreenColor.value,
           elevation: 0,
           toolbarHeight: 80,
           shape: const RoundedRectangleBorder(
@@ -47,13 +46,13 @@ class _WalletScreenState extends State<WalletScreen> {
         floatingActionButton: const ChattingBtn(),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         body: ListView(
-            // controller: controller.scrollOfferDescriptionController,
+            controller: controller.scrollWalletScreenController,
             padding: EdgeInsets.zero,
             children: [
               _buildHeader(context: context),
               _buildIncomeSpendingCard(context: context),
               _buildListOfIncomingSpending(),
-            ]));
+            ])));
   }
 
   Widget _buildLeadingAppbar({required String text}) {
@@ -83,8 +82,8 @@ class _WalletScreenState extends State<WalletScreen> {
             ),
             Text(
               text,
-              style: const TextStyle(
-                  color: Colors.white,
+              style:  TextStyle(
+                  color: Get.isDarkMode? Colors.white: controller.appBarItemWalletScreenColor.value,
                   fontSize: 15,
                   fontFamily: 'Noto Kufi Arabic',
                   fontWeight: FontWeight.bold),
@@ -103,7 +102,9 @@ class _WalletScreenState extends State<WalletScreen> {
           Container(
             width: MediaQuery.of(context).size.width,
             height: 270,
-            color: ColorConstants.walletHeaderColor,
+            color: Get.isDarkMode
+                ? ColorConstants.darkMainColor
+                : ColorConstants.walletHeaderColor,
           ),
 
           /////// total balance
@@ -124,7 +125,7 @@ class _WalletScreenState extends State<WalletScreen> {
                         height: 1.5),
                   ),
                   Text(
-                    '0.0 ${translation.currencyName.tr}',
+                    '${controller.userWallet.value.balance} ${translation.currencyName.tr}',
                     style: const TextStyle(
                         color: ColorConstants.mainColor,
                         fontSize: 28,
@@ -145,7 +146,9 @@ class _WalletScreenState extends State<WalletScreen> {
                 width: MediaQuery.of(context).size.width,
                 height: 20,
                 decoration: BoxDecoration(
-                    color: ColorConstants.backgroundContainer,
+                    color: Get.isDarkMode
+                        ? ColorConstants.bottomAppBarDarkColor
+                        : ColorConstants.backgroundContainer,
                     borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(12),
                         topLeft: Radius.circular(12))),
@@ -162,12 +165,11 @@ class _WalletScreenState extends State<WalletScreen> {
       offset: const Offset(0, -60),
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: 160,
+        height: 163,
         margin: const EdgeInsets.symmetric(
           horizontal: 16,
         ),
-        padding:
-            const EdgeInsets.only(left: 25, right: 25, top: 16, bottom: 11),
+        padding: const EdgeInsets.only(left: 25, right: 25, top: 16, bottom: 7),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -178,6 +180,9 @@ class _WalletScreenState extends State<WalletScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _buildChangedDate(),
+            const SizedBox(
+              height: 7,
+            ),
             _buildIncomeSpendingInfo(),
           ],
         ),
@@ -190,14 +195,6 @@ class _WalletScreenState extends State<WalletScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          '07 Jule - 14 Jule',
-          style: TextStyle(
-            color: ColorConstants.mainColor,
-            fontSize: 13,
-            fontFamily: 'Noto Kufi Arabic',
-          ),
-        ),
         Container(
           height: 31,
           alignment: Alignment.center,
@@ -208,24 +205,37 @@ class _WalletScreenState extends State<WalletScreen> {
           child: Center(
               child: GestureDetector(
                   onTap: () {},
-                  child: Row(children: [
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
                     const Icon(
                       Icons.keyboard_arrow_down_rounded,
                       color: ColorConstants.mainColor,
-                      size: 18,
+                      size: 17,
                     ),
                     const SizedBox(
-                      width: 6,
+                      width: 3,
                     ),
                     Text(
                       translation.thisWeekText.tr,
                       style: const TextStyle(
                         color: ColorConstants.mainColor,
                         fontSize: 10,
+                        fontWeight: FontWeight.w500,
                         fontFamily: 'Noto Kufi Arabic',
                       ),
                     ),
                   ]))),
+        ),
+        Text(
+          Utils.getTranslatedText(arText: '1 يناير', enText: '1 January'),
+          style: const TextStyle(
+            color: ColorConstants.mainColor,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Noto Kufi Arabic',
+          ),
         ),
       ],
     );
@@ -234,19 +244,22 @@ class _WalletScreenState extends State<WalletScreen> {
   // inside _buildIncomeSpendingCard
   Widget _buildIncomeSpendingInfo() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _buildSpendingData(
+      Obx(() =>  _buildSpendingData(
             text: translation.income.tr,
-            price: 0.0,
+            price: Controllers.userAuthenticationController.getIncomePrice(),
             icon: Icons.arrow_downward_sharp,
-            containerBackground: ColorConstants.incomeBackground),
-        _buildSpendingData(
+            containerBackground: ColorConstants.incomeBackground)),
+      Obx(() =>   _buildSpendingData(
             text: translation.spending.tr,
-            price: 0.0,
+            price:Controllers.userAuthenticationController.getSpendingPrice(),
             icon: Icons.arrow_upward_sharp,
-            containerBackground: ColorConstants.spendingBackground),
-
+            containerBackground: ColorConstants.spendingBackground)),
+        // const SizedBox(
+        //   width: 10,
+        // ),
       ],
     );
   }
@@ -258,9 +271,14 @@ class _WalletScreenState extends State<WalletScreen> {
       required Color containerBackground,
       required IconData icon}) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 22),
+      padding: const EdgeInsets.only(top: 22),
       child: Row(
         children: [
+          _buildCircleCardForIncomeSpending(
+              containerBackground: containerBackground, icon: icon, width: 48),
+          const SizedBox(
+            width: 6,
+          ),
           Column(
             children: [
               Text(
@@ -279,7 +297,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Noto Kufi Arabic',
-                    height: 1.5),
+                    height: 1.7),
               ),
               Text(
                 translation.currencyNameForAr.tr,
@@ -288,15 +306,10 @@ class _WalletScreenState extends State<WalletScreen> {
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                     fontFamily: 'Noto Kufi Arabic',
-                    height: 1.5),
+                    height: 1.2),
               ),
             ],
           ),
-          const SizedBox(
-            width: 6,
-          ),
-          _buildCircleCardForIncomeSpending(
-              containerBackground: containerBackground, icon: icon, width: 48),
         ],
       ),
     );
@@ -324,58 +337,125 @@ class _WalletScreenState extends State<WalletScreen> {
 
   // list of incoming - spending data
   Widget _buildListOfIncomingSpending() {
-    return Transform.translate(
-        offset: const Offset(0, -144),
-        child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-            child: ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                _drawListSelectBtn(),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      '14 June',
-                      style:TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                    ),
-                    Container(
-                      height: 24,
-                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: ColorConstants.incomeBackground,
-                        borderRadius:const BorderRadius.all(Radius.circular(6))
+    List<WalletHistoryModel> walletHistories = (Controllers
+                    .userAuthenticationController
+                    .userWallet
+                    .value
+                    .walletHistory ==
+                null ||
+            controller.userWallet.value
+                    .walletHistory ==
+                [])
+        ? []
+        : Controllers
+            .userAuthenticationController.userWallet.value.walletHistory
+            .map((walletHistory) => WalletHistoryModel.fromJson(walletHistory))
+            .toList();
+
+
+    return Obx (()=>(Controllers
+          .userAuthenticationController
+          .walletHistories.isNotEmpty)
+          ? Transform.translate(
+              offset: const Offset(0, -30),
+              child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                  child: Column(
+                    children: [
+                      _drawListSelectBtn(),
+                      const SizedBox(
+                        height: 20,
                       ),
-                      child: Text(
-                        '125 ${translation.currencyName.tr}',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
-                      )
-                    )
-                  ],
-                ),
-                const SizedBox(height: 16,),
-                ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 1,
-                    itemBuilder: (context, index) {
-                      return _buildCalculatedIncomeSpendingCard(typeOfMoney: TypeOfMoney.income);
-                    }),
-              ],
-            )));
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        itemCount: Controllers
+                            .userAuthenticationController
+                            .walletHistories.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Column(children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                      height: 25,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 7, vertical: 2),
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          color: Controllers
+                                              .userAuthenticationController
+                                              .walletHistories[index].money > 0
+                                              ? ColorConstants.incomeBackground
+                                              : ColorConstants.spendingBackground,
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(6))),
+                                      child: Center(
+                                        child: Text(
+                                          '${Controllers
+                                              .userAuthenticationController
+                                              .walletHistories[index].money} ${translation.currencyName.tr}',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                          ),
+                                        ),
+                                      )),
+                                  Text(
+                                  '${Controllers
+                                      .userAuthenticationController
+                                      .walletHistories[index].creationDate.day} ${Utils.getMonthName(dateTime: Controllers
+                                      .userAuthenticationController
+                                      .walletHistories[index].creationDate, )}',
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: ColorConstants.greyColor),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 12,
+                              ),
+                              _buildCalculatedIncomeSpendingCard(
+                                  typeOfMoney: Controllers
+                                      .userAuthenticationController
+                                      .walletHistories[index].money > 0
+                                      ? TypeOfMoney.income
+                                      : TypeOfMoney.spending,
+                                  context: context,
+                                  walletHistoryModel: Controllers
+                                      .userAuthenticationController
+                                      .walletHistories[index])
+                            ]),
+                          );
+                        },
+                      ),
+                    ],
+                  )))
+          : CenterImageForEmptyData(
+              imagePath: 'assets/images/wallet.png',
+              text: translation.noBalance.tr),
+    );
   }
 
-
-  Widget _buildCalculatedIncomeSpendingCard({required TypeOfMoney typeOfMoney}) {
+  Widget _buildCalculatedIncomeSpendingCard(
+      {required TypeOfMoney typeOfMoney,
+        required BuildContext context,
+      required WalletHistoryModel walletHistoryModel}) {
     return Container(
       height: 91,
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.only( right: Utils.rightPadding16Right,
-          left: Utils.leftPadding16Left, top: 10, bottom: 10),
+      padding: EdgeInsets.only(
+          right: Utils.rightPadding16Right,
+          left: Utils.leftPadding16Left,
+          top: 10,
+          bottom: 10),
       decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(12))),
@@ -385,10 +465,12 @@ class _WalletScreenState extends State<WalletScreen> {
           Row(
             children: [
               _buildCircleCardForIncomeSpending(
-                  containerBackground:
-                  (typeOfMoney == TypeOfMoney.income)? ColorConstants.incomeBackground:
-                  ColorConstants.spendingBackground,
-                  icon:(typeOfMoney == TypeOfMoney.income)?  Icons.arrow_downward_sharp: Icons.arrow_upward_sharp,
+                  containerBackground: (typeOfMoney == TypeOfMoney.income)
+                      ? ColorConstants.incomeBackground
+                      : ColorConstants.spendingBackground,
+                  icon: (typeOfMoney == TypeOfMoney.income)
+                      ? Icons.arrow_downward_sharp
+                      : Icons.arrow_upward_sharp,
                   width: 40),
               const SizedBox(
                 width: 10,
@@ -398,49 +480,52 @@ class _WalletScreenState extends State<WalletScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomTexts.textTitle(
-                    text: translation.cashbackText.tr,
+                    text: Utils.getTranslatedText(
+                        arText: walletHistoryModel.operationArTypeName,
+                        enText: walletHistoryModel.operationEnTypeName),
                   ),
-                  CustomTexts.textSubTitle(text: translation.cashbackCoupon.tr),
+                  CustomTexts.textSubTitle(
+                      text: Utils.getTranslatedText(
+                          arText: walletHistoryModel.opeationArDescription,
+                          enText: walletHistoryModel.opeationEnDescription)),
                 ],
               ),
             ],
           ),
           Container(
-            height: 45,
+            height: 48,
+            alignment: Alignment.center,
             decoration: BoxDecoration(
                 color: ColorConstants.backgroundContainerLightColor,
                 borderRadius: BorderRadius.only(
                     topRight: Controllers
-                        .directionalityController.languageBox.value
-                        .read('language') ==
-                        'ar'
+                                .directionalityController.languageBox.value
+                                .read('language') ==
+                            'ar'
                         ? Radius.circular(12)
                         : Radius.circular(0),
-                    bottomRight:Controllers
-                        .directionalityController.languageBox.value
-                        .read('language') ==
-                        'ar'
+                    bottomRight: Controllers
+                                .directionalityController.languageBox.value
+                                .read('language') ==
+                            'ar'
                         ? Radius.circular(12)
                         : Radius.circular(0),
-                    topLeft: Controllers
-                        .directionalityController.languageBox.value
-                        .read('language') ==
-                        'ar'
+                    topLeft: Controllers.directionalityController.languageBox.value
+                                .read('language') ==
+                            'ar'
                         ? Radius.circular(0)
                         : Radius.circular(12),
-                    bottomLeft: Controllers
-                        .directionalityController.languageBox.value
-                        .read('language') ==
-                        'ar'
-                        ? Radius.circular(0)
-                        : Radius.circular(12))),
-            padding: const EdgeInsets.only(
-                left: 8, right: 8, top: 4, bottom: 4),
+                    bottomLeft:
+                        Controllers.directionalityController.languageBox.value.read('language') == 'ar'
+                            ? Radius.circular(0)
+                            : Radius.circular(12))),
+            padding:
+                const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                 Text(
+                Text(
                   '02:03 PM',
                   style: TextStyle(
                       color: ColorConstants.black0,
@@ -450,9 +535,11 @@ class _WalletScreenState extends State<WalletScreen> {
                       fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  '+100${translation.currencyName.tr}',
-                  style:  TextStyle(
-                      color:(typeOfMoney == TypeOfMoney.income)? ColorConstants.incomeBackground: ColorConstants.spendingBackground,
+                  '${walletHistoryModel.money}${translation.currencyName.tr}',
+                  style: TextStyle(
+                      color: (typeOfMoney == TypeOfMoney.income)
+                          ? ColorConstants.incomeBackground
+                          : ColorConstants.spendingBackground,
                       fontSize: 13,
                       fontFamily: 'Noto Kufi Arabic',
                       height: 1.3,
@@ -468,65 +555,9 @@ class _WalletScreenState extends State<WalletScreen> {
 
   // All - income - spending btn
   Widget _drawListSelectBtn() {
-    return Row(
-      children: [
-        _drawBtn(
-            btnText: translation.all.tr,
-            onPressed: () {
-              setState(() {
-                btnName = translation.all.tr;
-                num = 0;
-              });
-            }),
-        const SizedBox(
-          width: 10,
-        ),
-        _drawBtn(
-            btnText: translation.income.tr,
-            onPressed: () {
-              setState(() {
-                btnName = translation.income.tr;
-                num = 1;
-              });
-            }),
-        const SizedBox(
-          width: 10,
-        ),
-        _drawBtn(
-            btnText: translation.spending.tr,
-            onPressed: () {
-              setState(() {
-                btnName = translation.spending.tr;
-                num = 2;
-              });
-            }),
-      ],
-    );
-  }
-
-  // draw btn for select type of displaying profile
-  Widget _drawBtn({required String btnText, required dynamic onPressed}) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          backgroundColor: (btnName == btnText)
-              ? ColorConstants.mainColor
-              : Colors.transparent,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24.0),
-          ),
-          padding:
-              const EdgeInsets.only(top: 3, bottom: 3, left: 18, right: 18)),
-      onPressed: onPressed,
-      child: Text(
-        btnText,
-        style: TextStyle(
-          color: (btnName == btnText) ? Colors.white : ColorConstants.greyColor,
-          fontSize: 14,
-          fontWeight: (btnName == btnText) ? FontWeight.bold : FontWeight.w500,
-          fontFamily: 'Noto Kufi Arabic',
-        ),
-      ),
-    );
+    return const SizedBox(
+        height: 38,
+        width: double.infinity,
+        child:  WalletButtons());
   }
 }

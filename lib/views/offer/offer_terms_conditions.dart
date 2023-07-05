@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:test_ecommerce_app/controllers/offers/OfferController.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
@@ -23,6 +24,14 @@ class OfferTermsConditions extends GetView<OfferController> {
           backgroundColor:
               // Colors.transparent,
               controller.appBarTermsConditionsColor.value,
+          flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle(
+                statusBarIconBrightness:
+                Get.isDarkMode ? Brightness.light : Brightness.dark,
+                statusBarBrightness:
+                Get.isDarkMode ? Brightness.light : Brightness.dark,
+              ),
+              child: Container()),
           elevation: 0,
           toolbarHeight: 80,
           shape: const RoundedRectangleBorder(

@@ -12,7 +12,7 @@ import 'package:test_ecommerce_app/views/offer/offer_detail.dart';
 import 'package:test_ecommerce_app/views/widgets/custom_text_line_through.dart';
 import 'package:test_ecommerce_app/views/offer/widget/merchant_logo.dart';
 import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
-as translation;
+    as translation;
 
 class OfferCard extends StatefulWidget {
   final OfferModel offerModel;
@@ -33,7 +33,8 @@ class _OfferCardState extends State<OfferCard> {
   late CompanyModel companyModel;
   @override
   void initState() {
-    companyModel = CompanyModel.fromJson(widget.offerModel.company!.map((key, value) => MapEntry(key.toString(), value)));
+    companyModel = CompanyModel.fromJson(widget.offerModel.company!
+        .map((key, value) => MapEntry(key.toString(), value)));
     super.initState();
   }
 
@@ -47,28 +48,45 @@ class _OfferCardState extends State<OfferCard> {
           showDialog(
               context: context,
               builder: (context) => const Center(
-                  child: CircularProgressIndicator(
+                      child: CircularProgressIndicator(
                     color: ColorConstants.mainColor,
                   )));
-          Controllers.offerController.getOffer(offerKey: widget.offerModel.key.toString())
-          .then((offer) {
+          Controllers.offerController
+              .getOffer(offerKey: widget.offerModel.key.toString())
+              .then((offer) {
             Get.back();
             Get.put(OfferController(Get.find()));
-            Get.to(() => OfferDetail(offerModel:  offer));
+            Get.to(() => OfferDetail(offerModel: offer));
           });
         },
         child: Container(
           width: widget.width,
           height: widget.height,
+          margin: const EdgeInsets.only(top: 6,bottom:6),
           decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius:  BorderRadius.all(Radius.circular(12)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(0, 1.4), // controls the offset of the shadow
+                blurRadius: 3, // controls the blur radius of the shadow
+                spreadRadius: 0, // controls the spread radius of the shadow
+              ),
+            ],
           ),
           child: Stack(
             children: <Widget>[
-          Align(
-          alignment: Alignment.topCenter,child: _buildOfferImage()),
+              Align(alignment: Alignment.topCenter, child: _buildOfferImage()),
+              Align(alignment: Alignment.center,child: Transform.translate(
+                  offset: const Offset(0, 0),
+                  child:Container(
+                      width: double.infinity,
+                      height:10,
+                      decoration:  const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12))))),),
               Align(
-                alignment: Alignment.bottomCenter,
+                  alignment: Alignment.bottomCenter,
                   child: _buildOfferDetailContainer()),
             ],
           ),
@@ -78,11 +96,12 @@ class _OfferCardState extends State<OfferCard> {
   // offer Image
   Widget _buildOfferImage() {
     return Container(
-      height: widget.height / 2 + 24,
+      height: widget.height / 2 ,
       width: double.infinity,
       alignment: Alignment.topCenter,
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(topLeft:Radius.circular(12), topRight: Radius.circular(12)),
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(12), topRight: Radius.circular(12)),
         image: DecorationImage(
           image: CachedNetworkImageProvider(
             '${ApiConstants.storageURL}${widget.offerModel.mainImage.toString()}',
@@ -135,17 +154,13 @@ class _OfferCardState extends State<OfferCard> {
 
   // offer detail
   Widget _buildOfferDetailContainer() {
-    return
-      Transform.translate(
-        offset: const Offset(0, -14.5),
-        child:
-        Container(
+    return  Container(
           width: double.infinity,
-          height: widget.height / 2+2,
-          padding: const EdgeInsets.all(10),
+          height: widget.height / 2+2 ,
+          padding: const EdgeInsets.only(left: 10,right: 10,bottom: 10,top: 3),
           decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(12))),
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12))),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -154,54 +169,75 @@ class _OfferCardState extends State<OfferCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  MerchantLogo(merchantLogo:  companyModel.logo.toString(),
-                      containerWidth: 43, containerHeight: 43,
-                      logoWidth: 25, logoHeight: 25),
+                  MerchantLogo(
+                      merchantLogo: companyModel.logo.toString(),
+                      containerWidth: 43,
+                      containerHeight: 43,
+                      logoWidth: 25,
+                      logoHeight: 25),
                   const SizedBox(
                     width: 9,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 22,
-                        child: Text( Utils.getTranslatedText(arText: companyModel.arName.toString(), enText: companyModel.enName.toString()),
-                          style: TextStyle(
-                              fontSize: 13, color: ColorConstants.greyColor,fontWeight: FontWeight.w500),
+                  SizedBox(
+                    height: 43,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 22,
+                          child: Text(
+                            Utils.getTranslatedText(
+                                arText: companyModel.arName.toString(),
+                                enText: companyModel.enName.toString()),
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: ColorConstants.greyColor,
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 28,
-                        width: widget.width - 105,
-                        child: Text(
-                          Utils.getTranslatedText(arText: widget.offerModel.arTitle.toString(), enText:  widget.offerModel.enTitle.toString())
-                         ,
-                          style: TextStyle(
-                              fontSize: 12, color: ColorConstants.black0,fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 5,),
+              const SizedBox(
+                height: 4,
+              ),
+              SizedBox(
+                  height: 28,
+                  // width: widget.width - 105,
+                  child: Text(
+                    Utils.getTranslatedText(
+                        arText: widget.offerModel.arTitle.toString(),
+                        enText: widget.offerModel.enTitle.toString()),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: ColorConstants.black0,
+                        overflow: TextOverflow.ellipsis,
+                        fontWeight: FontWeight.bold),
+                  )),
+              const SizedBox(
+                height: 4,
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   _buildPriceContainer(
-                      text: '${widget.offerModel.priceAfterDiscount.toString()} ${translation.currencyName.tr}'),
-                  const SizedBox(width: 9,),
-                  CustomTextLineThrough(
-                    text:
-                         '${widget.offerModel.priceBeforDiscount.toString()} ${translation.currencyName.tr}'
-                        ,textColor:ColorConstants.greyColor
+                      text:
+                          '${widget.offerModel.priceAfterDiscount.toString()} ${translation.currencyName.tr}'),
+                  const SizedBox(
+                    width: 9,
                   ),
+                  CustomTextLineThrough(
+                      text:
+                          '${widget.offerModel.priceBeforDiscount.toString()} ${translation.currencyName.tr}',
+                      textColor: ColorConstants.greyColor),
                 ],
               ),
             ],
           ),
-        ));
+        );
   }
 }

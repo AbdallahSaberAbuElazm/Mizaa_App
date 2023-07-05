@@ -35,7 +35,7 @@ class RecoverPassword extends GetView<UserAuthenticationController> {
                 toolbarHeight: 90,
                 leadingWidth: 200,
                 leading: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  padding: const EdgeInsets.only(left: 14, right: 14),
                   child: GestureDetector(
                     onTap: () {
                       controller.clearRecoveryTextFieldData();
@@ -73,7 +73,7 @@ class RecoverPassword extends GetView<UserAuthenticationController> {
                 ),
                 actions: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    padding: const EdgeInsets.only(left: 14, right: 14),
                     child: Utils.buildLogo(),
                   ),
                 ],
@@ -82,7 +82,7 @@ class RecoverPassword extends GetView<UserAuthenticationController> {
                 key: _formKey,
                 child: Container(
                   alignment: Alignment.topRight,
-                  margin: const EdgeInsets.only(right: 16, left: 16),
+                  margin: const EdgeInsets.only(right: 14, left: 14),
                   child: ListView(
                     children: [
                       BuildIntroText(

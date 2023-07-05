@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:test_ecommerce_app/controllers/home/HomeController.dart';
@@ -38,6 +39,14 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
       // backgroundColor: ColorConstants.backgroundContainer,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              statusBarIconBrightness:
+              Get.isDarkMode ? Brightness.light : Brightness.dark,
+              statusBarBrightness:
+              Get.isDarkMode ? Brightness.light : Brightness.dark,
+            ),
+            child: Container()),
         centerTitle: true,
         leadingWidth: 104,
         leading: Padding(
@@ -83,7 +92,7 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16),
+            padding: const EdgeInsets.only(left: 14, right: 14),
             child: GestureDetector(
               onTap: () {
                 setState(() {
@@ -112,7 +121,7 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
         ],
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 2),
+        padding: const EdgeInsets.only(left: 14, right: 14, bottom: 14, top: 2),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -156,7 +165,7 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 20, left: 16, right: 16),
+        padding: const EdgeInsets.only(top: 20, left: 14, right: 14),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,9 +197,9 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
         GestureDetector(
           onTap: () {
             Get.bottomSheet(
-                isDismissible: false,
+                isDismissible: true,
                 Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(14),
                     height: 260,
                     decoration: BoxDecoration(
                         color: Get.isDarkMode

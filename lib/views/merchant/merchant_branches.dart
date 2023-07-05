@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/controllers/companies/company_controller.dart';
 import 'package:test_ecommerce_app/models/companies/company_branches/CompanyBranchesModel.dart';
@@ -28,6 +29,14 @@ class MerchantBranches extends GetView<CompanyController> {
                 // Colors.transparent,
                 // Colors.white,
                 controller.appBarMerchantBranchesColor.value,
+            flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
+                value: SystemUiOverlayStyle(
+                  statusBarIconBrightness:
+                  Get.isDarkMode ? Brightness.light : Brightness.dark,
+                  statusBarBrightness:
+                  Get.isDarkMode ? Brightness.light : Brightness.dark,
+                ),
+                child: Container()),
             elevation: 0,
             toolbarHeight: 80,
             shape: const RoundedRectangleBorder(
@@ -117,31 +126,38 @@ class MerchantBranches extends GetView<CompanyController> {
                 size: 21,
               ),
               const SizedBox(
-                width: 8,
+                width: 20,
               ),
               // column
               SizedBox(
-                width: MediaQuery.of(context).size.width / 2.4,
+                width: MediaQuery.of(context).size.width / 2.46,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
                         width: MediaQuery.of(context).size.width ,
-                        child: CustomTexts.textTitle(
-                            text: translation.offerName.trParams({
+                        child:  Text( translation.offerName.trParams({
                           'offerName': Utils.getTranslatedText(
                               arText: companyBranchesModel.title.toString(),
                               enText: companyBranchesModel.enTitle.toString())
-                        }))),
+                        }),
+                            style: TextStyle(
+                                color: Get.isDarkMode? Colors.white: ColorConstants.black0,
+                                fontSize: 15,
+                                fontFamily: 'Noto Kufi Arabic',
+                                fontWeight: FontWeight.w600,height: 1.5))),
                     SizedBox(
                         width: MediaQuery.of(context).size.width,
-                        child: CustomTexts.textSubTitle(
-                            text: translation.offerName.trParams({
+                        child: Text( translation.offerName.trParams({
                           'offerName': Utils.getTranslatedText(
                               arText: companyBranchesModel.address.toString(),
                               enText: companyBranchesModel.enAddress.toString())
-                        }))),
+                        }), style: TextStyle(
+                          color:Get.isDarkMode? Colors.white:  ColorConstants.greyColor,
+                          fontSize: 12,
+                          fontFamily: 'Noto Kufi Arabic',
+                        ),)),
                   ],
                 ),
               )
@@ -174,7 +190,7 @@ class MerchantBranches extends GetView<CompanyController> {
               ),
               customButton(
                   btnText: translation.call.tr,
-                  textColor: Colors.black,
+                  textColor: Get.isDarkMode? Colors.white: Colors.black,
                   btnBackgroundColor: Colors.transparent,
                   borderColor: ColorConstants.greyColor,
                   textSize: 10,
@@ -232,6 +248,7 @@ class MerchantBranches extends GetView<CompanyController> {
                       imagePath,
                       width: 17,
                       height: 17,
+                      color: textColor,
                       fit: BoxFit.cover,
                     ),
                   ])),

@@ -24,13 +24,16 @@ class Assets {
   static const String imagesFilter = 'assets/images/filter.png';
   static const String imagesLocation = 'assets/images/location.png';
   static const String imagesLocationCategory = 'assets/images/location_category.png';
+  static const String imagesLogo = 'assets/images/Logo.png';
   static const String imagesLogoShimmer = 'assets/images/logo_shimmer.png';
   static const String imagesMap = 'assets/images/map.png';
   static const String imagesMenuEmpty = 'assets/images/menu_empty.png';
   static const String imagesMerchantEmpty = 'assets/images/merchant_empty.png';
-  static const String imagesMizaaLogo = 'assets/images/mizaaLogo.png';
+  static const String imagesMerchantIcon = 'assets/images/merchant_icon.png';
+  static const String imagestest_ecommerce_appLogo = 'assets/images/test_ecommerce_appLogo.png';
   static const String imagesMizaaLogoDark = 'assets/images/mizaa_logo_dark.png';
   static const String imagesOfferEmpty = 'assets/images/offer_empty.png';
+  static const String imagesOfferIcon = 'assets/images/offer_icon.png';
   static const String imagesOutings = 'assets/images/outings.png';
   static const String imagesRatingsEmpty = 'assets/images/ratings_empty.png';
   static const String imagesSearchEmpty = 'assets/images/search_empty.png';

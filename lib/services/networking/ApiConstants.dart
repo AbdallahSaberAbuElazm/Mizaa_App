@@ -3,6 +3,7 @@ class ApiConstants {
   static const storageURL = "http://ahmedbahgat2010-002-site3.btempurl.com/";
   static const String registerUrl = "${baseUrl}Auth/register";
   static const String otpLoginUrl = "${baseUrl}Auth/Login";
+  static const String getUserBasicInfo = "${baseUrl}Auth/getUserData/"; // phone number
   static const String verifyOTPUrl = "${baseUrl}Auth/checkOtp/";
   static const String recoveryOtpUrl = "${baseUrl}Auth/ForgetPasswordOtp/";
   static const String recoveryUrl = "${baseUrl}Auth/forgetPassword/";
@@ -25,8 +26,13 @@ class ApiConstants {
       '${baseUrl}Offers/GetSpecialOffersWithCityId/'; // 1
   static const mostSalesOfferByCityUrl =
       '${baseUrl}Offers/GetMostSalesOffersWithCityId/'; // 1
+  static const newOfferByCityUrl =
+      '${baseUrl}Offers/GetNewOffersWithCityId/'; // 1
+
   static const offerRateUrl =
       '${baseUrl}Rating/GetOfferRate/'; // 1
+  static const addRateToOffer = '${baseUrl}Rating/AddRateToOffer';
+  static const checkIfUserRateBefore = '${baseUrl}Rating/CheckIfUserRatedBefor';
   static const companiesByCityIdAndCatId = '${baseUrl}LookUp/GetAllCompaniesByCityIdAndCatId/'; //1/1
   static const getMerchantById = '${baseUrl}Sellers/GetSellersById/'; // merchant key
   static const getCompanyBranches = '${baseUrl}Sellers/GetSellerBrunches/'; // company key / city id
@@ -41,6 +47,7 @@ class ApiConstants {
   static const deleteCartItem = '${baseUrl}Cart/RemoveItemFromCart/'; // itemid
   static const deleteSpecificCart = '${baseUrl}Cart/ClearCart/'; //phone number
   static const updateCartItem = '${baseUrl}Cart/UpdateItemOnCart/'; // itemid / count
+  static const userWallet = '${baseUrl}User/getUserWalletData/'; // phone number
 
 
 }

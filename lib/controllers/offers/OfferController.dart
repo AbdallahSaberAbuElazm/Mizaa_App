@@ -1,17 +1,16 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:test_ecommerce_app/models/cart/cart_item_model/cart_item_model.dart';
-import 'package:test_ecommerce_app/models/companies/CompanyModel.dart';
 import 'package:test_ecommerce_app/models/merchant/merchant_model.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
-import 'package:test_ecommerce_app/models/offers/offer_options/OfferOptions.dart';
 import 'package:test_ecommerce_app/models/offers/offer_rate/OfferRateModel.dart';
 import 'package:test_ecommerce_app/providers/OfferProvider.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
-
+import 'package:test_ecommerce_app/shared/utils.dart';
+import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+as translation;
 class OfferController extends GetxController with StateMixin {
   final OfferProvider _offerProvider;
 
@@ -27,6 +26,8 @@ class OfferController extends GetxController with StateMixin {
   // for offer images carousel
   var currentPage = 0.obs;
   var currentBanner = 0.obs;
+
+  var userRating = 0.0.obs;
 
   var isLoadingMerchants = true.obs;
   final merchants = <MerchantModel>[].obs;
@@ -197,8 +198,10 @@ class OfferController extends GetxController with StateMixin {
 
 /////////////
   void decrementQuantityOfCartItemOfferDetail({required int index}) {
-    cartItemsOfferDetail[index].count -= 1;
-    update();
+    if(cartItemsOfferDetail[index].count>1) {
+      cartItemsOfferDetail[index].count -= 1;
+      update();
+    }
   }
 
   void incrementQuantityOfCartItemOfferDetail({required int index}) {
@@ -259,6 +262,26 @@ class OfferController extends GetxController with StateMixin {
     });
   }
 
+  void addRateToOffer({required int offerId, required String offerKey, required double rate, required BuildContext context}){
+
+    _offerProvider.addRateToOffer(offerId: offerId, offerKey: offerKey, rate: rate).then((value) {
+      if(value){
+        Utils.snackBar(context: context, msg: translation.rateAddedSuccessfully.tr, background: ColorConstants.greenColor, textColor: Colors.white);
+        Get.back();
+        getOfferRate(offerId: offerId.toString());
+      }
+    });
+
+  }
+
+  var isUserRateOffer = false.obs;
+  void checkIfUserRatedBefore({required int offerId, required String offerKey,}){
+    _offerProvider.checkIfUserRatedBefore(offerId: offerId, offerKey: offerKey, ).then((value) {
+      if(value){
+        isUserRateOffer.value = false;
+      }});
+  }
+
   void getMerchant({
     required String catId,
   }) {
@@ -283,6 +306,7 @@ class OfferController extends GetxController with StateMixin {
     });
   }
 
+  
   @override
   void dispose() {
     scrollOfferDescriptionController.dispose();

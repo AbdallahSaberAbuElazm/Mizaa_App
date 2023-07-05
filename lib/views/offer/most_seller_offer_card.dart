@@ -11,7 +11,7 @@ import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
 import 'package:test_ecommerce_app/views/offer/offer_detail.dart';
 import 'package:test_ecommerce_app/views/offer/widget/merchant_logo.dart';
 import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
-as translation;
+    as translation;
 
 class MostSellerOfferCard extends StatefulWidget {
   final OfferModel offerModel;
@@ -19,9 +19,9 @@ class MostSellerOfferCard extends StatefulWidget {
   final double height;
   const MostSellerOfferCard(
       {Key? key,
-        required this.offerModel,
-        required this.width,
-        required this.height})
+      required this.offerModel,
+      required this.width,
+      required this.height})
       : super(key: key);
 
   @override
@@ -32,7 +32,8 @@ class _MostSellerOfferCardState extends State<MostSellerOfferCard> {
   late CompanyModel companyModel;
   @override
   void initState() {
-    companyModel = CompanyModel.fromJson(widget.offerModel.company!.map((key, value) => MapEntry(key.toString(), value)));
+    companyModel = CompanyModel.fromJson(widget.offerModel.company!
+        .map((key, value) => MapEntry(key.toString(), value)));
     super.initState();
   }
 
@@ -46,21 +47,31 @@ class _MostSellerOfferCardState extends State<MostSellerOfferCard> {
           showDialog(
               context: context,
               builder: (context) => const Center(
-                  child: CircularProgressIndicator(
+                      child: CircularProgressIndicator(
                     color: ColorConstants.mainColor,
                   )));
-          Controllers.offerController.getOffer(offerKey: widget.offerModel.key.toString())
+          Controllers.offerController
+              .getOffer(offerKey: widget.offerModel.key.toString())
               .then((offer) {
             Get.back();
             Get.put(OfferController(Get.find()));
-            Get.to(() => OfferDetail(offerModel:  offer));
+            Get.to(() => OfferDetail(offerModel: offer));
           });
         },
         child: Container(
           width: widget.width,
           height: widget.height,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+          margin: const EdgeInsets.only(top: 6,bottom:6),
+          decoration:const BoxDecoration(
+            borderRadius:  BorderRadius.all(Radius.circular(12)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(0, 1.4), // controls the offset of the shadow
+                blurRadius: 3, // controls the blur radius of the shadow
+                spreadRadius: 0, // controls the spread radius of the shadow
+              ),
+            ],
           ),
           child: Stack(
             children: [
@@ -70,14 +81,29 @@ class _MostSellerOfferCardState extends State<MostSellerOfferCard> {
                   _buildOfferDetailContainer(),
                 ],
               ),
+              Align(
+                alignment: Alignment.center,
+                child: Transform.translate(
+                    offset: const Offset(0, -4),
+                    child: Container(
+                        width: double.infinity,
+                        height: 10,
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(12),
+                                topRight: Radius.circular(12))))),
+              ),
               Transform.translate(
-                offset: const Offset(0,-10),
+                offset: const Offset(0, -10),
                 child: Align(
                   alignment: Alignment.center,
-                  child: MerchantLogo(merchantLogo:  companyModel.logo.toString(),
-                      containerWidth: 43, containerHeight: 43,
-                      logoWidth: 25, logoHeight: 25),
-
+                  child: MerchantLogo(
+                      merchantLogo: companyModel.logo.toString(),
+                      containerWidth: 43,
+                      containerHeight: 43,
+                      logoWidth: 25,
+                      logoHeight: 25),
                 ),
               ),
             ],
@@ -88,11 +114,12 @@ class _MostSellerOfferCardState extends State<MostSellerOfferCard> {
   // offer Image
   Widget _buildOfferImage() {
     return Container(
-      height: widget.height / 2 + 27,
+      height: widget.height / 2,
       width: double.infinity,
       alignment: Alignment.topCenter,
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(12)),
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(12), topRight: Radius.circular(12)),
         image: DecorationImage(
           image: CachedNetworkImageProvider(
             '${ApiConstants.storageURL}${widget.offerModel.mainImage.toString()}',
@@ -136,75 +163,89 @@ class _MostSellerOfferCardState extends State<MostSellerOfferCard> {
       ),
       child: Center(
           child: Text(
-            text,
-            style: const TextStyle(color: Colors.white, fontSize: 13),
-            textAlign: TextAlign.center,
-          )),
+        text,
+        style: const TextStyle(color: Colors.white, fontSize: 13),
+        textAlign: TextAlign.center,
+      )),
     );
   }
 
   // offer detail
   Widget _buildOfferDetailContainer() {
-    return Transform.translate(
-        offset: const Offset(0, -19),
-        child: Container(
-          width: double.infinity,
-          height: widget.height / 2,
-          padding: const EdgeInsets.all(10),
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(12))),
-          child: Row(
+    return Container(
+      width: double.infinity,
+      height: widget.height / 2,
+      padding: const EdgeInsets.all(10),
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(12),
+              bottomRight: Radius.circular(12))),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-
-                      SizedBox(
-                        height: 22,
-                        child: Text(
-                            translation.companyName.trParams({
-                              'companyName': Utils.getTranslatedText(arText: companyModel.arName.toString(), enText: companyModel.enName.toString())
-                            }),
-                          style: TextStyle(
-                              fontSize: 13, color: ColorConstants.greyColor,fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                      const SizedBox(height: 7,),
-                      SizedBox(
-                        height: 50,
-                        width: widget.width/1.75,
-                        child: Text(
-                          translation.offerName.trParams({
-                            'offerName': Utils.getTranslatedText(arText:  widget.offerModel.arTitle.toString(), enText: widget.offerModel.enTitle.toString())
-                          }),
-                          style: TextStyle(
-                              fontSize: 12, color: ColorConstants.black0,height: 1.2,fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _buildPriceContainer(
-                      text: '${widget.offerModel.priceAfterDiscount.toString()}${translation.currencyName.tr}'),
-                  const SizedBox(height: 2,),
-
-                  Text(
-                      '${widget.offerModel.priceBeforDiscount.toString()}${translation.currencyName.tr}',
-                    style: TextStyle(
-                        fontSize: 13, color: ColorConstants.greyColor,decoration: TextDecoration.lineThrough,),
-                  ),
-                ],
+              SizedBox(
+                height: 22,
+                child: Text(
+                  translation.companyName.trParams({
+                    'companyName': Utils.getTranslatedText(
+                        arText: companyModel.arName.toString(),
+                        enText: companyModel.enName.toString())
+                  }),
+                  style: TextStyle(
+                      fontSize: 13,
+                      color: ColorConstants.greyColor,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+              const SizedBox(
+                height: 7,
+              ),
+              SizedBox(
+                height: 50,
+                width: widget.width / 1.75,
+                child: Text(
+                  translation.offerName.trParams({
+                    'offerName': Utils.getTranslatedText(
+                        arText: widget.offerModel.arTitle.toString(),
+                        enText: widget.offerModel.enTitle.toString())
+                  }),
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: ColorConstants.black0,
+                      height: 1.2,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           ),
-        ));
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              _buildPriceContainer(
+                  text:
+                      '${widget.offerModel.priceAfterDiscount.toString()}${translation.currencyName.tr}'),
+              const SizedBox(
+                height: 2,
+              ),
+              Text(
+                '${widget.offerModel.priceBeforDiscount.toString()}${translation.currencyName.tr}',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: ColorConstants.greyColor,
+                  decoration: TextDecoration.lineThrough,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

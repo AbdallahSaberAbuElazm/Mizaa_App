@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/controllers/companies/company_controller.dart';
 import 'package:test_ecommerce_app/models/merchant/merchant_detail_model/merchant_detail_model.dart';
@@ -32,6 +33,14 @@ class MerchantDetail extends GetView<CompanyController> {
           extendBodyBehindAppBar: true,
           appBar: AppBar(
               backgroundColor: controller.appBarMerchantDetailColor.value,
+              flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
+                  value: SystemUiOverlayStyle(
+                    statusBarIconBrightness:
+                    Get.isDarkMode ? Brightness.light : Brightness.dark,
+                    statusBarBrightness:
+                    Get.isDarkMode ? Brightness.light : Brightness.dark,
+                  ),
+                  child: Container()),
               elevation: 0,
               toolbarHeight: 80,
               shape: const RoundedRectangleBorder(
@@ -75,9 +84,9 @@ class MerchantDetail extends GetView<CompanyController> {
                 child: Text(
                   translation.offerName.trParams({
                     'offerName': Utils.getTranslatedText(
-                        arText: translation.offersText.tr + companyModel.arName.toString(),
+                        arText: '${translation.offersWithoutThe.tr} ${companyModel.arName}',
                         // companyModel.description.toString(),
-                        enText: translation.offersText.tr + companyModel.enName.toString()
+                        enText: '${translation.offersWithoutThe.tr} ${companyModel.enName}'
                     )
                   }),
                   style: TextStyle(
@@ -254,7 +263,7 @@ class MerchantDetail extends GetView<CompanyController> {
                   return OfferCard(
                       offerModel: offers[index],
                       width: MediaQuery.of(context).size.width,
-                      height: 204);
+                      height: 248);
                 },
               )
             :  Center(

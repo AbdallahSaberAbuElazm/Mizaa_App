@@ -28,7 +28,7 @@ class _CounterScreenState extends State<CounterScreen> {
                 setState(() {
                   Controllers.offerController
                       .incrementQuantityOfCartItemOfferDetail(
-                      index: widget.index);
+                          index: widget.index);
                   print(
                       'quantity is ${Controllers.offerController.cartItemsOfferDetail[widget.index].count}');
                 });
@@ -53,24 +53,21 @@ class _CounterScreenState extends State<CounterScreen> {
             width: 10,
           ),
           Obx(() => Text(
-                '${(Controllers.offerController.cartItemsOfferDetail.isNotEmpty) ? Controllers.offerController.cartItemsOfferDetail[widget.index].count : 0}',
+                '${(Controllers.offerController.cartItemsOfferDetail.isNotEmpty) ? Controllers.offerController.cartItemsOfferDetail[widget.index].count.value == 0 ? widget.index == 0 ? 1 : Controllers.offerController.cartItemsOfferDetail[widget.index].count.value : Controllers.offerController.cartItemsOfferDetail[widget.index].count.value : widget.index == 0 ? 1 : 0}',
                 style: TextStyle(
                     color: ColorConstants.black0,
                     fontSize: 13,
                     fontWeight: FontWeight.w600),
               )),
-
           const SizedBox(
             width: 10,
           ),
-
-
           GestureDetector(
               onTap: () {
                 setState(() {
                   Controllers.offerController
                       .decrementQuantityOfCartItemOfferDetail(
-                      index: widget.index);
+                          index: widget.index);
                   print(
                       'quantity is ${Controllers.offerController.cartItemsOfferDetail[widget.index].count}');
                 });

@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:test_ecommerce_app/models/companies/CompanyModel.dart';
 import 'package:test_ecommerce_app/models/merchant/merchant_model.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
 import 'package:test_ecommerce_app/models/offers/offer_rate/OfferRateModel.dart';
@@ -34,7 +32,7 @@ class OfferRepository {
   }
 
   Future<List<OfferModel>> getSpecialOffers({required String cityId}) async {
-    var response =  await http.get(Uri.parse('${ApiConstants.specialOfferByCityUrl}$cityId'));
+    var response =  await http.get(Uri.parse('${ApiConstants.newOfferByCityUrl}$cityId'));
     if (response.statusCode == 200) {
       final List<dynamic> body = json.decode(response.body);
       return  body.map((json) => OfferModel.fromJson(json)).toList();
@@ -112,5 +110,66 @@ class OfferRepository {
     }
   }
 
+  Future<bool> addRateToOffer({required int offerId, required String offerKey, required double rate})async{
 
+    final body = {
+      "offerId": offerId,
+      "OfferKey":offerKey,
+      "rate": rate,
+      "applicationUserId":SharedPreferencesClass.getApplicationUserId()
+    };
+
+    print('user application id is ${SharedPreferencesClass.getApplicationUserId()} and body is $body');
+
+    final response = await http.post(
+      Uri.parse(ApiConstants.addRateToOffer),
+      body: json.encode(body),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${SharedPreferencesClass.getToken()}",
+      },
+    );
+
+    Map<String, dynamic> bodyData = {};
+    if (response.statusCode == 200) {
+      bodyData = json.decode(response.body);
+    }
+    print('response code is ${response.statusCode}');
+    if(bodyData['isDone'] == true){
+      print('rate added');
+      return true;
+    }else {
+      return false;
+    }
+  }
+
+  Future<bool> checkIfUserRatedBefore({required int offerId, required String offerKey})async{
+    final body = {
+      "offerId": offerId,
+      "OfferKey":offerKey,
+      "applicationUserId":SharedPreferencesClass.getApplicationUserId()
+    };
+
+
+
+    final response = await http.post(
+      Uri.parse(ApiConstants.checkIfUserRateBefore),
+      body: json.encode(body),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${SharedPreferencesClass.getToken()}",
+      },
+    );
+    Map<String, dynamic> bodyData = {};
+    if (response.statusCode == 200) {
+      bodyData = json.decode(response.body);
+    }
+    print('response code is ${response.statusCode}');
+    if(bodyData['isRatedBefor'] == true){
+      print(' user rated before ${bodyData['isRatedBefor']} token is ${SharedPreferencesClass.getToken()} and user mobile is ${SharedPreferencesClass.getPhoneNumber()}');
+      return true;
+    }else {
+      return false;
+    }
+  }
 }

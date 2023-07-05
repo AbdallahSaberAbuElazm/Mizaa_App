@@ -22,14 +22,27 @@ class _ExpandedCardState extends State<ExpandedCard> {
   final GlobalKey<ExpansionTileCardState> cardA = GlobalKey();
   final GlobalKey<ExpansionTileCardState> cardB = GlobalKey();
 
+
+
   bool isExpanded = false;
+  @override
+  void initState() {
+   // if(widget.index == 0){
+     setState(() {
+       isExpanded=true;
+     });
+   // }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ExpansionTileCard(expandedColor: Colors.white,baseColor: Colors.white,
+      initiallyExpanded: true,
+      // (widget.index ==0 )? true: false,
       trailing: Icon(
-          isExpanded? Icons.arrow_drop_up_outlined: Icons.arrow_right_outlined,
-          color: isExpanded? ColorConstants.mainColor: ColorConstants.greyColor
+        isExpanded? Icons.keyboard_arrow_up_outlined: Icons.keyboard_arrow_down_outlined,
+          color:isExpanded? ColorConstants.mainColor: ColorConstants.greyColor
       ), onExpansionChanged: (value) {
         setState(() {
           isExpanded = value;
@@ -38,14 +51,14 @@ class _ExpandedCardState extends State<ExpandedCard> {
       title: Text(
         widget.title,
         style: Theme.of(context).textTheme.subtitle1!.copyWith(
-            fontWeight: FontWeight.bold,color: ColorConstants.black0
+            fontWeight: FontWeight.w600,color: ColorConstants.black0, fontSize: 13
         ),
       ),
       children: [
         Container(
             width: MediaQuery.of(context).size.width,
             color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -39,7 +39,7 @@ class Register extends GetView<UserAuthenticationController> {
                 toolbarHeight: 80,
                 leadingWidth: 200,
                 leading:   Padding(
-                  padding: const EdgeInsets.only(left: 16,right: 16),
+                  padding: const EdgeInsets.only(left: 14,right: 14),
                   child: GestureDetector(
                     onTap: (){
                       controller.clearRecoveryTextFieldData();

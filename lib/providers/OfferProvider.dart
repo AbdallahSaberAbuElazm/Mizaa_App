@@ -1,4 +1,4 @@
-import 'package:test_ecommerce_app/models/companies/CompanyModel.dart';
+
 import 'package:test_ecommerce_app/models/merchant/merchant_model.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
 import 'package:test_ecommerce_app/models/offers/offer_rate/OfferRateModel.dart';
@@ -38,6 +38,14 @@ class OfferProvider {
 
   Future<List<OfferRateModel>> getOfferRate({required String offerId,}) async {
     return await _offerRepository.getOfferRate(id: offerId);
+  }
+
+  Future<bool> addRateToOffer({required int offerId, required String offerKey, required double rate})async{
+    return await _offerRepository.addRateToOffer(offerId: offerId, offerKey: offerKey, rate: rate);
+  }
+
+  Future<bool> checkIfUserRatedBefore({required int offerId, required String offerKey,})async{
+    return await _offerRepository.checkIfUserRatedBefore(offerId: offerId, offerKey: offerKey,);
   }
 
   Future<List<MerchantModel>> getMerchants({required String categoryId, required String cityId})async{

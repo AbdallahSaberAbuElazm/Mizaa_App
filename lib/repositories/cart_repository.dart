@@ -94,22 +94,22 @@ class CartRepository{
 
   Future<List<CartItemModel>> getAllCart() async {
 
-    var response = await http.get(Uri.parse('${ApiConstants.getCartByUserMobile}${SharedPreferencesClass.getPhoneNumber()}'),
-    );
-    if (response.statusCode == 200) {
-      final  body = json.decode(response.body);
-      List<CartItemModel> cartItems = [];
-      if (body is List && body.isNotEmpty) {
-        final cartDetails = body[0]['cartDetails'];
+      var response = await http.get(Uri.parse('${ApiConstants.getCartByUserMobile}${SharedPreferencesClass.getPhoneNumber()}'),
+      );
+      if (response.statusCode == 200) {
+        final  body = json.decode(response.body);
+        List<CartItemModel> cartItems = [];
+        if (body is List && body.isNotEmpty) {
+          final cartDetails = body[0]['cartDetails'];
 
-        if (cartDetails is List) {
-          cartItems = cartDetails.map((cartItem) => CartItemModel.fromJson(cartItem)).toList();
+          if (cartDetails is List) {
+            cartItems = cartDetails.map((cartItem) => CartItemModel.fromJson(cartItem)).toList();
+          }
         }
+        return cartItems;
+      } else {
+        throw ServerException();
       }
-      return cartItems;
-    } else {
-      throw ServerException();
-    }
   }
 
   Future<void> clearCart() async{

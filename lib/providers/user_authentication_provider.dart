@@ -1,6 +1,8 @@
 import 'package:test_ecommerce_app/models/location/city/CityModel.dart';
 import 'package:test_ecommerce_app/models/location/country/CountryModel.dart';
+import 'package:test_ecommerce_app/models/user/basic_info/user_basic_info.dart';
 import 'package:test_ecommerce_app/models/user/user_service.dart';
+import 'package:test_ecommerce_app/models/user/wallet/wallet_model.dart';
 import 'package:test_ecommerce_app/repositories/user_authentication_repository.dart';
 
 class UserAuthenticationProvider{
@@ -10,6 +12,10 @@ class UserAuthenticationProvider{
   Future<UserService> otpLogin(
       {required String mobileNo, required String password}) async {
     return await userAuthenticationRepository.otpLogin(mobileNo: mobileNo, password: password);
+  }
+
+  Future<UserBasicInfo> getUserBasicInfo({required String phoneNumber, required String token}) async {
+    return await userAuthenticationRepository.getUserBasicInfo(phoneNumber: phoneNumber, token: token);
   }
 
   Future<Map<String, dynamic>> recoverPasswordOtp({required String password, required String mobile, required String otp})async {
@@ -41,5 +47,9 @@ class UserAuthenticationProvider{
 
   Future<List<CityModel>> getCites({required String id})async{
     return await userAuthenticationRepository.getCites(id: id);
+  }
+
+  Future<WalletModel> getUserWallet()async{
+    return await userAuthenticationRepository.getUserWallet();
   }
 }

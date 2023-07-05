@@ -37,10 +37,14 @@ void main() async {
   Hive.registerAdapter(OfferOptionsAdapter());
   Hive.registerAdapter(CompanyModelAdapter());
   await Hive.openBox<CartModel>('cart_box');
-  SystemChrome.setSystemUIOverlayStyle( SystemUiOverlayStyle(
-    systemNavigationBarColor:Get.isDarkMode? ColorConstants.darkMainColor: ColorConstants.mainColor, // navigation bar color
-    statusBarColor:Get.isDarkMode? ColorConstants.darkMainColor: ColorConstants.mainColor, // status bar color
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.white, // navigation bar color
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarColor: Colors.white, // status bar color
+      statusBarIconBrightness: Brightness.dark,
+    ),
+  );
 
   runApp(Mizaa(savedLanguage: savedLanguage));
 }
@@ -66,6 +70,11 @@ class Mizaa extends StatelessWidget {
         getPages: Routes.routes,
         initialRoute: Routes.INITIAL,
         initialBinding: AppBinding(),
+          builder:(context,child){
+            final mediaQueryData = MediaQuery.of(context);
+            final scale = mediaQueryData.textScaleFactor.clamp(1.0, 1.1);
+            return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: scale), child: child!);
+          }
     );
   }
 

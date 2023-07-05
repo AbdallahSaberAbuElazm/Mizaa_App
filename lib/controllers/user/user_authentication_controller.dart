@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:test_ecommerce_app/models/location/city/CityModel.dart';
 import 'package:test_ecommerce_app/models/location/country/CountryModel.dart';
+import 'package:test_ecommerce_app/models/user/wallet/wallet_history/wallet_history_model.dart';
+import 'package:test_ecommerce_app/models/user/wallet/wallet_model.dart';
 import 'package:test_ecommerce_app/providers/user_authentication_provider.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
@@ -11,7 +12,7 @@ import 'package:test_ecommerce_app/views/authentication/otp_verifiy_screen.dart'
 import 'package:test_ecommerce_app/models/user/user_login_data.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
-as translation;
+    as translation;
 
 class UserAuthenticationController extends GetxController {
   final UserAuthenticationProvider userAuthenticationProvider;
@@ -37,10 +38,53 @@ class UserAuthenticationController extends GetxController {
   final countries = <CountryModel>[].obs;
   final cities = <CityModel>[].obs;
 
+  final userWallet = WalletModel(
+          name: '',
+          mobile: '',
+          applicationUserId: '',
+          balance: 0.0,
+          points: 0,
+          city: 0,
+          country: 0,
+          walletHistory: [])
+      .obs;
+
+  final walletHistories = <WalletHistoryModel>[].obs;
+
+  //////// wallet screen attributes
+
+  var num = 0.obs;
+  var btnName = translation.all.tr.obs;
+
+  // app bar for wallet screen
+  late ScrollController scrollWalletScreenController ;
+  final isScrolledWalletScreen = false.obs;
+  final appBarWalletScreenColor = Colors.transparent.obs;
+  final appBarItemContainerWalletScreenColor = Colors.white.obs;
+  final appBarItemWalletScreenColor = Colors.white.obs;
 
   @override
   void onInit() {
+    scrollWalletScreenController = ScrollController()
+      ..addListener(_onScrollCartScreen);
     super.onInit();
+  }
+
+
+  void _onScrollCartScreen() {
+    if (scrollWalletScreenController.offset > 20 &&
+        !isScrolledWalletScreen.value) {
+      isScrolledWalletScreen.value = true;
+      appBarWalletScreenColor.value = Get.isDarkMode ? ColorConstants.bottomAppBarDarkColor : Colors.white;
+      appBarItemContainerWalletScreenColor.value = ColorConstants.mainColor;
+      appBarItemWalletScreenColor.value = Colors.black;
+    } else if (scrollWalletScreenController.offset <= 20 &&
+        isScrolledWalletScreen.value) {
+      isScrolledWalletScreen.value = false;
+      appBarWalletScreenColor.value = Colors.transparent;
+      appBarItemContainerWalletScreenColor.value = Colors.white;
+      appBarItemWalletScreenColor.value = Colors.white;
+    }
   }
 
   @override
@@ -72,28 +116,31 @@ class UserAuthenticationController extends GetxController {
   }
 
   void updateButtonStateLoginScreen() {
-    isButtonEnabled.value = phoneNumberController.text.isNotEmpty && phoneNumberController.text.length == selectedCountryPhoneLength.value  &&
+    isButtonEnabled.value = phoneNumberController.text.isNotEmpty &&
+        phoneNumberController.text.length == selectedCountryPhoneLength.value &&
         passwordController.text.isNotEmpty;
   }
 
   void updateButtonStateRegisterScreen() {
-    isButtonEnabled.value = phoneNumberController.text.isNotEmpty && phoneNumberController.text.length == selectedCountryPhoneLength.value  &&
+    isButtonEnabled.value = phoneNumberController.text.isNotEmpty &&
+        phoneNumberController.text.length == selectedCountryPhoneLength.value &&
         passwordController.text.isNotEmpty &&
-        confirmPasswordController.text.isNotEmpty && passwordController.text ==
-        confirmPasswordController.text &&
+        confirmPasswordController.text.isNotEmpty &&
+        passwordController.text == confirmPasswordController.text &&
         firstNameController.text.isNotEmpty;
   }
 
   void updateButtonStateRecoveryScreen() {
-    isButtonEnabled.value = phoneNumberController.text.isNotEmpty && phoneNumberController.text.length == selectedCountryPhoneLength.value  &&
+    isButtonEnabled.value = phoneNumberController.text.isNotEmpty &&
+        phoneNumberController.text.length == selectedCountryPhoneLength.value &&
         passwordController.text.isNotEmpty &&
-        confirmPasswordController.text.isNotEmpty && passwordController.text ==
-        confirmPasswordController.text;
+        confirmPasswordController.text.isNotEmpty &&
+        passwordController.text == confirmPasswordController.text;
   }
 
   ///////////
   //update isChecked agree policy in register
-  updateIsChecked({required bool isCheckedValue}){
+  updateIsChecked({required bool isCheckedValue}) {
     isChecked.value = isCheckedValue;
     update();
   }
@@ -123,7 +170,8 @@ class UserAuthenticationController extends GetxController {
   void getCountries() {
     userAuthenticationProvider.getCountries().then((value) {
       countries.value = value;
-      Controllers.directionalityController.updateCountries(countriesData: value);
+      Controllers.directionalityController
+          .updateCountries(countriesData: value);
     });
   }
 
@@ -148,14 +196,20 @@ class UserAuthenticationController extends GetxController {
                 firstName: userService.firstName,
                 phoneNumber: userService.phoneNumber,
                 token: userService.token));
-
-        isButtonEnabled.value = false;
-        Get.offNamed('/home')!.then((value){
-          clearLoginTextFieldData();
+        userAuthenticationProvider.getUserBasicInfo(phoneNumber:userService.phoneNumber, token: userService.token ).then((value) {
+          SharedPreferencesClass.setUserBasicInfo(userBasicInfo: value);
         });
 
+        isButtonEnabled.value = false;
+        Get.offNamed('/home')!.then((value) {
+          clearLoginTextFieldData();
+        });
       } else {
-        Utils.snackBar(context: context, msg: translation.loginInfoIncorrect.tr,background: ColorConstants.redColor, textColor: Colors.white);
+        Utils.snackBar(
+            context: context,
+            msg: translation.loginInfoIncorrect.tr,
+            background: ColorConstants.redColor,
+            textColor: Colors.white);
       }
     });
   }
@@ -170,12 +224,20 @@ class UserAuthenticationController extends GetxController {
         .then((value) {
       Get.back();
       if (value['isSuccess'] == true) {
-        Utils.snackBar(context: context, msg:
-        Utils.getTranslatedText(arText:value['message'] , enText: value['enmessage'])
-        ,background: ColorConstants.greenColor,textColor: Colors.white);
+        Utils.snackBar(
+            context: context,
+            msg: Utils.getTranslatedText(
+                arText: value['message'], enText: value['enmessage']),
+            background: ColorConstants.greenColor,
+            textColor: Colors.white);
         Get.offAllNamed('/login');
       } else {
-        Utils.snackBar(context: context, msg: Utils.getTranslatedText(arText:value['message'] , enText: value['enmessage']),background: ColorConstants.redColor,textColor: Colors.white);
+        Utils.snackBar(
+            context: context,
+            msg: Utils.getTranslatedText(
+                arText: value['message'], enText: value['enmessage']),
+            background: ColorConstants.redColor,
+            textColor: Colors.white);
       }
     });
   }
@@ -196,7 +258,11 @@ class UserAuthenticationController extends GetxController {
               routeName: 'recover',
             ));
       } else {
-        Utils.snackBar(context: context, msg:translation.verifyDataText.tr,background: ColorConstants.redColor,textColor: Colors.white);
+        Utils.snackBar(
+            context: context,
+            msg: translation.verifyDataText.tr,
+            background: ColorConstants.redColor,
+            textColor: Colors.white);
       }
     });
   }
@@ -226,7 +292,11 @@ class UserAuthenticationController extends GetxController {
             ));
         clearRegisterTextFieldData();
       } else {
-        Utils.snackBar(context: context, msg: value['message'],background: ColorConstants.yellowColor,textColor: ColorConstants.black0);
+        Utils.snackBar(
+            context: context,
+            msg: value['message'],
+            background: ColorConstants.yellowColor,
+            textColor: ColorConstants.black0);
       }
     });
   }
@@ -247,14 +317,74 @@ class UserAuthenticationController extends GetxController {
         .then((value) {
       if (value['isAuthenticated'] == true) {
         otpController.value = '';
-        Utils.snackBar(context: context, msg: translation.accountCreatedSuccessfully.tr,background: ColorConstants.greenColor ,textColor: Colors.white);
+        Utils.snackBar(
+            context: context,
+            msg: translation.accountCreatedSuccessfully.tr,
+            background: ColorConstants.greenColor,
+            textColor: Colors.white);
         Get.offAllNamed('/login');
       } else {
-
-          Get.back();
-          Utils.snackBar(context: context, msg: translation.codeEnteredIncorrect.tr,background: ColorConstants.redColor, textColor: Colors.white  );
-
+        Get.back();
+        Utils.snackBar(
+            context: context,
+            msg: translation.codeEnteredIncorrect.tr,
+            background: ColorConstants.redColor,
+            textColor: Colors.white);
       }
     });
+  }
+
+  //////////// User Wallet /////////
+
+  Future<WalletModel> getUserWallet(){
+    return userAuthenticationProvider.getUserWallet().then((wallet) {
+      walletHistories.value = wallet.walletHistory
+          .map((walletHistory) => WalletHistoryModel.fromJson(walletHistory))
+          .toList();
+
+      return userWallet.value = wallet;
+    });
+  }
+
+  getUserIncomeWallet(){
+      walletHistories.value = userWallet.value.walletHistory.where((walletHistory) => walletHistory['money'] > 0)
+          .map((walletHistory) => WalletHistoryModel.fromJson(walletHistory))
+          .toList();
+  }
+
+  getUserSpendingWallet(){
+      walletHistories.value = userWallet.value.walletHistory.where((walletHistory) => walletHistory['money'] < 0)
+          .map((walletHistory) =>WalletHistoryModel.fromJson(walletHistory))
+          .toList();
+  }
+
+  var incomePrice = 0.0.obs;
+  double getIncomePrice(){
+    incomePrice.value = 0.0;
+    userWallet.value.walletHistory.forEach((walletHistory){
+      final WalletHistoryModel walletHistoryModel = WalletHistoryModel.fromJson(walletHistory);
+      if(walletHistoryModel.money > 0){
+        incomePrice.value += walletHistoryModel.money;
+      }
+      });
+    return incomePrice.value;
+  }
+
+  var spendingPrice = 0.0.obs;
+  double getSpendingPrice(){
+    spendingPrice.value = 0.0;
+    userWallet.value.walletHistory.forEach((walletHistory){
+      final WalletHistoryModel walletHistoryModel = WalletHistoryModel.fromJson(walletHistory);
+      if(walletHistoryModel.money < 0){
+        spendingPrice.value += walletHistoryModel.money;
+      }
+    });
+    return spendingPrice.value;
+  }
+
+  setBtnNameAndNum({required String name, required int number}){
+    btnName.value = name;
+    num.value = number;
+    update();
   }
 }

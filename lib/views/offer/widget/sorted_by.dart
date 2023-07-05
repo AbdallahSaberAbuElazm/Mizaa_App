@@ -53,7 +53,7 @@ class _SortedByState extends State<SortedBy> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.only(top: 10, bottom: 10, right: 16, left: 5),
+      padding: const EdgeInsets.only(top: 10, bottom: 10, right: 14, left: 5),
       decoration:  BoxDecoration(
         color: Get.isDarkMode? ColorConstants.darkMainColor: Colors.white,
         borderRadius:const BorderRadius.only(

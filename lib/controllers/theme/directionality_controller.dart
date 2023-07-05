@@ -15,7 +15,9 @@ class DirectionalityController extends GetxController{
 
   final dropLanguageData = ''.obs;
   final  dropCountryData = ''.obs;
+  final countryId = ''.obs;
   final dropCityData = ''.obs;
+  final cityId = ''.obs;
 
   final countries = <CountryModel>[].obs;
   final cities = <CityModel>[].obs;

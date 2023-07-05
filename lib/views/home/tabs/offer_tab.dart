@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/services.dart';
 import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
 import 'package:test_ecommerce_app/controllers/home/HomeController.dart';
 import 'package:test_ecommerce_app/controllers/offers/OfferController.dart';
@@ -13,13 +14,13 @@ import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:test_ecommerce_app/views/cart/cart_screen.dart';
-import 'package:test_ecommerce_app/views/home/HomePage.dart';
 import 'package:test_ecommerce_app/views/offer/offer_detail.dart';
 import 'package:test_ecommerce_app/views/offer/sub_categories.dart';
 import 'package:test_ecommerce_app/views/offer/OfferCard.dart';
 import 'package:test_ecommerce_app/views/offer/new_offer_card.dart';
 import 'package:test_ecommerce_app/views/offer/most_seller_offer_card.dart';
 import 'package:test_ecommerce_app/views/widgets/chatting_btn.dart';
+import 'package:test_ecommerce_app/views/widgets/custom_button.dart';
 import 'package:test_ecommerce_app/views/widgets/search_screen.dart';
 import 'package:test_ecommerce_app/views/widgets/shimmer_container.dart';
 import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
@@ -44,6 +45,7 @@ class ExploreTab extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     Get.put(CartController(Get.find()));
+
     return SafeArea(
         child: Obx(() => Scaffold(
               extendBodyBehindAppBar:
@@ -51,6 +53,14 @@ class ExploreTab extends GetView<HomeController> {
               appBar: AppBar(
                   backgroundColor: controller.appBarColor
                       .value, // Set the background color to transparent
+                  flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
+                      value: SystemUiOverlayStyle(
+                        statusBarIconBrightness:
+                        Get.isDarkMode ? Brightness.light : Brightness.dark,
+                        statusBarBrightness:
+                        Get.isDarkMode ? Brightness.light : Brightness.dark,
+                      ),
+                      child: Container()),
                   elevation: 0,
                   toolbarHeight: 80,
                   shape: const RoundedRectangleBorder(
@@ -93,8 +103,8 @@ class ExploreTab extends GetView<HomeController> {
                                 )
                               : Padding(
                                   padding: EdgeInsets.only(
-                                      left:Utils.leftPadding8FromRight,
-                                      right: Utils.rightPadding8FromLeft),
+                                      left:Utils.leftPadding10FromRight,
+                                      right: Utils.rightPadding10FromLeft),
                                   child: ShimmerListView(
                                     width: 118,
                                     height: 112,
@@ -106,12 +116,12 @@ class ExploreTab extends GetView<HomeController> {
                                 ),
                         )),
                     const SizedBox(
-                      height: 16,
+                      height: 23,
                     ),
                     _buildSection(
                         title: translation.hotOffersText.tr,
                         onPressed: () {
-
+                          controller.isLoadingOffersMainCategory.value = false;
                           Get.to(() =>
                               // HomePage(recentPage:
                           OfferListForMainCategoryPage(
@@ -125,7 +135,7 @@ class ExploreTab extends GetView<HomeController> {
                         },
                         theme: theme),
                     const SizedBox(
-                      height: 10,
+                      height: 14,
                     ),
                     Obx(() => (controller.todayOffers.isNotEmpty)
                         ? _buildTheHotOffers(
@@ -134,27 +144,31 @@ class ExploreTab extends GetView<HomeController> {
                           )
                         : _shimmerForListViewForOffer(height: 224)),
                     const SizedBox(
-                      height: 3,
+                      height: 23,
                     ),
                     _buildSection(
                         title: translation.outingsText.tr,
                         onPressed: () {
-                          Get.to(() => HomePage(recentPage: SubCategoryPage(
+                          Get.to(() =>
+                              // HomePage(recentPage:
+                              SubCategoryPage(
                               categories: controller.subCategoryOutings,
-                              subCategoryName: translation.outingsText.tr) , selectedIndex: 0));
+                              subCategoryName: translation.outingsText.tr) ,
+                              // selectedIndex: 0)
+                          );
                         },
                         theme: theme),
                     const SizedBox(
-                      height: 10,
+                      height: 14,
                     ),
                     _buildSubCategoryOutings(theme),
                     const SizedBox(
-                      height: 16,
+                      height: 23,
                     ),
                     _buildSection(
                         title: translation.mostSellerText.tr,
                         onPressed: () {
-
+                        controller.isLoadingOffersMainCategory.value = false;
                           Get.to(() =>
                               // HomePage(recentPage:
                               OfferListForMainCategoryPage(
@@ -168,7 +182,7 @@ class ExploreTab extends GetView<HomeController> {
                         },
                         theme: theme),
                     const SizedBox(
-                      height: 10,
+                      height: 14,
                     ),
                     Obx(() => (controller.mostSellerOffers.isNotEmpty)
                         ? _buildMostSellerOffers(
@@ -176,7 +190,9 @@ class ExploreTab extends GetView<HomeController> {
                             theme: theme,
                           )
                         : _shimmerForListViewForOffer(height: 224)),
-
+                    const SizedBox(
+                      height: 23,
+                    ),
                     _buildSection(
                         title: translation.newOfferText.tr,
                         onPressed: () {
@@ -185,7 +201,7 @@ class ExploreTab extends GetView<HomeController> {
                               // HomePage(recentPage:
                           OfferListForMainCategoryPage(
                               typeOfCategory: TypeOfCategory.specificOffers,
-                              mainCategoryName: translation.mostSellerText.tr,
+                              mainCategoryName: translation.newOfferText.tr,
                               categoryId: -1,
                               offers: controller.specialOffers)
                               // , selectedIndex: 0)
@@ -194,26 +210,27 @@ class ExploreTab extends GetView<HomeController> {
                         },
                         theme: theme),
                     const SizedBox(
-                      height: 10,
+                      height: 14,
                     ),
-                    // Obx(() => (controller.specialOffers.isNotEmpty)
-                    //     ? _buildNewOfferCard(
-                    //         offerModels: controller.specialOffers,
-                    //         theme: theme,
-                    //       )
-                    Obx(() => (controller.todayOffers.isNotEmpty)
+                    Obx(() => (controller.specialOffers.isNotEmpty)
                         ? _buildNewOfferCard(
-                            offerModels: controller.todayOffers,
+                            offerModels: controller.specialOffers,
                             theme: theme,
-                            context: context)
-                        : _shimmerForListViewForOffer(height: 260)),
+                            context: context
+                          )
+                    // Obx(() => (controller.todayOffers.isNotEmpty)
+                    //     ? _buildNewOfferCard(
+                    //         offerModels: controller.todayOffers,
+                    //         theme: theme,
+                    //         context: context)
+                        : _shimmerForListViewForOffer(height: 123)),
 
                     const SizedBox(
-                      height: 16,
+                      height: 23,
                     ),
 
                     Obx(() => CustomIndicatorCarousel(
-                        list: controller.todayOffers,
+                        list: controller.specialOffers,
                         currentBanner: controller.currentBannerNewOffer.value)),
                     const SizedBox(
                       height: 25,
@@ -249,13 +266,44 @@ class ExploreTab extends GetView<HomeController> {
             const SizedBox(
               width: 6,
             ),
-            Obx(() => appBarIcon(
-                onPressed: (){
-                  Get.to(()=>const CartScreen(comingForCart: ComingForCart.homPage,));
-                },
-                icon: Icons.shopping_cart_rounded,
-                containerColor: controller.appBarItemContainerColor.value,
-                iconColor: controller.appBarItemColor.value)),
+            Obx(() => Stack(
+              children: [
+                appBarIcon(
+                    onPressed: (){
+                      if( SharedPreferencesClass.getToken() == null ||
+                          SharedPreferencesClass.getToken() == ''){
+                        Utils.showAlertDialogForRegisterLogin(context: context);
+                      }else{
+                        Get.to(()=>const CartScreen(comingForCart: ComingForCart.homPage,));
+                      }
+
+                    },
+                    icon: Icons.shopping_cart_rounded,
+                    containerColor: controller.appBarItemContainerColor.value,
+                    iconColor: controller.appBarItemColor.value),
+                Transform.translate(
+                  offset: const Offset(-3,-9),
+                  child: Align(
+                    alignment: Controllers.directionalityController.languageBox.value.read('language') == 'ar'?
+                    Alignment.topRight: Alignment.topRight ,
+                    child: Obx(()=>Container(
+                      width: 19,height: 19,
+                      alignment: Alignment.center,
+                      // padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child: Center(
+                        child: Text(Controllers.cartController.cartItems.length.toString(),
+                            style: const TextStyle(color: ColorConstants.mainColor, fontSize: 12, fontWeight: FontWeight.bold)),
+                      ))
+                    )
+
+                  ),
+                )
+              ],
+            )),
           ],
         )
       ],
@@ -307,10 +355,11 @@ class ExploreTab extends GetView<HomeController> {
 
   //to detect ( language - country - city)
   _buildBottomSheet({required BuildContext context}) {
-    Get.bottomSheet(isDismissible: false,
+    Get.bottomSheet(
+        isDismissible: true,
         Container(
-      padding: const EdgeInsets.all(16),
-      height: 400,
+      padding: const EdgeInsets.all(14),
+      height: 484,
       decoration:  BoxDecoration(
           color: Get.isDarkMode? ColorConstants.darkMainColor: Colors.white,
           borderRadius: const BorderRadius.only(
@@ -329,6 +378,12 @@ class ExploreTab extends GetView<HomeController> {
               dropDownValue:
                   Controllers.directionalityController.dropLanguageData.value,
               onChanged: (value) {
+                showDialog(
+                    context: context,
+                    builder: (context) => const Center(
+                        child: CircularProgressIndicator(
+                          color: ColorConstants.mainColor,
+                        )));
                 Controllers.directionalityController.dropLanguageData.value =
                     value;
 
@@ -353,8 +408,9 @@ class ExploreTab extends GetView<HomeController> {
                     language: Controllers
                         .directionalityController.dropLanguageData.value);
 
-                Controllers.directionalityController.dropCountryData.value = '';
-                Controllers.directionalityController.dropCityData.value = '';
+                controller.dropCountryData.value = '';
+                controller.dropCityData.value = '';
+                Get.back();
               },
               menu: [
                 'العربية',
@@ -377,16 +433,16 @@ class ExploreTab extends GetView<HomeController> {
                 optionName: translation.selectCountry.tr,
                 dropDownValue: controller.dropCountryData.value,
                 onChanged: (country) {
-                  Controllers.directionalityController.dropCountryData.value =
+                  controller.dropCountryData.value =
                   Utils.getTranslatedText(arText:  country.arName, enText: country.enName);
 
                   Controllers.userAuthenticationController
                       .getCities(countryId: country.id.toString());
 
-                  Controllers.directionalityController.dropCityData.value = "";
+                  controller.dropCityData.value = "";
+                  controller.cityId.value = '';
+                  controller.countryId.value = country.id.toString();
 
-                  SharedPreferencesClass.setUserCountryId(
-                      countryId: country.id.toString());
                 },
                 menu: Controllers.directionalityController.countries,
                 context: context,
@@ -406,13 +462,13 @@ class ExploreTab extends GetView<HomeController> {
             () => Utils.drawDropDownListCitiesBtn(
                 optionName: translation.selectCity.tr,
                 dropDownValue:
-                    Controllers.directionalityController.dropCityData.value,
+                controller.dropCityData.value,
                 onChanged: (city) {
-                  Controllers.directionalityController.dropCityData.value =
+                  controller.dropCityData.value =
                   Utils.getTranslatedText(arText: city.arName, enText: city.enName);
 
-                  SharedPreferencesClass.setUserCity(
-                      cityId: city.id.toString());
+                  controller.cityId.value = city.id.toString();
+
                 },
                 menu: Controllers.directionalityController.cities,
                 context: context,
@@ -423,24 +479,63 @@ class ExploreTab extends GetView<HomeController> {
           const SizedBox(
             height: 30,
           ),
-          // CustomButton(
-          //     btnText: translation.saveText.tr,
-          //     textColor: Colors.white,
-          //     textSize: 17,
-          //     btnBackgroundColor: ColorConstants.mainColor,
-          //     btnOnpressed: () {
-          //       if (SharedPreferencesClass.getCountryId() != null &&
-          //           SharedPreferencesClass.getCountryId() != '' &&
-          //           SharedPreferencesClass.getCityId() != null &&
-          //           SharedPreferencesClass.getCityId() != '') {
-          //
-          //       } else {
-          //         Utils.snackBar(
-          //             context: context,
-          //             background: ColorConstants.redColor,
-          //             msg: translation.completeDataText.tr);
-          //       }
-          //     }),
+          CustomButton(
+              btnText: translation.saveText.tr,
+              textColor: Colors.white,
+              textSize: 17,
+              btnBackgroundColor: ColorConstants.mainColor,
+              btnOnpressed: () {
+                if (Controllers.directionalityController.countryId.value != '' &&
+                    Controllers.directionalityController.cityId.value != '') {
+                  print('city id is ${Controllers.directionalityController.cityId.value} country id is ${Controllers.directionalityController.countryId.value}');
+                Get.back();
+                showDialog(
+                    context: context,
+                    builder: (context) => const Center(
+                        child: CircularProgressIndicator(
+                          color: ColorConstants.mainColor,
+                        )));
+                  ////// language //////
+                  if (Controllers
+                      .directionalityController.dropLanguageData.value ==
+                      'العربية') {
+                    Controllers.directionalityController.changeLanguage('ar');
+                  } else if (Controllers
+                      .directionalityController.dropLanguageData.value ==
+                      'English') {
+                    Controllers.directionalityController.changeLanguage('en');
+                  }
+
+                  Utils.updatePadding();
+
+                  ////// country //////
+                  SharedPreferencesClass.setUserCountryId(
+                      countryId: Controllers.directionalityController.countryId.value);
+                  ////// city //////
+                  SharedPreferencesClass.setUserCity(
+                      cityId: Controllers.directionalityController.cityId.value);
+                  ////// get offers based on city id //////
+                  controller.getCarouselOffers();
+                  controller.getTodayOffers();
+                  controller.getSpecialOffers();
+                  controller.getMostSalesOffers();
+                  controller.getMostSalesOffers();
+                  controller.getMainCategories();
+                  controller.getSubCategoryOutings(categoryId: '1');
+                  Get.back();
+                } else {
+                  Get.snackbar(
+                    translation.selectLocation.tr,
+                    translation.completeDataText.tr,
+                    backgroundColor: ColorConstants.redColor,
+                    colorText: Colors.white,
+                    snackPosition: SnackPosition.BOTTOM,
+                    borderRadius: 12.0,
+                    margin: const EdgeInsets.all( 14)
+                  );
+
+                }
+              }),
         ],
       ),
     ));
@@ -511,8 +606,8 @@ class ExploreTab extends GetView<HomeController> {
                       height: 290,
                       topPadding: 0,
                       bottomPadding: 0,
-                      leftPadding: 16,
-                      rightPadding: 16,
+                      leftPadding: 14,
+                      rightPadding: 14,
                     );
                   }
                 }),
@@ -543,8 +638,8 @@ class ExploreTab extends GetView<HomeController> {
         Container(
           width: MediaQuery.of(context).size.width,
           height: 78,
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          margin: const EdgeInsets.symmetric(horizontal: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(12)),
             gradient: LinearGradient(
@@ -614,8 +709,20 @@ class ExploreTab extends GetView<HomeController> {
     CompanyModel companyModel = CompanyModel.fromJson(offer.company!.map((key, value) => MapEntry(key.toString(), value)));
     return GestureDetector(
       onTap: () {
-        Get.put(OfferController(Get.find()));
-        Get.to(() => OfferDetail(offerModel: offer));
+        // Get.put(OfferController(Get.find()));
+        // Get.to(() => OfferDetail(offerModel: offer));
+        showDialog(
+            context: context,
+            builder: (context) => const Center(
+                child: CircularProgressIndicator(
+                  color: ColorConstants.mainColor,
+                )));
+        Controllers.offerController.getOffer(offerKey: offer.key.toString())
+            .then((offer) {
+          Get.back();
+          Get.put(OfferController(Get.find()));
+          Get.to(() => OfferDetail(offerModel:  offer));
+        });
       },
       child: Stack(
         children: [
@@ -770,13 +877,11 @@ class ExploreTab extends GetView<HomeController> {
         height: 84,
         child: Obx(() => (controller.subCategoryOutings.isNotEmpty)
             ? ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 9),
                 scrollDirection: Axis.horizontal,
                 itemCount: controller.subCategoryOutings.length,
                 itemBuilder: (context, index) {
-                  return SizedBox(
-                    width: 210,
-                    child: GestureDetector(
+                  return GestureDetector(
                       onTap: () {
                         controller.getOffersForSubCategories(
                           subCategoryId:
@@ -793,9 +898,19 @@ class ExploreTab extends GetView<HomeController> {
                         );
                         },
                       child: Container(
+                          width: 235,
+                          height: 84,
                           clipBehavior: Clip.hardEdge,
                           margin: const EdgeInsets.only(right: 4, left: 4),
                           decoration: BoxDecoration(
+                            // boxShadow:const [
+                            //   BoxShadow(
+                            //     color: Colors.grey,
+                            //     offset: Offset(0, 1.4), // controls the offset of the shadow
+                            //     blurRadius: 3, // controls the blur radius of the shadow
+                            //     spreadRadius: 0, // controls the spread radius of the shadow
+                            //   ),
+                            // ],
                             borderRadius: BorderRadius.circular(12),
                             color: Get.isDarkMode
                                 ? ColorConstants.gray700
@@ -867,7 +982,7 @@ class ExploreTab extends GetView<HomeController> {
                                   )),
                             ],
                           )),
-                    ),
+
                   );
                 })
             : _shimmerForListViewForOffer(height: 160)));
@@ -957,6 +1072,7 @@ class ExploreTab extends GetView<HomeController> {
           categoryId: category.id.toString(),
         );
         controller.getSubCategories(categoryId: category.id.toString());
+        Controllers.homeController.isLoadingOffersMainCategory.value = true;
         Get.to(() =>
         // HomePage(recentPage:
         OfferListForMainCategoryPage(
@@ -982,8 +1098,8 @@ class ExploreTab extends GetView<HomeController> {
             borderRadius: BorderRadius.circular(12),
           ),
           margin: EdgeInsets.only(
-              right: Utils.rightPadding8FromRight,
-              left: Utils.leftPadding8FromLeft),
+              right: Utils.rightPadding10FromRight,
+              left: Utils.leftPadding10FromLeft),
           child: Stack(
             children: [
               Container(
@@ -1132,11 +1248,11 @@ class ExploreTab extends GetView<HomeController> {
   Widget _buildTheHotOffers(
       {required List<OfferModel> offerModels, required ThemeData theme}) {
     return SizedBox(
-      height: 230,
+      height: 245,
       child: ListView.builder(
         padding: EdgeInsets.only(
-            right: Utils.rightPadding8FromLeft,
-            left: Utils.leftPadding8FromRight,
+            right: Utils.rightPadding4FromLeft,
+            left: Utils.leftPadding4FromRight,
             top: 0,
             bottom: 0),
         scrollDirection: Axis.horizontal,
@@ -1144,13 +1260,13 @@ class ExploreTab extends GetView<HomeController> {
         itemBuilder: (context, index) {
           return Padding(
             padding: EdgeInsets.only(
-              right: Utils.rightPadding8FromLeft,
-              left:  Utils.leftPadding8FromRight,
+              right: Utils.rightPadding10FromLeft,
+              left:  Utils.leftPadding10FromRight,
             ),
             child: OfferCard(
               offerModel: offerModels[index],
-              width: 265,
-              height: 204,
+              width: 290,
+              height: 240,
             ),
           );
         },
@@ -1162,8 +1278,9 @@ class ExploreTab extends GetView<HomeController> {
       {required List<OfferModel> offerModels,
       required ThemeData theme,
       required BuildContext context}) {
-    return SizedBox(
-        height: 123,
+    return Container(
+        height: 129,
+        padding: const EdgeInsets.only(top: 3, bottom: 1),
         child: CarouselSlider.builder(
             carouselController: controller.carouselNewOfferController,
             options: CarouselOptions(
@@ -1181,8 +1298,8 @@ class ExploreTab extends GetView<HomeController> {
                 int pageViewIndex) {
               return Padding(
                 padding: const EdgeInsets.only(
-                  right: 16,
-                  left: 16,
+                  right: 14,
+                  left: 14,
                 ),
                 child: NewOfferCard(
                   offerModel: offerModels[itemIndex],
@@ -1198,11 +1315,11 @@ class ExploreTab extends GetView<HomeController> {
   Widget _buildMostSellerOffers(
       {required List<OfferModel> offerModels, required ThemeData theme}) {
     return SizedBox(
-      height: 230,
+      height: 231,
       child: ListView.builder(
         padding: EdgeInsets.only(
-            right: Utils.rightPadding8FromLeft,
-            left: Utils.leftPadding8FromRight,
+            right: Utils.rightPadding4FromLeft,
+            left: Utils.leftPadding4FromRight,
             top: 0,
             bottom: 0),
         scrollDirection: Axis.horizontal,
@@ -1210,12 +1327,12 @@ class ExploreTab extends GetView<HomeController> {
         itemBuilder: (context, index) {
           return Padding(
             padding: EdgeInsets.only(
-              right: Utils.rightPadding8FromLeft,
-              left: Utils.leftPadding8FromRight,),
+              right: Utils.rightPadding10FromLeft,
+              left: Utils.leftPadding10FromRight,),
             child: MostSellerOfferCard(
               offerModel: offerModels[index],
-              width: 265,
-              height: 200,
+              width: 290,
+              height: 219,
             ),
           );
         },

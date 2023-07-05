@@ -17,23 +17,22 @@ class UserLocationScreen extends StatefulWidget {
 }
 
 class _UserLocationScreenState extends State<UserLocationScreen> {
-
-
   @override
   void initState() {
     Controllers.directionalityController.dropLanguageData.value =
         languageBox.read('language') == 'en' ? 'English' : 'العربية';
     print('user location language is ${languageBox.read('language')}');
-    Controllers
-        .directionalityController.languageBox.value
-        .write('language',languageBox.read('language') == 'ar' ?'ar':'en');
+    Controllers.directionalityController.languageBox.value
+        .write('language', languageBox.read('language') == 'ar' ? 'ar' : 'en');
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:Get.isDarkMode? ColorConstants.darkMainColor : ColorConstants.mainColor,
+      backgroundColor: Get.isDarkMode
+          ? ColorConstants.darkMainColor
+          : ColorConstants.mainColor,
       body: Stack(
         children: [
           Image.asset(
@@ -41,9 +40,10 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             fit: BoxFit.cover,
+            // color: Colors.white,
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 88, left: 16, right: 16),
+            padding: const EdgeInsets.only(top: 88, left: 14, right: 14),
             child: Align(
               alignment: Alignment.topCenter,
               child: Column(
@@ -139,16 +139,16 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
                                     arText: country.arName,
                                     enText: country.enName);
 
-                            // setState(() {
                             SharedPreferencesClass.setUserCountryId(
                                 countryId: country.id.toString());
-                            // });
 
                             Controllers.userAuthenticationController
                                 .getCities(countryId: country.id.toString());
 
                             Controllers.directionalityController.dropCityData
                                 .value = "";
+                            SharedPreferencesClass.setUserCity(
+                                cityId: '');
                           },
                           menu: Controllers.directionalityController.countries,
                           context: context,
@@ -173,10 +173,8 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
                                   Utils.getTranslatedText(
                                       arText: city.arName, enText: city.enName);
 
-                              // setState(() {
                               SharedPreferencesClass.setUserCity(
                                   cityId: city.id.toString());
-                              // });
                             },
                             menu: Controllers.directionalityController.cities,
                             context: context,
@@ -187,7 +185,7 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
                       const SizedBox(
                         height: 45,
                       ),
-             CustomButton(
+                      CustomButton(
                           btnText: translation.userLocationScreenBtn.tr,
                           textColor: ColorConstants.mainColor,
                           textSize: 17,
@@ -196,26 +194,31 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
                             print(
                                 'user loc ${SharedPreferencesClass.getLanguageCode()} ${SharedPreferencesClass.getCountryId()}  ${SharedPreferencesClass.getCityId()}');
                             if (SharedPreferencesClass.getCountryId() != null &&
-                                SharedPreferencesClass.getCityId() != null) {
-                              if (Controllers
-                                  .directionalityController.dropLanguageData.value ==
+                                SharedPreferencesClass.getCountryId() != '' &&
+                                SharedPreferencesClass.getCityId() != '' &&
+                                    SharedPreferencesClass.getCityId() != null) {
+                              if (Controllers.directionalityController
+                                      .dropLanguageData.value ==
                                   'العربية') {
-                                Controllers.directionalityController.changeLanguage('ar');
-                              } else if (Controllers
-                                  .directionalityController.dropLanguageData.value ==
+                                Controllers.directionalityController
+                                    .changeLanguage('ar');
+                              } else if (Controllers.directionalityController
+                                      .dropLanguageData.value ==
                                   'English') {
                                 print('english');
-                                Controllers.directionalityController.changeLanguage('en');
+                                Controllers.directionalityController
+                                    .changeLanguage('en');
                               }
 
-                                Utils.updatePadding();
+                              Utils.updatePadding();
                               Get.offAllNamed('/login');
                             } else {
                               Utils.snackBar(
-                                  context: context,
-                                  textColor: Colors.white,
-                                  background: ColorConstants.redColor,
-                                  msg: translation.completeDataText.tr, );
+                                context: context,
+                                textColor: Colors.white,
+                                background: ColorConstants.redColor,
+                                msg: translation.completeDataText.tr,
+                              );
                             }
                           }),
                     ],

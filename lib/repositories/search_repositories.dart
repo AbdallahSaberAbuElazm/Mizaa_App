@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:test_ecommerce_app/models/companies/CompanyModel.dart';
 import 'package:test_ecommerce_app/models/merchant/merchant_detail_model/merchant_detail_model.dart';
 import 'package:test_ecommerce_app/models/merchant/merchant_model.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';

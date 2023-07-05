@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:test_ecommerce_app/controllers/home/HomeController.dart';
 import 'package:test_ecommerce_app/models/categories/sub_categories/SubCategoriesModel.dart';
@@ -8,10 +10,11 @@ import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
+import 'package:test_ecommerce_app/views/cart/cart_screen.dart';
 import 'package:test_ecommerce_app/views/offer/OfferListForSubCategoryPage.dart';
 import 'package:test_ecommerce_app/views/widgets/chatting_btn.dart';
 import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
-as translation;
+    as translation;
 
 class SubCategoryPage extends StatefulWidget {
   final String subCategoryName;
@@ -35,19 +38,25 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
           elevation: 0,
           // backgroundColor: ColorConstants.backgroundContainer,
           backgroundColor: Colors.transparent,
+          flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle(
+                statusBarIconBrightness:
+                Get.isDarkMode ? Brightness.light : Brightness.dark,
+                statusBarBrightness:
+                Get.isDarkMode ? Brightness.light : Brightness.dark,
+              ),
+              child: Container()),
           toolbarHeight: 90,
-          leading: Utils.buildLeadingAppBar(title:  widget.subCategoryName),
+          leading: Utils.buildLeadingAppBar(title: widget.subCategoryName),
           leadingWidth: 260,
           actions: [
             Padding(
-              padding: const  EdgeInsets.only(
-                  right: 16,
-                  left:16),
+              padding: const EdgeInsets.only(right: 16, left: 16),
               child: _buildActionsAppBar(context: context),
             )
           ],
-          ),
-        floatingActionButton:const ChattingBtn(),
+        ),
+        floatingActionButton: const ChattingBtn(),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         body: _buildListOfOffers());
   }
@@ -55,27 +64,77 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
   Widget _buildActionsAppBar({required BuildContext context}) {
     return Row(
       children: [
-        appBarIcon(icon: Icons.search, iconColor: ColorConstants.mainColor),
+        appBarIcon(
+            icon: Icons.search,
+            iconColor: ColorConstants.mainColor,
+            onTap: () {}),
         const SizedBox(
           width: 8,
         ),
         appBarIcon(
-            icon: Icons.notifications, iconColor: ColorConstants.mainColor),
+            icon: Icons.notifications,
+            iconColor: ColorConstants.mainColor,
+            onTap: () {}),
         const SizedBox(
           width: 8,
         ),
-        appBarIcon(
-            icon: Icons.shopping_cart_rounded,
-            iconColor: ColorConstants.mainColor),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            appBarIcon(
+                icon: Icons.shopping_cart_rounded,
+                iconColor: ColorConstants.mainColor,
+                onTap: () {
+                  if (SharedPreferencesClass.getToken() == null ||
+                      SharedPreferencesClass.getToken() == '') {
+                    Utils.showAlertDialogForRegisterLogin(context: context);
+                  } else {
+                    Get.put(CartController(Get.find()));
+                    Get.to(() => const CartScreen(
+                          comingForCart: ComingForCart.offerListCategory,
+                        ));
+                  }
+                }),
+            Transform.translate(
+              offset: const Offset(-9,-18),
+              child: Align(
+                  alignment: Controllers.directionalityController.languageBox.value
+                      .read('language') ==
+                      'ar'
+                      ?
+                  Alignment.centerLeft: Alignment.centerRight,
+                  child:Obx(()=> Container(
+                    width: 17,height: 17,
+                    alignment: Alignment.center,
+                    // padding: const EdgeInsets.all(2),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                    child:  Text(Controllers.cartController.cartItems.length.toString(),
+                        style: const TextStyle(color: ColorConstants.mainColor, fontSize: 10, fontWeight: FontWeight.bold)),
+
+                  ))
+
+              ),
+            )
+          ],
+        ),
       ],
     );
   }
 
-  Widget appBarIcon({required IconData icon, required Color iconColor}) {
-    return Icon(
-      icon,
-      color: iconColor,
-      size: 25,
+  Widget appBarIcon(
+      {required IconData icon,
+      required Color iconColor,
+      required dynamic onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Icon(
+        icon,
+        color: iconColor,
+        size: 25,
+      ),
     );
   }
 
@@ -108,7 +167,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                           _buildOfferCard(category: widget.categories[index]));
                 },
               )
-            :  Center(
+            : Center(
                 child: Text(
                   translation.noDataYet.tr,
                   style: TextStyle(fontSize: 18),
@@ -120,11 +179,14 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
   Widget _buildOfferCard({required SubCategoriesModel category}) {
     return GestureDetector(
       onTap: () {
+
         homeController.getOffersForSubCategories(
           subCategoryId: category.id.toString(),
         );
         Get.to(() => OfferListForSubCategoryPage(
-              mainCategoryName: category.enName,
+              mainCategoryName:
+              Utils.getTranslatedText(arText: category.arName, enText: category.enName),
+              // category.enName,
               categoryId: category.id,
             ));
       },
@@ -133,6 +195,14 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
         height: 110,
         margin: const EdgeInsets.only(left: 16, right: 16),
         decoration: const BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(0, 1.4), // controls the offset of the shadow
+              blurRadius: 3, // controls the blur radius of the shadow
+              spreadRadius: 0, // controls the spread radius of the shadow
+            ),
+          ],
             borderRadius: BorderRadius.all(Radius.circular(12))),
         child: Row(
           children: [
@@ -160,15 +230,19 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                   padding: const EdgeInsets.only(left: 15, right: 15),
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius:
-                      Controllers.directionalityController.languageBox.value.read('language') == 'en'
-                              ? const BorderRadius.only(
-                                  topRight: Radius.circular(12),
-                                  bottomRight: Radius.circular(12))
-                              : const BorderRadius.only(
-                                  topLeft: Radius.circular(12),
-                                  bottomLeft: Radius.circular(12))),
-                  child: Text( Utils.getTranslatedText(arText: category.arName, enText: category.enName),
+                      borderRadius: Controllers
+                                  .directionalityController.languageBox.value
+                                  .read('language') ==
+                              'en'
+                          ? const BorderRadius.only(
+                              topRight: Radius.circular(12),
+                              bottomRight: Radius.circular(12))
+                          : const BorderRadius.only(
+                              topLeft: Radius.circular(12),
+                              bottomLeft: Radius.circular(12))),
+                  child: Text(
+                    Utils.getTranslatedText(
+                        arText: category.arName, enText: category.enName),
                     style: Theme.of(context).textTheme.subtitle2!.copyWith(
                         color: ColorConstants.black0,
                         fontWeight: FontWeight.w500),

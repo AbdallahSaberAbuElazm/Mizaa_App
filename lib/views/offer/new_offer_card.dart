@@ -58,8 +58,17 @@ class _NewOfferCardState extends State<NewOfferCard> {
         child: Container(
           width: widget.width,
           height: widget.height,
+          margin: const EdgeInsets.only(top: 6,bottom:6),
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(12)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(0, 1.4), // controls the offset of the shadow
+                blurRadius: 3, // controls the blur radius of the shadow
+                spreadRadius: 0, // controls the spread radius of the shadow
+              ),
+            ],
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,6 +104,7 @@ class _NewOfferCardState extends State<NewOfferCard> {
           ),
           fit: BoxFit.cover,
         ),
+
       ),
       child: Padding(
         padding:
@@ -141,103 +151,105 @@ class _NewOfferCardState extends State<NewOfferCard> {
 
   // offer detail
   Widget _buildOfferDetailContainer() {
-    return Container(
-      width: widget.width / 2 + 29,
-      height: widget.height,
-      padding: const EdgeInsets.all(9),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: Controllers
-                  .directionalityController.languageBox.value
-                  .read('language') ==
-                  'ar'
-              ? BorderRadius.only(
-                  topLeft: Radius.circular(12), bottomLeft: Radius.circular(12))
-              : BorderRadius.only(
-                  topRight: Radius.circular(12),
-                  bottomRight: Radius.circular(12))),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: widget.width / 2 + 9,
-            height: widget.height - 20,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 22,
-                      child: Text(
-                        translation.companyName.trParams({
-                          'companyName': Utils.getTranslatedText(arText: companyModel.arName.toString(), enText: companyModel.enName.toString())
-                        }),
-                        style: TextStyle(
-                            fontSize: 13,
-                            color: ColorConstants.greyColor,
-                            fontWeight: FontWeight.w500),
+    return Expanded(
+      child: Container(
+        // width:  widget.width / 2 + 36,
+        height: widget.height,
+        padding: const EdgeInsets.all(9),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: Controllers
+                    .directionalityController.languageBox.value
+                    .read('language') ==
+                    'ar'
+                ? BorderRadius.only(
+                    topLeft: Radius.circular(12), bottomLeft: Radius.circular(12))
+                : BorderRadius.only(
+                    topRight: Radius.circular(12),
+                    bottomRight: Radius.circular(12))),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: widget.width / 2 + 9,
+              height: widget.height - 20,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        height: 22,
+                        child: Text(
+                          translation.companyName.trParams({
+                            'companyName': Utils.getTranslatedText(arText: companyModel.arName.toString(), enText: companyModel.enName.toString())
+                          }),
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: ColorConstants.greyColor,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
-                    ),
-                    Container(
-                        width: 26,
-                        height: 26,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: ColorConstants.backgroundContainer),
-                        child: const Icon(
-                          Icons.favorite_border_outlined,
-                          color: ColorConstants.mainColor,
-                          size: 19,
-                        )),
-                  ],
-                ),
-                const SizedBox(
-                  height: 3,
-                ),
-                SizedBox(
-                  height: 33,
-                  width: widget.width / 2 - 20,
-                  child: Text(
-                    translation.companyName.trParams({
-                      'companyName': Utils.getTranslatedText(arText:  widget.offerModel.arTitle.toString(), enText: widget.offerModel.enTitle.toString())
-                    }),
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: ColorConstants.black0,
-                        height: 1.2,
-                        fontWeight: FontWeight.bold),
+                      Container(
+                          width: 26,
+                          height: 26,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: ColorConstants.backgroundContainer),
+                          child: const Icon(
+                            Icons.favorite_border_outlined,
+                            color: ColorConstants.mainColor,
+                            size: 19,
+                          )),
+                    ],
                   ),
-                ),
-                const SizedBox(
-                  height: 3,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    _buildPriceContainer(
-                        text: translation.companyName.trParams({
-                      'companyName': '${widget.offerModel.priceAfterDiscount.toString()} ${translation.currencyName.tr}',
-                    })),
-                    const SizedBox(
-                      width: 5,
+                  const SizedBox(
+                    height: 3,
+                  ),
+                  SizedBox(
+                    height: 33,
+                    width: widget.width / 2 - 20,
+                    child: Text(
+                      translation.companyName.trParams({
+                        'companyName': Utils.getTranslatedText(arText:  widget.offerModel.arTitle.toString(), enText: widget.offerModel.enTitle.toString())
+                      }),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: ColorConstants.black0,
+                          height: 1.2,
+                          fontWeight: FontWeight.bold),
                     ),
-                    CustomTextLineThrough(
-                        text: translation.companyName.trParams({
-                          'companyName':'${widget.offerModel.priceBeforDiscount.toString()} ${translation.currencyName.tr}'
-                              ,
-                        }),
-                        textColor: ColorConstants.greyColor)
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(
+                    height: 3,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      _buildPriceContainer(
+                          text: translation.companyName.trParams({
+                        'companyName': '${widget.offerModel.priceAfterDiscount.toString()} ${translation.currencyName.tr}',
+                      })),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      CustomTextLineThrough(
+                          text: translation.companyName.trParams({
+                            'companyName':'${widget.offerModel.priceBeforDiscount.toString()} ${translation.currencyName.tr}'
+                                ,
+                          }),
+                          textColor: ColorConstants.greyColor)
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
