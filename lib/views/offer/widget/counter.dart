@@ -52,13 +52,15 @@ class _CounterScreenState extends State<CounterScreen> {
           const SizedBox(
             width: 10,
           ),
-          Obx(() => Text(
-                '${(Controllers.offerController.cartItemsOfferDetail.isNotEmpty) ? Controllers.offerController.cartItemsOfferDetail[widget.index].count.value == 0 ? widget.index == 0 ? 1 : Controllers.offerController.cartItemsOfferDetail[widget.index].count.value : Controllers.offerController.cartItemsOfferDetail[widget.index].count.value : widget.index == 0 ? 1 : 0}',
-                style: TextStyle(
-                    color: ColorConstants.black0,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600),
-              )),
+          // Obx(() =>
+          Text(
+            '${(Controllers.offerController.cartItemsOfferDetail.isNotEmpty) ? Controllers.offerController.cartItemsOfferDetail[widget.index].count.value : 0}',
+            style: TextStyle(
+                color: ColorConstants.black0,
+                fontSize: 13,
+                fontWeight: FontWeight.w600),
+            // )
+          ),
           const SizedBox(
             width: 10,
           ),

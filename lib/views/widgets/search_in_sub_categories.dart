@@ -6,7 +6,11 @@ class SearchInSubCategories extends StatelessWidget {
   final dynamic searchOnPressed;
   final dynamic sortedByOnPressed;
 
-  const SearchInSubCategories({Key? key, required this.searchOnPressed,required this.sortedByOnPressed}) : super(key: key);
+  const SearchInSubCategories(
+      {Key? key,
+      required this.searchOnPressed,
+      required this.sortedByOnPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +24,9 @@ class SearchInSubCategories extends StatelessWidget {
             width: 10,
           ),
           Expanded(
-              child: SortedByIcon(sortedByOnPressed: sortedByOnPressed, )),
+              child: SortedByIcon(
+            sortedByOnPressed: sortedByOnPressed,
+          )),
         ],
       ),
     );

@@ -5,7 +5,12 @@ class BuildButtonWithIcon extends StatelessWidget {
   final dynamic onPressed;
   final String text;
   final IconData icon;
-  const BuildButtonWithIcon({Key? key, required this.onPressed, required this.text, required this.icon}) : super(key: key);
+  const BuildButtonWithIcon(
+      {Key? key,
+      required this.onPressed,
+      required this.text,
+      required this.icon})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +24,11 @@ class BuildButtonWithIcon extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 )),
-            onPressed:onPressed,
+            onPressed: onPressed,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  icon,
-                  color: Colors.white,
-                  size: 26
-                ),
+                Icon(icon, color: Colors.white, size: 26),
                 const SizedBox(
                   width: 6,
                 ),

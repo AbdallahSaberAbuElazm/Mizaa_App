@@ -1,5 +1,3 @@
-
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -7,14 +5,13 @@ import 'package:test_ecommerce_app/models/location/city/CityModel.dart';
 import 'package:test_ecommerce_app/models/location/country/CountryModel.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 
-class DirectionalityController extends GetxController{
-
+class DirectionalityController extends GetxController {
   final direction = TextDirection.rtl.obs;
 
   final languageBox = GetStorage().obs;
 
   final dropLanguageData = ''.obs;
-  final  dropCountryData = ''.obs;
+  final dropCountryData = ''.obs;
   final countryId = ''.obs;
   final dropCityData = ''.obs;
   final cityId = ''.obs;
@@ -22,12 +19,11 @@ class DirectionalityController extends GetxController{
   final countries = <CountryModel>[].obs;
   final cities = <CityModel>[].obs;
 
-
   // Is password and confirm password  matched
   final isPasswordAndConfirmPasswordMatched = false.obs;
 
   @override
-  onInit(){
+  onInit() {
     super.onInit();
   }
 
@@ -35,7 +31,7 @@ class DirectionalityController extends GetxController{
     late Locale locale;
     if (languageCode == 'en') {
       locale = Locale('en');
-    } else if(languageCode == 'ar'){
+    } else if (languageCode == 'ar') {
       locale = Locale('ar');
     }
 
@@ -43,13 +39,12 @@ class DirectionalityController extends GetxController{
     languageBox.value.write('language', languageCode);
   }
 
-
-  updateCountries({required  List<CountryModel> countriesData}){
+  updateCountries({required List<CountryModel> countriesData}) {
     countries.value = countriesData;
     update();
   }
 
-  updateCities({required  List<CityModel> citiesData}){
+  updateCities({required List<CityModel> citiesData}) {
     cities.value = citiesData;
     update();
   }

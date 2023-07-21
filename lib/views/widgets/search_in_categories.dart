@@ -3,13 +3,17 @@ import 'package:test_ecommerce_app/views/widgets/icon_search.dart';
 import 'package:test_ecommerce_app/views/widgets/sorted_by_icon.dart';
 import 'package:test_ecommerce_app/views/widgets/filteration_icon.dart';
 
-
 class SearchInCategories extends StatelessWidget {
   final dynamic searchOnPressed;
   final dynamic filterOnPressed;
   final dynamic sortedByOnPressed;
 
-  const SearchInCategories({Key? key, required this.searchOnPressed,required this.filterOnPressed,required this.sortedByOnPressed}) : super(key: key);
+  const SearchInCategories(
+      {Key? key,
+      required this.searchOnPressed,
+      required this.filterOnPressed,
+      required this.sortedByOnPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +26,11 @@ class SearchInCategories extends StatelessWidget {
           const SizedBox(
             width: 10,
           ),
-         SizedBox(
-             width: MediaQuery.of(context).size.width  - 142,
-             child: SortedByIcon(sortedByOnPressed: sortedByOnPressed,)),
+          SizedBox(
+              width: MediaQuery.of(context).size.width - 142,
+              child: SortedByIcon(
+                sortedByOnPressed: sortedByOnPressed,
+              )),
           const SizedBox(
             width: 10,
           ),

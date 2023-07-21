@@ -4,7 +4,8 @@ import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 
 class FilterationIcon extends StatelessWidget {
   final dynamic filterOnPressed;
-  const FilterationIcon({Key? key,required this.filterOnPressed}) : super(key: key);
+  const FilterationIcon({Key? key, required this.filterOnPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +19,16 @@ class FilterationIcon extends StatelessWidget {
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(12)),
-              color: Get.isDarkMode? ColorConstants.bottomAppBarDarkColor: ColorConstants.backgroundContainerLightColor,
+              color: Get.isDarkMode
+                  ? ColorConstants.bottomAppBarDarkColor
+                  : ColorConstants.backgroundContainerLightColor,
             ),
             child: Image.asset(
               'assets/images/filter.png',
               width: 30,
               height: 30,
               fit: BoxFit.cover,
-              color: Get.isDarkMode? Colors.white: ColorConstants.black0 ,
+              color: Get.isDarkMode ? Colors.white : ColorConstants.black0,
             ),
           ),
         )

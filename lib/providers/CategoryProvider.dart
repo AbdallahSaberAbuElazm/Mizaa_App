@@ -9,12 +9,17 @@ class CategoryProvider {
 
   Future<List<CategoryModel>> getMainCategories() async {
     var categories = await _categoryRepository.getMainCategories();
-    return categories.map((category) => CategoryModel.fromJson(category.toJson())).toList();
+    return categories
+        .map((category) => CategoryModel.fromJson(category.toJson()))
+        .toList();
   }
 
-  Future<List<SubCategoriesModel>> getSubCategoriesByMainCategoryId({required String mainCategoryId}) async {
-    var categories = await _categoryRepository.getSubCategoriesByMainCategoryId(mainCategoryId: mainCategoryId);
-    return categories.map((category) => SubCategoriesModel.fromJson(category.toJson())).toList();
+  Future<List<SubCategoriesModel>> getSubCategoriesByMainCategoryId(
+      {required String mainCategoryId}) async {
+    var categories = await _categoryRepository.getSubCategoriesByMainCategoryId(
+        mainCategoryId: mainCategoryId);
+    return categories
+        .map((category) => SubCategoriesModel.fromJson(category.toJson()))
+        .toList();
   }
-
 }

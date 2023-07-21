@@ -3,9 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
+import 'package:test_ecommerce_app/controllers/order/order_controller.dart';
 import 'package:test_ecommerce_app/models/cart/cart_item_model/cart_item_model.dart';
+import 'package:test_ecommerce_app/models/cart/validate_order_data/order_data_model.dart';
+import 'package:test_ecommerce_app/providers/order_provider.dart';
+import 'package:test_ecommerce_app/repositories/order_repository.dart';
 import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
+import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
     as translation;
@@ -15,8 +20,7 @@ import 'package:test_ecommerce_app/views/widgets/center_image_for_empty_data.dar
 import 'package:test_ecommerce_app/views/widgets/custom_button.dart';
 import 'package:test_ecommerce_app/views/widgets/build_button_with_icon.dart';
 import 'package:test_ecommerce_app/views/widgets/shimmer_container.dart';
-
-enum ComingForCart { homPage, offerListCategory, offerDetail }
+import 'package:test_ecommerce_app/views/widgets/arrow_back.dart';
 
 class CartScreen extends GetView<CartController> {
   final ComingForCart comingForCart;
@@ -26,6 +30,7 @@ class CartScreen extends GetView<CartController> {
   @override
   Widget build(BuildContext context) {
     controller.getCartApi();
+    Controllers.cartController.checkedData.value = false;
     return Obx(
       () => WillPopScope(
         onWillPop: () async {
@@ -42,222 +47,240 @@ class CartScreen extends GetView<CartController> {
           return true;
         },
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor:
-                controller.appBarCartScreenColor.value,
-            flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
-                value: SystemUiOverlayStyle(
-                  statusBarIconBrightness:
-                  Get.isDarkMode ? Brightness.light : Brightness.dark,
-                  statusBarBrightness:
-                  Get.isDarkMode ? Brightness.light : Brightness.dark,
-                ),
-                child: Container()),
-            elevation: 0,
-            toolbarHeight: 80,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
-            ),
-            leadingWidth: 260,
-            leading: Padding(
-              padding: EdgeInsets.only(
-                  right: Utils.rightPadding16Right,
-                  left: Utils.leftPadding16Left),
-              child: GestureDetector(
-                onTap: () {
-                  Controllers.cartController.getCartApi();
-                  if (comingForCart == ComingForCart.homPage) {
-                    Get.back();
-                  } else if (comingForCart ==
-                      ComingForCart.offerListCategory) {
-                    Get.back();
-                  } else {
-                    Get.back();
-                    Get.back();
-                  }
-
-                },
-                child: Row(
-                  children: [
-                    Container(
-                      width: 37,
-                      height: 37,
-                      decoration: const BoxDecoration(
-                        color: ColorConstants.mainColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_ios_rounded,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      translation.cartHeader.tr,
-                      style: TextStyle(
-                          color: Get.isDarkMode ? Colors.white : Colors.black,
-                          fontSize: 15,
-                          fontFamily: 'Noto Kufi Arabic',
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              (Controllers.cartController.cartItems.isNotEmpty)
-                  ? Padding(
-                      padding:
-                          const EdgeInsets.only(right: 14, left: 14, top: 25),
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) => AlertDelete(
-                                  alertText: translation.deleteAllOffer.tr,
-                                  onPressedOkBtn: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) => const Center(
-                                            child: CircularProgressIndicator(
-                                              color: ColorConstants.mainColor,
-                                            )));
-                                    Controllers.cartController.clearCartApi();
-                                    // Controllers.cartController.getCartItemsWithoutLoading();
-                                    Get.back();
-                                    Get.back();
-                                  }));
-                        },
-                        child: Text(
-                          translation.deleteAllText.tr,
-                          style: const TextStyle(
-                            color: ColorConstants.mainColor,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Noto Kufi Arabic',
-                          ),
-                        ),
-                      ))
-                  : const SizedBox.shrink()
-            ],
-          ),
-          bottomNavigationBar: (Controllers.cartController.cartItems.isNotEmpty)
-              ? Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-                  height: 130,
-                  decoration: BoxDecoration(
-                    color: Get.isDarkMode
-                        ? ColorConstants.bottomAppBarDarkColor
-                        : Colors.white,
+            appBar: AppBar(
+              backgroundColor: controller.appBarCartScreenColor.value,
+              flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
+                  value: SystemUiOverlayStyle(
+                    statusBarIconBrightness: Get.isDarkMode
+                        ? Brightness.light
+                        : controller.appBarCartScreenColor.value == Colors.white
+                            ? Brightness.dark
+                            : Brightness.dark,
+                    statusBarBrightness:
+                        Get.isDarkMode ? Brightness.light : Brightness.dark,
+                    systemNavigationBarColor: Get.isDarkMode
+                        ? ColorConstants.darkMainColor
+                        : Colors.white, // navigation bar color
+                    systemNavigationBarIconBrightness:
+                        Get.isDarkMode ? Brightness.light : Brightness.dark,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width,
+                  child: Container()),
+              elevation: 0,
+              toolbarHeight: 80,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
+              ),
+              leadingWidth: 260,
+              leading: Padding(
+                padding: EdgeInsets.only(
+                    right: Utils.rightPadding12Right,
+                    left: Utils.leftPadding12Left),
+                child: ArrowBack(
+                  onTap: () {
+                    Controllers.cartController.getCartApi();
+                    if (comingForCart == ComingForCart.homPage) {
+                      Get.back();
+                    } else if (comingForCart ==
+                        ComingForCart.offerListCategory) {
+                      Get.back();
+                    } else {
+                      Get.back();
+                      Get.back();
+                    }
+                  },
+                  text: translation.cartHeader.tr,
+                ),
+              ),
+              actions: [
+                (Controllers.cartController.cartItems.isNotEmpty)
+                    ? Padding(
+                        padding:
+                            const EdgeInsets.only(right: 14, left: 14, top: 25),
                         child: GestureDetector(
                           onTap: () {
-                            Controllers.cartController.checkedData.value =
-                                !Controllers.cartController.checkedData.value;
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDelete(
+                                    alertText: translation.deleteAllOffer.tr,
+                                    onPressedOkBtn: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) => const Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                color: ColorConstants.mainColor,
+                                              )));
+                                      Controllers.cartController.clearCartApi();
+                                      // Controllers.cartController.getCartItemsWithoutLoading();
+                                      Get.back();
+                                      Get.back();
+                                    }));
                           },
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 17,
-                                height: 17,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(2)),
-                                    color: Controllers.cartController.checkedData.value
-                                        ? ColorConstants.mainColor
-                                        : Colors.white,
-                                    border: Border.all(
-                                      color: Controllers.cartController.checkedData.value
+                          child: Text(
+                            translation.deleteAllText.tr,
+                            style: const TextStyle(
+                              color: ColorConstants.mainColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Noto Kufi Arabic',
+                            ),
+                          ),
+                        ))
+                    : const SizedBox.shrink()
+              ],
+            ),
+            bottomNavigationBar: (Controllers
+                    .cartController.cartItems.isNotEmpty)
+                ? Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 16),
+                    height: 130,
+                    decoration: BoxDecoration(
+                      color: Get.isDarkMode
+                          ? ColorConstants.bottomAppBarDarkColor
+                          : Colors.white,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: GestureDetector(
+                            onTap: () {
+                              Controllers.cartController.checkedData.value =
+                                  !Controllers.cartController.checkedData.value;
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 17,
+                                  height: 17,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(2)),
+                                      color: Controllers
+                                              .cartController.checkedData.value
                                           ? ColorConstants.mainColor
-                                          : ColorConstants.greyColor,
-                                      width: 1,
-                                    )),
-                                child: (Controllers.cartController.checkedData.value)
-                                    ? Center(
-                                        child: Icon(
-                                        Icons.done,
+                                          : Colors.white,
+                                      border: Border.all(
                                         color: Controllers.cartController
                                                 .checkedData.value
-                                            ? Colors.white
-                                            : ColorConstants.mainColor,
-                                        size: 15,
-                                      ))
-                                    : const SizedBox(),
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Text(
-                                translation.paymentFromWallet.tr,
-                                style: const TextStyle(
-                                  color: ColorConstants.mainColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Noto Kufi Arabic',
+                                            ? ColorConstants.mainColor
+                                            : ColorConstants.greyColor,
+                                        width: 1,
+                                      )),
+                                  child: (Controllers
+                                          .cartController.checkedData.value)
+                                      ? Center(
+                                          child: Icon(
+                                          Icons.done,
+                                          color: Controllers.cartController
+                                                  .checkedData.value
+                                              ? Colors.white
+                                              : ColorConstants.mainColor,
+                                          size: 15,
+                                        ))
+                                      : const SizedBox(),
                                 ),
-                              )
-                            ],
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Text(
+                                  translation.paymentFromWallet.tr,
+                                  style: const TextStyle(
+                                    color: ColorConstants.mainColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Noto Kufi Arabic',
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 1.3,
-                            child: BuildButtonWithIcon(
-                              onPressed: () {},
-                              icon: Controllers.directionalityController
-                                          .languageBox.value
-                                          .read('language') ==
-                                      'ar'
-                                  ? Icons.keyboard_double_arrow_right
-                                  : Icons.keyboard_double_arrow_left,
-                              text: translation.userLocationScreenBtn.tr,
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 1.3,
+                              child: BuildButtonWithIcon(
+                                onPressed: () {
+                                  // Get.to(()=> CompletePayment());
+                                  Get.put<OrderRepository>(OrderRepository());
+                                  Get.put<OrderProvider>(
+                                      OrderProvider(Get.find()));
+                                  Get.put<OrderController>(
+                                      OrderController(Get.find()));
+
+                                  List<Map<String, dynamic>> orderDataDetail =
+                                      controller.convertList(Controllers
+                                          .cartController.cartItems
+                                          .map((cartItem) => cartItem.toJson())
+                                          .toList());
+                                  print(
+                                      'list of orderDto is ${orderDataDetail}');
+                                  // .map((cartItem) =>OrderOfferDataDetailModel(offerId: cartItem.offerId,
+                                  //     orderDetailsDto: OrderDetailsDto(offerOptionsId: cartItem.offerOptionsId, coboneCount: cartItem.count, cobonesCost: cartItem.totalPrice).toJson()).toJson() ).toList();
+
+                                  Controllers.orderController.validateOrderData(
+                                      comingForCart: comingForCart,
+                                      orderDataModel: OrderDataModel(
+                                          applicationUserId:
+                                              SharedPreferencesClass
+                                                      .getApplicationUserId()
+                                                  .toString(),
+                                          paymentWayId: 1,
+                                          totalToPay: (Controllers
+                                                      .cartController
+                                                      .totalCartPrice
+                                                      .value +
+                                                  50)
+                                              .toDouble(),
+                                          orderDto: orderDataDetail),
+                                      // comingForCart:comingForCart ,
+                                      context: context);
+                                },
+                                icon: Controllers.directionalityController
+                                            .languageBox.value
+                                            .read('language') ==
+                                        'ar'
+                                    ? Icons.keyboard_double_arrow_right
+                                    : Icons.keyboard_double_arrow_left,
+                                text: translation.userLocationScreenBtn.tr,
+                              ),
                             ),
-                          ),
-                          Container(
-                            width: 50,
-                            height: 50,
-                            decoration: const BoxDecoration(
-                              color: ColorConstants.mainColor,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.chat_outlined,
-                              color: Colors.white,
-                              size: 25,
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ))
-              : const SizedBox.shrink(),
-          body:
-             Controllers.cartController.isLoadingCartItems.value == true
+                            Container(
+                              width: 50,
+                              height: 50,
+                              decoration: const BoxDecoration(
+                                color: ColorConstants.mainColor,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.chat_outlined,
+                                color: Colors.white,
+                                size: 25,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ))
+                : const SizedBox.shrink(),
+            body: Controllers.cartController.isLoadingCartItems.value == true
                 ? ListView.builder(
                     controller: controller.scrollCartScreenController,
                     shrinkWrap: true,
                     padding: const EdgeInsets.only(
-                        left: 14, right: 14, bottom: 5, top: 10),
+                        left: 12, right: 12, bottom: 5, top: 6),
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: 2,
                     itemBuilder: (context, index) => Padding(
@@ -273,48 +296,48 @@ class CartScreen extends GetView<CartController> {
                   )
                 : (Controllers.cartController.cartItems.isNotEmpty)
                     ? Obx(() => ListView(
-                        padding: const EdgeInsets.all(14),
-                        physics: const ScrollPhysics(),
-                        controller: controller.scrollCartScreenController,
-                        children: [
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount:
-                                  Controllers.cartController.cartItems.length,
-                              itemBuilder: (context, index) {
-                                // CompanyModel companyModel = CompanyModel.fromJson(Controllers
-                                //     .offerController.offerModel.value.company!
-                                //     .map((key, value) => MapEntry(key.toString(), value)));
-                                return _buildCartItemCard(
-                                  cartItemModel:Controllers.cartController.cartItems[index],
-                                  context: context,
-                                  // offerModel: Controllers
-                                  //     .offerController.offerModel.value,
-                                  // companyModel: companyModel,
-                                  index: index,
-                                );
-                              },
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 40, bottom: 25),
-                              child: Divider(
-                                color: ColorConstants.greyColor,
-                                height: 1,
+                            padding: const EdgeInsets.all(14),
+                            physics: const ScrollPhysics(),
+                            controller: controller.scrollCartScreenController,
+                            children: [
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount:
+                                    Controllers.cartController.cartItems.length,
+                                itemBuilder: (context, index) {
+                                  // CompanyModel companyModel = CompanyModel.fromJson(Controllers
+                                  //     .offerController.offerModel.value.company!
+                                  //     .map((key, value) => MapEntry(key.toString(), value)));
+                                  return _buildCartItemCard(
+                                    cartItemModel: Controllers
+                                        .cartController.cartItems[index],
+                                    context: context,
+                                    // offerModel: Controllers
+                                    //     .offerController.offerModel.value,
+                                    // companyModel: companyModel,
+                                    index: index,
+                                  );
+                                },
                               ),
-                            ),
-                            _buildCheckOutData(),
-                          ]))
-                    : _buildCartImageEmpty()
-          ),
-        ),
-
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 40, bottom: 25),
+                                child: Divider(
+                                  color: ColorConstants.greyColor,
+                                  height: 1,
+                                ),
+                              ),
+                              _buildCheckOutData(),
+                            ]))
+                    : _buildCartImageEmpty()),
+      ),
     );
   }
 
   Widget _buildCartItemCard(
-      {required CartItemModel cartItemModel, required BuildContext context,
+      {required CartItemModel cartItemModel,
+      required BuildContext context,
       // required OfferModel offerModel,
       //   required CompanyModel companyModel,
       required int index}) {
@@ -322,9 +345,17 @@ class CartScreen extends GetView<CartController> {
       width: MediaQuery.of(context).size.width,
       height: 135,
       margin: const EdgeInsets.symmetric(vertical: 5),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
+        boxShadow: [
+          BoxShadow(
+            color: ColorConstants.gray100,
+            offset: const Offset(0, 2), // controls the offset of the shadow
+            blurRadius: 4, // controls the blur radius of the shadow
+            spreadRadius: 0, // controls the spread radius of the shadow
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -541,9 +572,11 @@ class CartScreen extends GetView<CartController> {
                                                   ),
                                                 ),
                                                 onTap: () {
-                                                  Controllers.cartController
+                                                  Controllers
+                                                      .cartController
                                                       .quantityInCart
-                                                      .value = Controllers.cartController
+                                                      .value = Controllers
+                                                          .cartController
                                                           .quantityInCart
                                                           .value +
                                                       1;
@@ -591,12 +624,16 @@ class CartScreen extends GetView<CartController> {
                                                   ),
                                                 ),
                                                 onTap: () {
-                                                  if (Controllers.cartController
-                                                      .quantityInCart
-                                                      .value > 1) {
-                                                    Controllers.cartController
+                                                  if (Controllers
+                                                          .cartController
+                                                          .quantityInCart
+                                                          .value >
+                                                      1) {
+                                                    Controllers
+                                                        .cartController
                                                         .quantityInCart
-                                                        .value = Controllers.cartController
+                                                        .value = Controllers
+                                                            .cartController
                                                             .quantityInCart
                                                             .value -
                                                         1;
@@ -623,10 +660,12 @@ class CartScreen extends GetView<CartController> {
                                                           cartItemId:
                                                               cartItemModel.id
                                                                   .toString(),
-                                                          newQuantity: Controllers.cartController
+                                                          newQuantity: Controllers
+                                                              .cartController
                                                               .quantityInCart
                                                               .value);
-                                                  Controllers.cartController
+                                                  Controllers
+                                                          .cartController
                                                           .cartItems[index]
                                                           .count
                                                           .value =
@@ -634,7 +673,8 @@ class CartScreen extends GetView<CartController> {
                                                           .quantityInCart.value;
                                                   print(
                                                       'count is ${Controllers.cartController.cartItems[index].count}');
-                                                  Controllers.cartController.getCartItemsWithoutLoading();
+                                                  Controllers.cartController
+                                                      .getCartItemsWithoutLoading();
                                                   Get.back();
                                                 }),
                                           )
@@ -669,7 +709,8 @@ class CartScreen extends GetView<CartController> {
                             width: 8,
                           ),
                           Obx(() => Text(
-                            Controllers.cartController.cartItems[index].count
+                                Controllers
+                                    .cartController.cartItems[index].count
                                     .toString(),
                                 style: TextStyle(
                                     color: ColorConstants.black0,
@@ -735,14 +776,16 @@ class CartScreen extends GetView<CartController> {
                                       showDialog(
                                           context: context,
                                           builder: (context) => const Center(
-                                              child: CircularProgressIndicator(
+                                                  child:
+                                                      CircularProgressIndicator(
                                                 color: ColorConstants.mainColor,
                                               )));
                                       Controllers.cartController
                                           .deleteCartItemApi(
                                               cartItemId:
                                                   cartItemModel.id.toString());
-                                      Controllers.cartController.getCartItemsWithoutLoading();
+                                      Controllers.cartController
+                                          .getCartItemsWithoutLoading();
                                       Get.back();
                                       Get.back();
                                     }));
@@ -875,29 +918,18 @@ class CartScreen extends GetView<CartController> {
             imagePath: 'assets/images/cart_empty.png',
             text: translation.cartIsEmpty.tr,
           ),
-          // Image.asset(
-          //   'assets/images/cart_empty.png',
-          //   height: 118,
-          //   fit: BoxFit.cover,
-          // ),
-          // Text(
-          //   translation.cartIsEmpty.tr,
-          //   style: TextStyle(
-          //       color: ColorConstants.greyColor,
-          //       fontSize: 16,
-          //       fontFamily: 'Noto Kufi Arabic',
-          //       fontWeight: FontWeight.w500),
-          // ),
           const SizedBox(
             height: 15,
           ),
           TextButton(
+            style: ButtonStyle(
+                overlayColor: MaterialStateProperty.all(
+                    ColorConstants.backgroundContainerLightColor)),
             onPressed: () {
               Controllers.cartController.getCartApi();
               if (comingForCart == ComingForCart.homPage) {
                 Get.back();
-              } else if (comingForCart ==
-                  ComingForCart.offerListCategory) {
+              } else if (comingForCart == ComingForCart.offerListCategory) {
                 Get.back();
               } else {
                 Get.back();

@@ -1,7 +1,8 @@
-name: test_ecommerce_app
-description: A new Flutter project.
+name: mizaa
+description: Mizaa E-Commerce App
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
 
 version: 1.0.0+1
 
@@ -12,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons:
+  cupertino_icons: ^1.0.2
   get:
   get_storage:
   iconly:
@@ -39,9 +40,17 @@ dependencies:
   flutter_rating_bar:
   url_launcher:
   rename:
+  flutter_stripe:
+  geolocator:
+  firebase_messaging: ^14.2.1
+  firebase_auth:
+  firebase_core:
+  awesome_notifications:
+  flutter_local_notifications: ^9.9.1
+#  agora_rtc_engine:
+#  agora_rtm:
   flutter_localizations:
     sdk: flutter
-#  intl:
 
 dev_dependencies:
   flutter_test:

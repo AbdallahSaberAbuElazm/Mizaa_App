@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/controllers/companies/company_controller.dart';
+import 'package:test_ecommerce_app/controllers/controllers.dart';
+import 'package:test_ecommerce_app/models/favourite/favourite_model.dart';
 import 'package:test_ecommerce_app/models/merchant/merchant_detail_model/merchant_detail_model.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
 import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
+import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:test_ecommerce_app/views/offer/OfferCard.dart';
 import 'package:test_ecommerce_app/views/offer/widget/merchant_logo.dart';
@@ -27,6 +30,7 @@ class MerchantDetail extends GetView<CompanyController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.resetMerchantDetail();
     // controller.getOffersForCompany(companyId: companyModel.id.toString());
     return Obx(() => Scaffold(
           // backgroundColor: ColorConstants.backgroundContainer,
@@ -36,9 +40,17 @@ class MerchantDetail extends GetView<CompanyController> {
               flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
                   value: SystemUiOverlayStyle(
                     statusBarIconBrightness:
-                    Get.isDarkMode ? Brightness.light : Brightness.dark,
+                        controller.appBarMerchantDetailColor.value ==
+                                Colors.white
+                            ? Brightness.dark
+                            : Brightness.light,
                     statusBarBrightness:
-                    Get.isDarkMode ? Brightness.light : Brightness.dark,
+                        Get.isDarkMode ? Brightness.light : Brightness.dark,
+                    systemNavigationBarColor: Get.isDarkMode
+                        ? ColorConstants.darkMainColor
+                        : Colors.white, // navigation bar color
+                    systemNavigationBarIconBrightness:
+                        Get.isDarkMode ? Brightness.light : Brightness.dark,
                   ),
                   child: Container()),
               elevation: 0,
@@ -69,7 +81,8 @@ class MerchantDetail extends GetView<CompanyController> {
                         ),
                       )))),
           floatingActionButton: const ChattingBtn(),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.miniEndFloat,
           body: ListView(
             physics: const ScrollPhysics(),
             controller: controller.scrollMerchantDetailController,
@@ -80,17 +93,19 @@ class MerchantDetail extends GetView<CompanyController> {
                 height: 46,
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16),
+                padding: const EdgeInsets.only(left: 12, right: 12),
                 child: Text(
                   translation.offerName.trParams({
                     'offerName': Utils.getTranslatedText(
-                        arText: '${translation.offersWithoutThe.tr} ${companyModel.arName}',
+                        arText:
+                            '${translation.offersWithoutThe.tr} ${companyModel.arName}',
                         // companyModel.description.toString(),
-                        enText: '${translation.offersWithoutThe.tr} ${companyModel.enName}'
-                    )
+                        enText:
+                            '${translation.offersWithoutThe.tr} ${companyModel.enName}')
                   }),
                   style: TextStyle(
-                      color:Get.isDarkMode? Colors.white:  ColorConstants.black0,
+                      color:
+                          Get.isDarkMode ? Colors.white : ColorConstants.black0,
                       fontSize: 15,
                       fontWeight: FontWeight.bold),
                 ),
@@ -118,8 +133,8 @@ class MerchantDetail extends GetView<CompanyController> {
               height: MediaQuery.of(context).size.height * 0.4,
               topPadding: 0,
               bottomPadding: 0,
-              leftPadding: 16,
-              rightPadding: 16,
+              leftPadding: 12,
+              rightPadding: 12,
             ),
           ),
           Transform.translate(
@@ -132,7 +147,7 @@ class MerchantDetail extends GetView<CompanyController> {
                       width: MediaQuery.of(context).size.width,
                       // height: 103,
                       margin: const EdgeInsets.symmetric(
-                        horizontal: 16,
+                        horizontal: 12,
                       ),
                       padding: const EdgeInsets.only(
                           left: 25, right: 25, top: 16, bottom: 11),
@@ -257,16 +272,45 @@ class MerchantDetail extends GetView<CompanyController> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.only(
-                    left: 16, right: 16, bottom: 20, top: 20),
+                    left: 12, right: 12, bottom: 20, top: 20),
                 itemCount: offers.length,
                 itemBuilder: (context, index) {
                   return OfferCard(
+                      isComingFromFavourite: false,
                       offerModel: offers[index],
+                      typeOfComingOffer: TypeOfComingOffer.comingFromMerchant,
+                      onTapFavourite: () {
+                        if (SharedPreferencesClass.getToken() == null ||
+                            SharedPreferencesClass.getToken() == '') {
+                          Utils.showAlertDialogForRegisterLogin(
+                              context: context);
+                        } else {
+                          if (offers[index].isFavourite!) {
+                            Controllers.favouriteController
+                                .getUserFavourites()
+                                .then((favouriteList) {
+                              FavouriteModel favouriteModel =
+                                  favouriteList.firstWhere((offer) =>
+                                      offers[index].id == offer.offerId);
+                              offers[index].copyWith(isFavourite: false);
+                              Controllers.favouriteController
+                                  .deleteFromFavourites(
+                                      favouriteKey: favouriteModel.key,
+                                      context: context);
+                            });
+                          } else {
+                            Controllers.favouriteController.addToFavourites(
+                                offerId: Controllers.offerController
+                                    .filteredListOfferMainCategory[index].id!,
+                                context: context);
+                          }
+                        }
+                      },
                       width: MediaQuery.of(context).size.width,
                       height: 248);
                 },
               )
-            :  Center(
+            : Center(
                 child: Text(
                   translation.noDataYet.tr,
                   style: TextStyle(fontSize: 18),

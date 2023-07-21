@@ -45,10 +45,10 @@ class OfferModel with _$OfferModel {
     int? subCategoryId,
     int? salesCount,
     // CompanyModel? company,
-    Map<dynamic,dynamic>? company,
-    List<Map<dynamic,dynamic>>? offerImages,
-    List<Map<dynamic,dynamic>>? offerOptions,
-    Map<String,dynamic>? subCategory,
+    Map<dynamic, dynamic>? company,
+    List<Map<dynamic, dynamic>>? offerImages,
+    List<Map<dynamic, dynamic>>? offerOptions,
+    Map<String, dynamic>? subCategory,
     dynamic userOfferActionHistories,
     bool? isShowInHomePage,
     bool? isTodayOffer,
@@ -57,9 +57,8 @@ class OfferModel with _$OfferModel {
     bool? isSpecial,
     double? offerRate,
     dynamic offerRates,
+    @Default(false) bool? isFavourite,
   }) = _OfferModel;
 
   factory OfferModel.fromJson(JSON json) => _$OfferModelFromJson(json);
-
-
 }

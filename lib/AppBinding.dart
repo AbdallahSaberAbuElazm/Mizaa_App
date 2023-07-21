@@ -14,6 +14,7 @@ class AppBinding extends Bindings {
     Get.put(DirectionalityController(), permanent: true);
     Get.put<UserAuthenticationRepository>(UserAuthenticationRepository());
     Get.put<UserAuthenticationProvider>(UserAuthenticationProvider(Get.find()));
-    Get.put<UserAuthenticationController>(UserAuthenticationController(Get.find()));
+    Get.put<UserAuthenticationController>(
+        UserAuthenticationController(Get.find()));
   }
 }

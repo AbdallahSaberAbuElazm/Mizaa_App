@@ -19,10 +19,20 @@ class UserAuthenticationController extends GetxController {
   UserAuthenticationController(this.userAuthenticationProvider);
 
   final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController oldPasswordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
+
+  final countryController = ''.obs;
+  final cityController = ''.obs;
+  final countryIdController = 0.obs;
+  final cityIdController = 0.obs;
+  final genderNameController = ''.obs;
+  final genderIdController = 0.obs;
+  final selectedDate = DateTime.now().obs;
 
   final passwordErrorText = ''.obs;
 
@@ -37,17 +47,17 @@ class UserAuthenticationController extends GetxController {
 
   final countries = <CountryModel>[].obs;
   final cities = <CityModel>[].obs;
+  final citiesForSelectedCountry = <CityModel>[].obs;
 
   final userWallet = WalletModel(
-          name: '',
-          mobile: '',
-          applicationUserId: '',
-          balance: 0.0,
-          points: 0,
-          city: 0,
-          country: 0,
-          walletHistory: [])
-      .obs;
+      name: '',
+      mobile: '',
+      applicationUserId: '',
+      balance: 0.0,
+      points: 0,
+      city: 0,
+      country: 0,
+      walletHistory: []).obs;
 
   final walletHistories = <WalletHistoryModel>[].obs;
 
@@ -56,8 +66,14 @@ class UserAuthenticationController extends GetxController {
   var num = 0.obs;
   var btnName = translation.all.tr.obs;
 
+  /// variable => bool to hase if use logged or not
+  var isLoggedIn = SharedPreferencesClass.getToken() != null &&
+          SharedPreferencesClass.getToken() != ''
+      ? true.obs
+      : false.obs;
+
   // app bar for wallet screen
-  late ScrollController scrollWalletScreenController ;
+  late ScrollController scrollWalletScreenController;
   final isScrolledWalletScreen = false.obs;
   final appBarWalletScreenColor = Colors.transparent.obs;
   final appBarItemContainerWalletScreenColor = Colors.white.obs;
@@ -67,15 +83,16 @@ class UserAuthenticationController extends GetxController {
   void onInit() {
     scrollWalletScreenController = ScrollController()
       ..addListener(_onScrollCartScreen);
+    addDeviceToken();
     super.onInit();
   }
-
 
   void _onScrollCartScreen() {
     if (scrollWalletScreenController.offset > 20 &&
         !isScrolledWalletScreen.value) {
       isScrolledWalletScreen.value = true;
-      appBarWalletScreenColor.value = Get.isDarkMode ? ColorConstants.bottomAppBarDarkColor : Colors.white;
+      appBarWalletScreenColor.value =
+          Get.isDarkMode ? ColorConstants.bottomAppBarDarkColor : Colors.white;
       appBarItemContainerWalletScreenColor.value = ColorConstants.mainColor;
       appBarItemWalletScreenColor.value = Colors.black;
     } else if (scrollWalletScreenController.offset <= 20 &&
@@ -91,7 +108,9 @@ class UserAuthenticationController extends GetxController {
   void dispose() {
     phoneNumberController.dispose();
     firstNameController.dispose();
+    emailController.dispose();
     passwordController.dispose();
+    oldPasswordController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
   }
@@ -146,7 +165,6 @@ class UserAuthenticationController extends GetxController {
   }
 
   ///////////////////////////////////////////////
-
   void clearLoginTextFieldData() {
     phoneNumberController.text = '';
     passwordController.text = '';
@@ -166,7 +184,6 @@ class UserAuthenticationController extends GetxController {
   }
 
   ///////////////////////////////////////////////
-
   void getCountries() {
     userAuthenticationProvider.getCountries().then((value) {
       countries.value = value;
@@ -182,6 +199,13 @@ class UserAuthenticationController extends GetxController {
     });
   }
 
+  void getCitiesForSelectedCountry({required String countryId}) {
+    citiesForSelectedCountry.clear();
+    userAuthenticationProvider.getCites(id: countryId).then((value) {
+      citiesForSelectedCountry.value = value;
+    });
+  }
+
   void otpLogin(
       {required String mobileNo,
       required String password,
@@ -189,22 +213,28 @@ class UserAuthenticationController extends GetxController {
     userAuthenticationProvider
         .otpLogin(mobileNo: mobileNo, password: password)
         .then((userService) {
-      Get.back();
       if (userService.firstName != '') {
         SharedPreferencesClass.setUserData(
             userLoginData: UserLoginData(
                 firstName: userService.firstName,
                 phoneNumber: userService.phoneNumber,
                 token: userService.token));
-        userAuthenticationProvider.getUserBasicInfo(phoneNumber:userService.phoneNumber, token: userService.token ).then((value) {
+        Controllers.userAuthenticationController.isLoggedIn.value = true;
+        userAuthenticationProvider
+            .getUserBasicInfo(
+                phoneNumber: userService.phoneNumber, token: userService.token)
+            .then((value) {
           SharedPreferencesClass.setUserBasicInfo(userBasicInfo: value);
         });
 
         isButtonEnabled.value = false;
-        Get.offNamed('/home')!.then((value) {
-          clearLoginTextFieldData();
-        });
+        Get.back();
+        Controllers.userAuthenticationController.isLoggedIn.value = true;
+        Get.offNamed('/home');
+        clearLoginTextFieldData();
+        print('user token i ${SharedPreferencesClass.getToken()}');
       } else {
+        Get.back();
         Utils.snackBar(
             context: context,
             msg: translation.loginInfoIncorrect.tr,
@@ -263,6 +293,14 @@ class UserAuthenticationController extends GetxController {
             msg: translation.verifyDataText.tr,
             background: ColorConstants.redColor,
             textColor: Colors.white);
+      }
+    });
+  }
+
+  void addDeviceToken() {
+    userAuthenticationProvider.addDeviceToken().then((value) {
+      if (value == 'success') {
+        print('device token added successfully');
       }
     });
   }
@@ -334,9 +372,69 @@ class UserAuthenticationController extends GetxController {
     });
   }
 
+  // update user data
+  void updateUserDate(
+      {required String mobileNo,
+      required String name,
+      required String email,
+      required DateTime dateOfBrith,
+      required int gender,
+      required int cityId,
+      required int countryId,
+      required BuildContext context}) {
+    userAuthenticationProvider
+        .updateUserDate(
+            mobileNo: mobileNo,
+            name: name,
+            email: email,
+            dateOfBrith: dateOfBrith,
+            gender: gender,
+            cityId: cityId,
+            countryId: countryId)
+        .then((value) {
+      userAuthenticationProvider
+          .getUserBasicInfo(
+              phoneNumber: SharedPreferencesClass.getPhoneNumber().toString(),
+              token: SharedPreferencesClass.getToken().toString())
+          .then((value) {
+        SharedPreferencesClass.setUserBasicInfo(userBasicInfo: value);
+      });
+      Utils.snackBar(
+          context: context,
+          msg: Utils.getTranslatedText(
+              arText: value['arMessage'], enText: value['enMessage']),
+          background: ColorConstants.greenColor,
+          textColor: Colors.white);
+      Get.back();
+      Get.back();
+    });
+  }
+
+  // reset password
+  resetPassword({
+    required String oldPassword,
+    required String newPassword,
+    required String mobile,
+    required BuildContext context,
+  }) {
+    userAuthenticationProvider
+        .resetPassword(
+            oldPassword: oldPassword, newPassword: newPassword, mobile: mobile)
+        .then((value) {
+      Utils.snackBar(
+          context: context,
+          msg: Utils.getTranslatedText(
+              arText: value['message'], enText: value['enmessage']),
+          background: ColorConstants.greenColor,
+          textColor: Colors.white);
+      Get.back();
+      Get.back();
+    });
+  }
+
   //////////// User Wallet /////////
 
-  Future<WalletModel> getUserWallet(){
+  Future<WalletModel> getUserWallet() {
     return userAuthenticationProvider.getUserWallet().then((wallet) {
       walletHistories.value = wallet.walletHistory
           .map((walletHistory) => WalletHistoryModel.fromJson(walletHistory))
@@ -346,43 +444,47 @@ class UserAuthenticationController extends GetxController {
     });
   }
 
-  getUserIncomeWallet(){
-      walletHistories.value = userWallet.value.walletHistory.where((walletHistory) => walletHistory['money'] > 0)
-          .map((walletHistory) => WalletHistoryModel.fromJson(walletHistory))
-          .toList();
+  getUserIncomeWallet() {
+    walletHistories.value = userWallet.value.walletHistory
+        .where((walletHistory) => walletHistory['money'] > 0)
+        .map((walletHistory) => WalletHistoryModel.fromJson(walletHistory))
+        .toList();
   }
 
-  getUserSpendingWallet(){
-      walletHistories.value = userWallet.value.walletHistory.where((walletHistory) => walletHistory['money'] < 0)
-          .map((walletHistory) =>WalletHistoryModel.fromJson(walletHistory))
-          .toList();
+  getUserSpendingWallet() {
+    walletHistories.value = userWallet.value.walletHistory
+        .where((walletHistory) => walletHistory['money'] < 0)
+        .map((walletHistory) => WalletHistoryModel.fromJson(walletHistory))
+        .toList();
   }
 
   var incomePrice = 0.0.obs;
-  double getIncomePrice(){
+  double getIncomePrice() {
     incomePrice.value = 0.0;
-    userWallet.value.walletHistory.forEach((walletHistory){
-      final WalletHistoryModel walletHistoryModel = WalletHistoryModel.fromJson(walletHistory);
-      if(walletHistoryModel.money > 0){
+    userWallet.value.walletHistory.forEach((walletHistory) {
+      final WalletHistoryModel walletHistoryModel =
+          WalletHistoryModel.fromJson(walletHistory);
+      if (walletHistoryModel.money > 0) {
         incomePrice.value += walletHistoryModel.money;
       }
-      });
+    });
     return incomePrice.value;
   }
 
   var spendingPrice = 0.0.obs;
-  double getSpendingPrice(){
+  double getSpendingPrice() {
     spendingPrice.value = 0.0;
-    userWallet.value.walletHistory.forEach((walletHistory){
-      final WalletHistoryModel walletHistoryModel = WalletHistoryModel.fromJson(walletHistory);
-      if(walletHistoryModel.money < 0){
+    userWallet.value.walletHistory.forEach((walletHistory) {
+      final WalletHistoryModel walletHistoryModel =
+          WalletHistoryModel.fromJson(walletHistory);
+      if (walletHistoryModel.money < 0) {
         spendingPrice.value += walletHistoryModel.money;
       }
     });
     return spendingPrice.value;
   }
 
-  setBtnNameAndNum({required String name, required int number}){
+  setBtnNameAndNum({required String name, required int number}) {
     btnName.value = name;
     num.value = number;
     update();

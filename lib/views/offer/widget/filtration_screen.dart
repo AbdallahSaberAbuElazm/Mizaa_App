@@ -42,16 +42,16 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
         flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle(
               statusBarIconBrightness:
-              Get.isDarkMode ? Brightness.light : Brightness.dark,
+                  Get.isDarkMode ? Brightness.light : Brightness.dark,
               statusBarBrightness:
-              Get.isDarkMode ? Brightness.light : Brightness.dark,
+                  Get.isDarkMode ? Brightness.light : Brightness.dark,
             ),
             child: Container()),
         centerTitle: true,
         leadingWidth: 104,
         leading: Padding(
           padding: EdgeInsets.only(
-              left: Utils.leftPadding16Left, right: Utils.rightPadding16Right),
+              left: Utils.leftPadding12Left, right: Utils.rightPadding12Right),
           child: Container(
               child: IntrinsicWidth(
                   child: Row(

@@ -23,9 +23,12 @@ class CartModel extends HiveObject {
     final cartId = json['cartId'] as String;
     final itemsData = json['items'] as List<dynamic>;
     final List<CartItemModel> items = itemsData
-        .map<CartItemModel>((itemData) => CartItemModel.fromJson(itemData ))
+        .map<CartItemModel>((itemData) => CartItemModel.fromJson(itemData))
         .toList();
 
-    return CartModel(cartId:  json['cartId'] as String, items: items,);
+    return CartModel(
+      cartId: json['cartId'] as String,
+      items: items,
+    );
   }
 }

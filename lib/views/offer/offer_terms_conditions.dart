@@ -16,6 +16,7 @@ class OfferTermsConditions extends GetView<OfferController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.resetTermsAndConditionsScrolling();
     return Obx(
       () => Scaffold(
         // backgroundColor: ColorConstants.backgroundContainer,
@@ -27,9 +28,9 @@ class OfferTermsConditions extends GetView<OfferController> {
           flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle(
                 statusBarIconBrightness:
-                Get.isDarkMode ? Brightness.light : Brightness.dark,
+                    Get.isDarkMode ? Brightness.light : Brightness.dark,
                 statusBarBrightness:
-                Get.isDarkMode ? Brightness.light : Brightness.dark,
+                    Get.isDarkMode ? Brightness.light : Brightness.dark,
               ),
               child: Container()),
           elevation: 0,
@@ -45,7 +46,7 @@ class OfferTermsConditions extends GetView<OfferController> {
               title: translation.termsConditionsText.tr),
         ),
         floatingActionButton: const ChattingBtn(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
         body: ListView(
           controller: controller.scrollTermsConditionsController,
           padding:

@@ -21,6 +21,7 @@ class MerchantRatings extends GetView<OfferController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.resetMerchantRatingsScrolling();
     return Obx(() => Scaffold(
           appBar: AppBar(
             backgroundColor:
@@ -28,9 +29,17 @@ class MerchantRatings extends GetView<OfferController> {
                 controller.appBarOfferRatingsColor.value,
             flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
                 value: SystemUiOverlayStyle(
-                  statusBarIconBrightness:
-                      Get.isDarkMode ? Brightness.light : Brightness.dark,
+                  statusBarIconBrightness: Get.isDarkMode
+                      ? Brightness.light
+                      : controller.appBarOfferRatingsColor.value == Colors.white
+                          ? Brightness.dark
+                          : Brightness.dark,
                   statusBarBrightness:
+                      Get.isDarkMode ? Brightness.light : Brightness.dark,
+                  systemNavigationBarColor: Get.isDarkMode
+                      ? ColorConstants.darkMainColor
+                      : Colors.white, // navigation bar color
+                  systemNavigationBarIconBrightness:
                       Get.isDarkMode ? Brightness.light : Brightness.dark,
                 ),
                 child: Container()),
@@ -45,111 +54,138 @@ class MerchantRatings extends GetView<OfferController> {
             leadingWidth: 260,
             leading: Utils.buildLeadingAppBar(title: translation.ratings.tr),
             actions: [
-            controller.isUserRateOffer.value?  Padding(
-                padding: const EdgeInsets.only(right: 14, left: 14,),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  backgroundColor:
-                                  Get.isDarkMode ? ColorConstants.bottomAppBarDarkColor : Colors.white,
-                                  content: Container(
-                                    height: 158,
-                                    padding: const EdgeInsets.only(
-                                      left: 10,
-                                      right: 10,
-                                      top: 16,
-                                    ),
-                                    color: Get.isDarkMode
-                                        ? ColorConstants.bottomAppBarDarkColor
-                                        : Colors.white,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          translation.addRatings.tr,
-                                          style: TextStyle(
-                                              color:Get.isDarkMode? Colors.white: Colors.black,
-                                              fontSize: 16,
-                                              fontFamily: 'Noto Kufi Arabic',
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        const SizedBox(
-                                          height: 16,
-                                        ),
-                                        Obx(
-                                          () => RatingBar.builder(
-                                            initialRating:
-                                                controller.userRating.value,
-                                            minRating: 1,
-                                            direction: Axis.horizontal,
-                                            allowHalfRating: true,
-                                            // ignoreGestures: true,
-                                            itemSize: 28,
-                                            unratedColor: Colors.grey,
-                                            itemCount: 5,
-                                            itemPadding: const EdgeInsets.symmetric(
-                                                horizontal: 0.5),
-                                            itemBuilder: (context, _) => const Icon(
-                                              Icons.star,
-                                              color: ColorConstants.mainColor,
-                                            ),
-                                            onRatingUpdate: (rating) {
-                                              controller.userRating.value = rating;
-                                              print(
-                                                  'rating is ${controller.userRating.value}');
-                                            },
+              controller.isUserRateOffer.value
+                  ? Padding(
+                      padding: const EdgeInsets.only(
+                        right: 14,
+                        left: 14,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        backgroundColor: Get.isDarkMode
+                                            ? ColorConstants
+                                                .bottomAppBarDarkColor
+                                            : Colors.white,
+                                        content: Container(
+                                          height: 158,
+                                          padding: const EdgeInsets.only(
+                                            left: 10,
+                                            right: 10,
+                                            top: 16,
+                                          ),
+                                          color: Get.isDarkMode
+                                              ? ColorConstants
+                                                  .bottomAppBarDarkColor
+                                              : Colors.white,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                translation.addRatings.tr,
+                                                style: TextStyle(
+                                                    color: Get.isDarkMode
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                    fontSize: 16,
+                                                    fontFamily:
+                                                        'Noto Kufi Arabic',
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              const SizedBox(
+                                                height: 16,
+                                              ),
+                                              Obx(
+                                                () => RatingBar.builder(
+                                                  initialRating: controller
+                                                      .userRating.value,
+                                                  minRating: 1,
+                                                  direction: Axis.horizontal,
+                                                  allowHalfRating: true,
+                                                  // ignoreGestures: true,
+                                                  itemSize: 28,
+                                                  unratedColor: Colors.grey,
+                                                  itemCount: 5,
+                                                  itemPadding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 0.5),
+                                                  itemBuilder: (context, _) =>
+                                                      const Icon(
+                                                    Icons.star,
+                                                    color: ColorConstants
+                                                        .mainColor,
+                                                  ),
+                                                  onRatingUpdate: (rating) {
+                                                    controller.userRating
+                                                        .value = rating;
+                                                    print(
+                                                        'rating is ${controller.userRating.value}');
+                                                  },
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 20,
+                                              ),
+                                              SizedBox(
+                                                height: 45,
+                                                child: CustomButton(
+                                                    btnText:
+                                                        translation.saveText.tr,
+                                                    textSize: 15,
+                                                    textColor: Get.isDarkMode
+                                                        ? ColorConstants
+                                                            .bottomAppBarDarkColor
+                                                        : Colors.white,
+                                                    btnBackgroundColor:
+                                                        ColorConstants
+                                                            .mainColor,
+                                                    btnOnpressed: () {
+                                                      controller.addRateToOffer(
+                                                          offerId:
+                                                              offerModel.id!,
+                                                          offerKey:
+                                                              offerModel.key!,
+                                                          rate: controller
+                                                              .userRating.value,
+                                                          context: context);
+                                                      controller.userRating
+                                                          .value = 0.0;
+                                                    }),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        SizedBox(
-                                          height: 45,
-                                          child: CustomButton(
-                                              btnText: translation.saveText.tr,
-                                              textSize: 15,
-                                              textColor: Get.isDarkMode
-                                                  ? ColorConstants
-                                                      .bottomAppBarDarkColor
-                                                  : Colors.white,
-                                              btnBackgroundColor:
-                                                  ColorConstants.mainColor,
-                                              btnOnpressed: () {
-                                                controller.addRateToOffer(
-                                                    offerId: offerModel.id!,
-                                                    offerKey: offerModel.key!,
-                                                    rate: controller.userRating.value,
-                                                    context: context);
-                                                controller.userRating.value = 0.0;
-
-                                              }),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              });
-                        },
-                        child: Text(translation.addRatings.tr, style: const TextStyle(
-                            color:ColorConstants.mainColor,
-                            fontSize: 12,
-                            fontFamily: 'Noto Kufi Arabic',
-                            fontWeight: FontWeight.w500),)),
-                  ],
-                ),
-              ): const SizedBox()
+                                      );
+                                    });
+                              },
+                              child: Text(
+                                translation.addRatings.tr,
+                                style: const TextStyle(
+                                    color: ColorConstants.mainColor,
+                                    fontSize: 12,
+                                    fontFamily: 'Noto Kufi Arabic',
+                                    fontWeight: FontWeight.w500),
+                              )),
+                        ],
+                      ),
+                    )
+                  : const SizedBox()
             ],
           ),
           floatingActionButton: const ChattingBtn(),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.miniEndFloat,
           body: (controller.isLoadingOfferRatings.value)
               ? ListView.builder(
                   itemCount: 3,
@@ -192,7 +228,7 @@ class MerchantRatings extends GetView<OfferController> {
       width: MediaQuery.of(context).size.width,
       height: 108,
       padding: EdgeInsets.only(
-          right: Utils.rightPadding16Right, left: Utils.leftPadding16Left),
+          right: Utils.rightPadding12Right, left: Utils.leftPadding12Left),
       margin: const EdgeInsets.only(bottom: 9),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(12)),

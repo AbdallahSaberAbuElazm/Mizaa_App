@@ -6,7 +6,7 @@ class ApiService {
 
   ApiService(this._baseProvider);
 
-  Future<List<Map<String,dynamic>>> get<T>({
+  Future<List<Map<String, dynamic>>> get<T>({
     required String endpoint,
     JSON? query,
     Map<String, String>? headers,
@@ -14,7 +14,7 @@ class ApiService {
   }) async {
     var customHeaders = {
       'Accept': 'application/json',
-      requiresAuthToken ? 'Authorization': '' : '',
+      requiresAuthToken ? 'Authorization' : '': '',
     };
 
     if (headers != null) {
@@ -39,19 +39,15 @@ class ApiService {
   }) async {
     var customHeaders = {
       'Accept': 'application/json',
-      requiresAuthToken ? 'Authorization': '' : '',
+      requiresAuthToken ? 'Authorization' : '': '',
     };
 
     if (headers != null) {
       customHeaders.addAll(headers);
     }
 
-    final response = await _baseProvider.post(
-      endpoint,
-      body,
-      headers: customHeaders,
-      query: query
-    );
+    final response = await _baseProvider.post(endpoint, body,
+        headers: customHeaders, query: query);
 
     return response.body;
   }
@@ -65,23 +61,19 @@ class ApiService {
   }) async {
     var customHeaders = {
       'Accept': 'application/json',
-      requiresAuthToken ? 'Authorization': '' : '',
+      requiresAuthToken ? 'Authorization' : '': '',
     };
 
     if (headers != null) {
       customHeaders.addAll(headers);
     }
 
-    final response = await _baseProvider.put(
-      endpoint,
-      body,
-      headers: customHeaders,
-      query: query
-    );
+    final response = await _baseProvider.put(endpoint, body,
+        headers: customHeaders, query: query);
 
     return response.body;
   }
-  
+
   Future<JSON> delete<T>({
     required String endpoint,
     JSON? body,
@@ -91,18 +83,15 @@ class ApiService {
   }) async {
     var customHeaders = {
       'Accept': 'application/json',
-      requiresAuthToken ? 'Authorization': '' : '',
+      requiresAuthToken ? 'Authorization' : '': '',
     };
 
     if (headers != null) {
       customHeaders.addAll(headers);
     }
 
-    final response = await _baseProvider.delete(
-      endpoint,
-      headers: customHeaders,
-      query: query
-    );
+    final response = await _baseProvider.delete(endpoint,
+        headers: customHeaders, query: query);
 
     return response.body;
   }

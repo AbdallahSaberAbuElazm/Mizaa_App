@@ -36,7 +36,7 @@ class CompanyController extends GetxController {
   final companyBranches = <CompanyBranchesModel>[].obs;
   var isLoadingCompanyBranches = true.obs;
 
-  var isLoadingCompanyOffers= true.obs;
+  var isLoadingCompanyOffers = true.obs;
   final companyOffers = <OfferModel>[].obs;
 
   // app bar for merchant branches screen
@@ -46,7 +46,6 @@ class CompanyController extends GetxController {
   final appBarItemContainerMerchantBranchesColor = Colors.white.obs;
   final appBarItemMerchantBranchesColor = ColorConstants.mainColor.obs;
 
-
   // app bar for merchant detail screen
   late ScrollController scrollMerchantDetailController;
   final isScrolledMerchantDetail = false.obs;
@@ -54,6 +53,19 @@ class CompanyController extends GetxController {
   final appBarItemContainerMerchantDetailColor = Colors.white.obs;
   final appBarItemMerchantDetailColor = ColorConstants.mainColor.obs;
 
+  resetMerchantBranches() {
+    isScrolledMerchantBranches.value = false;
+    appBarMerchantBranchesColor.value = Colors.transparent;
+    appBarItemContainerMerchantBranchesColor.value = Colors.white;
+    appBarItemMerchantBranchesColor.value = ColorConstants.mainColor;
+  }
+
+  resetMerchantDetail() {
+    isScrolledMerchantDetail.value = false;
+    appBarMerchantDetailColor.value = Colors.transparent;
+    appBarItemContainerMerchantDetailColor.value = Colors.white;
+    appBarItemMerchantDetailColor.value = ColorConstants.mainColor;
+  }
 
   @override
   void onInit() {
@@ -64,12 +76,12 @@ class CompanyController extends GetxController {
     super.onInit();
   }
 
-
   void _onScrollMerchantBranches() {
     if (scrollMerchantBranchesController.offset > 80 &&
         !isScrolledMerchantBranches.value) {
       isScrolledMerchantBranches.value = true;
-      appBarMerchantBranchesColor.value = Get.isDarkMode? ColorConstants.bottomAppBarDarkColor:Colors.white;
+      appBarMerchantBranchesColor.value =
+          Get.isDarkMode ? ColorConstants.bottomAppBarDarkColor : Colors.white;
       appBarItemContainerMerchantBranchesColor.value = ColorConstants.mainColor;
       appBarItemMerchantBranchesColor.value = Colors.white;
     } else if (scrollMerchantBranchesController.offset <= 80 &&
@@ -85,7 +97,8 @@ class CompanyController extends GetxController {
     if (scrollMerchantDetailController.offset > 20 &&
         !isScrolledMerchantDetail.value) {
       isScrolledMerchantDetail.value = true;
-      appBarMerchantDetailColor.value =Get.isDarkMode? ColorConstants.bottomAppBarDarkColor: Colors.white;
+      appBarMerchantDetailColor.value =
+          Get.isDarkMode ? ColorConstants.bottomAppBarDarkColor : Colors.white;
       appBarItemContainerMerchantDetailColor.value = ColorConstants.mainColor;
       appBarItemMerchantDetailColor.value = Colors.white;
     } else if (scrollMerchantDetailController.offset <= 20 &&
@@ -102,7 +115,7 @@ class CompanyController extends GetxController {
     companyProvider
         .getCompanyBranches(
             cityId: SharedPreferencesClass.getCityId().toString(),
-        companyKey: companyKey)
+            companyKey: companyKey)
         .then((branches) {
       companyBranches.value = branches;
       print('branches is $branches');
@@ -110,11 +123,11 @@ class CompanyController extends GetxController {
     });
   }
 
-  void getOffersForCompany({required String companyId}){
+  void getOffersForCompany({required String companyId}) {
     isLoadingCompanyOffers.value = true;
-    companyProvider.getOffersForCompany(companyId: companyId).then((offers){
-        companyOffers.value = offers;
-        isLoadingCompanyOffers.value = false;
-      });
+    companyProvider.getOffersForCompany(companyId: companyId).then((offers) {
+      companyOffers.value = offers;
+      isLoadingCompanyOffers.value = false;
+    });
   }
 }

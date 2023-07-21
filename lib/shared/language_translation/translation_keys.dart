@@ -119,7 +119,8 @@ const deleteAllText = 'Delete All';
 const deleteOffer = 'deleteOffer';
 const deleteAllOffer = 'deleteAllOffer';
 const cancelText = 'cancelText';
-
+const addToOrderMsg = 'addToOrderMsg';
+const backToOrder = 'backToOrder';
 
 // search screen
 const searchIsEmpty = 'searchIsEmpty';
@@ -130,6 +131,28 @@ const settings = 'settings';
 const account = 'account';
 const logout = 'logout';
 const selectTheme = 'selectTheme';
+const contactUs = 'contactUs';
+const deleteUserAccount = 'deleteUserAccount';
+const welcome = 'welcome';
+const version = 'version';
+
+// settings screen
+const updateData = 'updateData';
+const changePassword = 'changePassword';
+const locationPermission= 'locationPermission';
+const updateText = 'updateText';
+const selectGender = 'selectGender';
+const maleText = 'maleText';
+const femaleText = 'femaleText';
+
+// edit profile screen
+const email = 'email';
+const dateOfBirth = 'dateOfBirth';
+
+// change password screen
+const changeText = 'changeText';
+const newPassword = 'newPassword';
+const oldPassword ='oldPassword';
 
 // wallet screen
 const wallet = 'wallet';
@@ -142,7 +165,31 @@ const cashbackText = 'cashbackText';
 const cashbackCoupon = 'cashbackCoupon';
 const noBalance = 'noBalance';
 
+//complete payment screen
+const completePaymentText = 'completePaymentText';
+const bankCard = 'bankCard';
 
+// order screen
+const orderNumber = 'orderNumber';
+const orderDate = 'orderDate';
+const paymentMethod = 'paymentMethod';
+const numberOfOffers = 'numberOfOffers';
+const orderStatus = 'orderStatus';
+const orderDetails = 'orderDetails';
+const coupon= 'coupon';
+const couponsText= 'couponsText';
+
+// favourite screen
+const offerAddedToFavourite = 'offerAddedToFavourite';
+const offerDeletedFromFavourite = 'offerDeletedFromFavourite';
+
+// delete user account screen
+const deleteMyAccount = 'DeleteMyAccount';
+const deleteUserAccountMessage = 'deleteUserAccountMessage';
+
+
+// contact us screen
+const followUsThrough = 'followUsThrough';
 
 
 

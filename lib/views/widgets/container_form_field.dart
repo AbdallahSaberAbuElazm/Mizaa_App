@@ -7,7 +7,14 @@ class ContainerFormField extends StatelessWidget {
   final TextInputType type;
   final TextEditingController controller;
   final double containerWidth;
-  const ContainerFormField({Key? key, required this.name, required this.hintName, required this.type, required this.controller, required this.containerWidth}) : super(key: key);
+  const ContainerFormField(
+      {Key? key,
+      required this.name,
+      required this.hintName,
+      required this.type,
+      required this.controller,
+      required this.containerWidth})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +29,12 @@ class ContainerFormField extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
           name,
-          style:  TextStyle(
-              color: ColorConstants.greyColor, fontSize: 15, fontWeight: FontWeight.w500,fontFamily: 'Cairo',height: 0.6),
+          style: TextStyle(
+              color: ColorConstants.greyColor,
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Cairo',
+              height: 0.6),
         ),
         SizedBox(
           height: 68,
@@ -35,16 +46,17 @@ class ContainerFormField extends StatelessWidget {
             decoration: InputDecoration(
                 border: const OutlineInputBorder(borderSide: BorderSide.none),
                 focusedBorder:
-                const OutlineInputBorder(borderSide: BorderSide.none),
+                    const OutlineInputBorder(borderSide: BorderSide.none),
                 fillColor: Colors.black,
                 focusColor: Colors.black,
                 hoverColor: Colors.black,
                 hintText: hintName,
-                hintStyle:  TextStyle(
-                    color: ColorConstants.greyColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  fontFamily: 'Cairo',)),
+                hintStyle: TextStyle(
+                  color: ColorConstants.greyColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Cairo',
+                )),
             style: Theme.of(context).textTheme.bodyText1,
             textAlign: TextAlign.left,
             validator: (value) {

@@ -1,4 +1,3 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:test_ecommerce_app/shared/typedef.dart';
 
@@ -6,7 +5,7 @@ part 'CountryModel.freezed.dart';
 part 'CountryModel.g.dart';
 
 @freezed
-class CountryModel with _$CountryModel{
+class CountryModel with _$CountryModel {
   factory CountryModel({
     required int id,
     required String key,
@@ -17,9 +16,8 @@ class CountryModel with _$CountryModel{
     required String phoneCode,
     required int coinId,
     dynamic cities,
-    dynamic coin,  })= _CountryModel;
+    dynamic coin,
+  }) = _CountryModel;
 
   factory CountryModel.fromJson(JSON json) => _$CountryModelFromJson(json);
-
-
 }

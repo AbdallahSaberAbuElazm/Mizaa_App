@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
 import 'package:test_ecommerce_app/controllers/companies/company_controller.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
@@ -10,6 +11,7 @@ import 'package:test_ecommerce_app/controllers/home/HomeController.dart';
 import 'package:test_ecommerce_app/controllers/offers/OfferController.dart';
 import 'package:test_ecommerce_app/controllers/offers/search_binding.dart';
 import 'package:test_ecommerce_app/controllers/offers/search_offer_controller.dart';
+import 'package:test_ecommerce_app/models/favourite/favourite_model.dart';
 import 'package:test_ecommerce_app/models/merchant/merchant_model.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
 import 'package:test_ecommerce_app/providers/company_provider.dart';
@@ -98,10 +100,16 @@ class _OfferListForMainCategoryPageState
         backgroundColor: Colors.transparent,
         flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
               statusBarIconBrightness:
-              Get.isDarkMode ? Brightness.light : Brightness.dark,
+                  Get.isDarkMode ? Brightness.light : Brightness.dark,
               statusBarBrightness:
-              Get.isDarkMode ? Brightness.light : Brightness.dark,
+                  Get.isDarkMode ? Brightness.light : Brightness.dark,
+              systemNavigationBarColor: Get.isDarkMode
+                  ? ColorConstants.darkMainColor
+                  : Colors.white, // navigation bar color
+              systemNavigationBarIconBrightness:
+                  Get.isDarkMode ? Brightness.light : Brightness.dark,
             ),
             child: Container()),
         toolbarHeight:
@@ -112,7 +120,7 @@ class _OfferListForMainCategoryPageState
         leadingWidth: 260,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16, left: 16),
+            padding: const EdgeInsets.only(right: 12, left: 12),
             child: _buildActionsAppBar(context: context),
           )
         ],
@@ -211,7 +219,7 @@ class _OfferListForMainCategoryPageState
             )),
       ),
       floatingActionButton: const ChattingBtn(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
       body: Padding(
         padding: const EdgeInsets.only(top: 27),
         child: TabBarView(
@@ -264,39 +272,53 @@ class _OfferListForMainCategoryPageState
                         ));
                   }
                 }),
-            Transform.translate(
-              offset: const Offset(-9, -18),
-              child: Align(
-                  alignment: Controllers
-                              .directionalityController.languageBox.value
-                              .read('language') ==
-                          'ar'
-                      ? Alignment.centerLeft
-                      : Alignment.centerRight,
-                  child: Obx(() => Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                            width: 17,
-                            height: 17,
-                            alignment: Alignment.center,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                            ),
-                          ),
-                      Center(
-                        child: Text(
-                            Controllers.cartController.cartItems.length
-                                .toString(),
-                            style: const TextStyle(
-                                color: ColorConstants.mainColor,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                    ],
-                  ))),
-            )
+            Controllers.cartController.cartItems.isNotEmpty
+                ? Transform.translate(
+                    offset: const Offset(-9, -18),
+                    child: Align(
+                        alignment: Controllers
+                                    .directionalityController.languageBox.value
+                                    .read('language') ==
+                                'ar'
+                            ? Alignment.centerLeft
+                            : Alignment.centerRight,
+                        child: Obx(() => Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Container(
+                                  width: 19,
+                                  height: 19,
+                                  alignment: Alignment.center,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(0,
+                                            1.4), // controls the offset of the shadow
+                                        blurRadius:
+                                            3, // controls the blur radius of the shadow
+                                        spreadRadius:
+                                            0, // controls the spread radius of the shadow
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                      Controllers
+                                          .cartController.cartItems.length
+                                          .toString(),
+                                      style: const TextStyle(
+                                          color: ColorConstants.mainColor,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            ))),
+                  )
+                : const SizedBox.shrink()
           ],
         ),
       ],
@@ -309,11 +331,16 @@ class _OfferListForMainCategoryPageState
       required dynamic onTap}) {
     return GestureDetector(
       onTap: onTap,
-      child: Icon(
-        icon,
-        color: iconColor,
-        size: 25,
-      ),
+      child: Container(
+          width: 37,
+          height: 37,
+          decoration:
+              const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+          child: Icon(
+            icon,
+            color: iconColor,
+            size: 25,
+          )),
     );
   }
 }
@@ -337,12 +364,11 @@ class _OfferTabState extends State<OfferTab> {
       homeController.selectedSubCategories.value = '';
     });
 
-    Future.delayed(const Duration(milliseconds: 900), () {
+    Future.delayed(const Duration(milliseconds: 1050), () {
       Controllers.homeController.isLoadingOffersMainCategory.value = false;
     });
 
     super.initState();
-
   }
 
   @override
@@ -450,8 +476,8 @@ class _OfferTabState extends State<OfferTab> {
           ? ListView.builder(
               shrinkWrap: true,
               padding: EdgeInsets.only(
-                  left: 16,
-                  right: 16,
+                  left: 12,
+                  right: 12,
                   bottom: 5,
                   top: widget.typeOfCategory == TypeOfCategory.mainCategory
                       ? 20
@@ -475,8 +501,8 @@ class _OfferTabState extends State<OfferTab> {
               ? ListView.builder(
                   scrollDirection: Axis.vertical,
                   padding: EdgeInsets.only(
-                      left: 16,
-                      right: 16,
+                      left: 12,
+                      right: 12,
                       bottom: 10,
                       top: widget.typeOfCategory == TypeOfCategory.mainCategory
                           ? 20
@@ -497,9 +523,65 @@ class _OfferTabState extends State<OfferTab> {
                                     .filteredListOfferMainCategory[index]));
                       },
                       child: OfferCard(
+                        isComingFromFavourite: false,
+                        typeOfComingOffer: TypeOfComingOffer.comingFromOffer,
                         offerModel: Controllers.offerController
                             .filteredListOfferMainCategory[index],
-                        // widget.offers[index],
+                        onTapFavourite: () {
+                          if (SharedPreferencesClass.getToken() == null ||
+                              SharedPreferencesClass.getToken() == '') {
+                            Utils.showAlertDialogForRegisterLogin(
+                                context: context);
+                          } else {
+                            if (Controllers
+                                .offerController
+                                .filteredListOfferMainCategory[index]
+                                .isFavourite!) {
+                              Controllers.favouriteController
+                                  .getUserFavourites()
+                                  .then((favouriteList) {
+                                FavouriteModel favouriteModel =
+                                    favouriteList.firstWhere((offer) =>
+                                        Controllers
+                                            .offerController
+                                            .filteredListOfferMainCategory[
+                                                index]
+                                            .id ==
+                                        offer.offerId);
+                                setState(() {
+                                  Controllers.offerController
+                                              .filteredListOfferMainCategory[
+                                          index] =
+                                      Controllers.offerController
+                                          .filteredListOfferMainCategory[index]
+                                          .copyWith(isFavourite: false);
+                                });
+
+                                print(
+                                    'isFavourite for offerModel is ${Controllers.offerController.filteredListOfferMainCategory[index].isFavourite}');
+
+                                Controllers.favouriteController
+                                    .deleteFromFavourites(
+                                        favouriteKey: favouriteModel.key,
+                                        context: context);
+                              });
+                            } else {
+                              setState(() {
+                                Controllers.offerController
+                                        .filteredListOfferMainCategory[index] =
+                                    Controllers.offerController
+                                        .filteredListOfferMainCategory[index]
+                                        .copyWith(isFavourite: true);
+                              });
+                              Controllers.favouriteController.addToFavourites(
+                                  offerId: Controllers.offerController
+                                      .filteredListOfferMainCategory[index].id!,
+                                  context: context);
+                              print(
+                                  'isFavourite for offerModel is ${Controllers.offerController.filteredListOfferMainCategory[index].isFavourite}');
+                            }
+                          }
+                        },
                         width: MediaQuery.of(context).size.width,
                         height: 248,
                       ),
@@ -521,7 +603,7 @@ class MerchantTab extends GetView<OfferController> {
   Widget build(BuildContext context) {
     return Obx(() => controller.merchants.isNotEmpty
         ? ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             itemCount: controller.merchants.length,
             itemBuilder: (context, index) {
               return _buildMerchantCard(

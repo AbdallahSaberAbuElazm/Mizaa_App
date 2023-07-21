@@ -9,18 +9,17 @@ part 'SubCategoriesModel.g.dart';
 @freezed
 class SubCategoriesModel with _$SubCategoriesModel {
   factory SubCategoriesModel({
-  required int id,
-  required int categoryId,
-  required String key,
-  required String arName,
-  required String enName,
-  required String imageUrl,
-  String? image,
-      CategoryModel? category,
-  OfferModel? offers,
-
+    required int id,
+    required int categoryId,
+    required String key,
+    required String arName,
+    required String enName,
+    required String imageUrl,
+    String? image,
+    CategoryModel? category,
+    OfferModel? offers,
   }) = _SubCategoryModel;
 
-  factory SubCategoriesModel.fromJson(JSON json) => _$SubCategoriesModelFromJson(json);
-
+  factory SubCategoriesModel.fromJson(JSON json) =>
+      _$SubCategoriesModelFromJson(json);
 }

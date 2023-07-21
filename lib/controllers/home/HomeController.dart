@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_controller.dart';
+import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:test_ecommerce_app/models/categories/CategoryModel.dart';
 import 'package:test_ecommerce_app/models/categories/sub_categories/SubCategoriesModel.dart';
@@ -15,6 +16,7 @@ import 'package:test_ecommerce_app/views/home/tabs/user_tab.dart';
 import 'package:test_ecommerce_app/views/home/tabs/categories_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:test_ecommerce_app/views/offer/nearest_offer.dart';
 
 class HomeController extends GetxController {
   final OfferProvider _offerProvider;
@@ -37,8 +39,10 @@ class HomeController extends GetxController {
   var todayOffers = <OfferModel>[].obs;
   var specialOffers = <OfferModel>[].obs;
   var mostSellerOffers = <OfferModel>[].obs;
+  var nearestOffers = <OfferModel>[].obs;
 
   // home page categories
+  var isLoadingMainCategories = true.obs;
   var mainCategories = <CategoryModel>[].obs;
   var subCategoryOutings = <SubCategoriesModel>[].obs;
   var subCategories = <SubCategoriesModel>[].obs;
@@ -57,18 +61,33 @@ class HomeController extends GetxController {
   final appBarItemContainerColor = Colors.white.obs;
   final appBarItemColor = ColorConstants.mainColor.obs;
 
+  resetOfferPageScrolling() {
+    isScrolled.value = false;
+    appBarColor.value = Colors.transparent;
+    appBarItemContainerColor.value = Colors.white;
+    appBarItemColor.value = ColorConstants.mainColor;
+  }
+
   // set language - country - city
   final dropLanguageData = '${SharedPreferencesClass.getLanguageName()}'.obs;
   final dropCountryData = ''.obs;
   final dropCityData = ''.obs;
   final countryId = ''.obs;
   final cityId = ''.obs;
+  final userPositionLongitude = ''.obs;
+  final userPositionLatitude = ''.obs;
 
-  List<Widget> pages = [
+  List<Widget> pagesForLoggedIn = [
     ExploreTab(),
     const OrderTab(),
-     CategoriesTab(),
+    CategoriesTab(),
     const FavoriteTab(),
+    UserTab(),
+  ];
+
+  List<Widget> pagesForNotLoggedIn = [
+    ExploreTab(),
+    CategoriesTab(),
     UserTab(),
   ];
 
@@ -81,16 +100,17 @@ class HomeController extends GetxController {
     scrollController = ScrollController()..addListener(_onScroll);
 
     getCarouselOffers();
-    getTodayOffers();
-    getSpecialOffers();
-    getMostSalesOffers();
-    getMostSalesOffers();
+    Controllers.homeController.getTodayOffers();
+    Controllers.homeController.getSpecialOffers();
+    Controllers.homeController.getMostSalesOffers();
+    Controllers.homeController.getMostSalesOffers();
     getMainCategories();
     getSubCategoryOutings(categoryId: '1');
-    if( SharedPreferencesClass.getToken() != null ||
-        SharedPreferencesClass.getToken() != ''){
-      Controllers.cartController.getCartApi();
-    }
+    // if( SharedPreferencesClass.getToken() != null ||
+    //     SharedPreferencesClass.getToken() != ''){
+    Get.put(CartController(Get.find()));
+    Controllers.cartController.getCartApi();
+    // }
     super.onInit();
   }
 
@@ -107,7 +127,8 @@ class HomeController extends GetxController {
     print('inside scroll controller');
     if (scrollController.offset > 80 && !isScrolled.value) {
       isScrolled.value = true;
-      appBarColor.value = Get.isDarkMode? ColorConstants.bottomAppBarDarkColor: Colors.white;
+      appBarColor.value =
+          Get.isDarkMode ? ColorConstants.bottomAppBarDarkColor : Colors.white;
       appBarItemContainerColor.value = ColorConstants.mainColor;
       appBarItemColor.value = Colors.white;
     } else if (scrollController.offset <= 80 && isScrolled.value) {
@@ -134,6 +155,27 @@ class HomeController extends GetxController {
     });
   }
 
+  void getNearestOffers({required double longitude, required double latitude}) {
+    _offerProvider
+        .getNearestOffers(longitude: longitude, latitude: latitude)
+        .then((offers) {
+      nearestOffers.value = offers;
+      Get.back();
+      Get.to(() => NearestOffer(offers: offers));
+    });
+  }
+
+  Future<List<OfferModel>> getNearestOffersInsideNearestList(
+      {required double longitude, required double latitude}) async {
+    await _offerProvider
+        .getNearestOffers(longitude: longitude, latitude: latitude)
+        .then((offers) {
+      nearestOffers.value = offers;
+      Controllers.offerController.filteredListOfferMainCategory.value = offers;
+    });
+    return nearestOffers;
+  }
+
   void getMostSalesOffers() {
     _offerProvider
         .getMostSalesOffers(
@@ -144,8 +186,10 @@ class HomeController extends GetxController {
   }
 
   void getMainCategories() {
+    isLoadingMainCategories.value = true;
     _categoryProvider.getMainCategories().then((categories) {
       mainCategories.value = categories;
+      isLoadingMainCategories.value = false;
     });
   }
 
@@ -196,21 +240,20 @@ class HomeController extends GetxController {
 
   void getOffersForFiltrationSubCategories(
       {
-        // required String categoryId,
-        required List<String> subCategoryIds}) {
+      // required String categoryId,
+      required List<String> subCategoryIds}) {
     isLoadingOffersMainCategory.value = true;
 
-      // _offerProvider
-      //     .getOffersForMainCategories(
-      //     categoryId: categoryId,
-      //     city: SharedPreferencesClass.getCityId().toString())
-      //     .then((offers) {
-      //   // offersForSubCategory.value = offers;
-      //   offersForMainCategory.value = offers.where((offer) => subCategoryIds.contains(offer.id.toString()))
-      //       .toList();
-      //   isLoadingOffersSubCategory.value = false;
-      // });
-
+    // _offerProvider
+    //     .getOffersForMainCategories(
+    //     categoryId: categoryId,
+    //     city: SharedPreferencesClass.getCityId().toString())
+    //     .then((offers) {
+    //   // offersForSubCategory.value = offers;
+    //   offersForMainCategory.value = offers.where((offer) => subCategoryIds.contains(offer.id.toString()))
+    //       .toList();
+    //   isLoadingOffersSubCategory.value = false;
+    // });
   }
 
   // void getDiscountedProducts() {

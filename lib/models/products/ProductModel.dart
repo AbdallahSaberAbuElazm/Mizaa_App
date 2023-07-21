@@ -23,7 +23,6 @@ class ProductModel with _$ProductModel {
     String? rating,
     String? model,
     String? weight,
-
   }) = _ProductModel;
 
   factory ProductModel.fromJson(JSON json) => _$ProductModelFromJson(json);

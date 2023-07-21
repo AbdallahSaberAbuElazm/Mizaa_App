@@ -8,8 +8,9 @@ import 'package:test_ecommerce_app/shared/utils.dart';
 
 class SortedBy extends StatefulWidget {
   // final ComingSortedByRoute comingSortedByRoute;
-  const SortedBy({Key? key,})
-      : super(key: key);
+  const SortedBy({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<SortedBy> createState() => _SortedByState();
@@ -54,9 +55,9 @@ class _SortedByState extends State<SortedBy> {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.only(top: 10, bottom: 10, right: 14, left: 5),
-      decoration:  BoxDecoration(
-        color: Get.isDarkMode? ColorConstants.darkMainColor: Colors.white,
-        borderRadius:const BorderRadius.only(
+      decoration: BoxDecoration(
+        color: Get.isDarkMode ? ColorConstants.darkMainColor : Colors.white,
+        borderRadius: const BorderRadius.only(
           topRight: Radius.circular(12),
           topLeft: Radius.circular(12),
         ),
@@ -79,10 +80,14 @@ class _SortedByState extends State<SortedBy> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                 Center(
+                Center(
                   child: Text(
                     'الترتيب حسب',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Get.isDarkMode? Colors.white:ColorConstants.black0),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Get.isDarkMode
+                            ? Colors.white
+                            : ColorConstants.black0),
                   ),
                 ),
                 // Padding(
@@ -127,38 +132,39 @@ class _SortedByState extends State<SortedBy> {
     );
   }
 
-  Widget _buildListTileCard(
-      {required int index, }) {
-    return GestureDetector(
+  Widget _buildListTileCard({
+    required int index,
+  }) {
+    return InkWell(
       onTap: () {
         setState(() {
           selectedIndex = index; // Update the selected index
-          Controllers.offerController.filteredListOfferMainCategory.sort((a, b) {
-              if (sortedByList[index]['enName'] == 'Hot Offers') {
-                return a.isSpecialOffer! ? -1 : 1;
-              } else if (sortedByList[index]['enName'] == 'Closest to you') {
-                return a.isNewest! ? -1 : 1;
-              } else if (sortedByList[index]['enName'] == 'New offers') {
-                return a.isTodayOffer! ? -1 : 1;
-              } else if (sortedByList[index]['enName'] == 'Most seller') {
-                return a.isMostSales! ? -1 : 1;
-              } else if (sortedByList[index]['enName'] ==
-                  'Price: low to high') {
-                return a.priceAfterDiscount!.compareTo(b.priceAfterDiscount!);
-              } else if (sortedByList[index]['enName'] ==
-                  'Price: high to low') {
-                return b.priceAfterDiscount!.compareTo(a.priceAfterDiscount!);
-              } else if (sortedByList[index]['enName'] == 'Highest rated') {
-                return b.offerRate!.compareTo(a.offerRate!);
-              }
-              return 0;
-            });
+          Controllers.offerController.filteredListOfferMainCategory
+              .sort((a, b) {
+            if (sortedByList[index]['enName'] == 'Hot Offers') {
+              return a.isSpecialOffer! ? -1 : 1;
+            } else if (sortedByList[index]['enName'] == 'Closest to you') {
+              return a.isNewest! ? -1 : 1;
+            } else if (sortedByList[index]['enName'] == 'New offers') {
+              return a.isTodayOffer! ? -1 : 1;
+            } else if (sortedByList[index]['enName'] == 'Most seller') {
+              return a.isMostSales! ? -1 : 1;
+            } else if (sortedByList[index]['enName'] == 'Price: low to high') {
+              return a.priceAfterDiscount!.compareTo(b.priceAfterDiscount!);
+            } else if (sortedByList[index]['enName'] == 'Price: high to low') {
+              return b.priceAfterDiscount!.compareTo(a.priceAfterDiscount!);
+            } else if (sortedByList[index]['enName'] == 'Highest rated') {
+              return b.offerRate!.compareTo(a.offerRate!);
+            }
+            return 0;
+          });
           // }
         });
         print('selected element ${sortedByList[index]}');
       },
       child: SizedBox(
         height: 60,
+        width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
             Row(
@@ -169,8 +175,8 @@ class _SortedByState extends State<SortedBy> {
                     arText: sortedByList[index]['arName'],
                     enText: sortedByList[index]['enName'],
                   ),
-                  style:  TextStyle(
-                    color: Get.isDarkMode? Colors.white: Colors.black,
+                  style: TextStyle(
+                    color: Get.isDarkMode ? Colors.white : Colors.black,
                     fontFamily: 'Noto Kufi Arabic',
                   ),
                 ),
@@ -180,8 +186,37 @@ class _SortedByState extends State<SortedBy> {
                   groupValue: selectedIndex,
                   onChanged: (int? value) {
                     setState(() {
-                      selectedIndex = value ?? -1; // Update the selected index
+                      selectedIndex = index; // Update the selected index
+                      Controllers.offerController.filteredListOfferMainCategory
+                          .sort((a, b) {
+                        if (sortedByList[index]['enName'] == 'Hot Offers') {
+                          return a.isSpecialOffer! ? -1 : 1;
+                        } else if (sortedByList[index]['enName'] ==
+                            'Closest to you') {
+                          return a.isNewest! ? -1 : 1;
+                        } else if (sortedByList[index]['enName'] ==
+                            'New offers') {
+                          return a.isTodayOffer! ? -1 : 1;
+                        } else if (sortedByList[index]['enName'] ==
+                            'Most seller') {
+                          return a.isMostSales! ? -1 : 1;
+                        } else if (sortedByList[index]['enName'] ==
+                            'Price: low to high') {
+                          return a.priceAfterDiscount!
+                              .compareTo(b.priceAfterDiscount!);
+                        } else if (sortedByList[index]['enName'] ==
+                            'Price: high to low') {
+                          return b.priceAfterDiscount!
+                              .compareTo(a.priceAfterDiscount!);
+                        } else if (sortedByList[index]['enName'] ==
+                            'Highest rated') {
+                          return b.offerRate!.compareTo(a.offerRate!);
+                        }
+                        return 0;
+                      });
+                      // }
                     });
+                    print('selected element ${sortedByList[index]}');
                   },
                 ),
               ],

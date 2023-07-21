@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:test_ecommerce_app/controllers/notification_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:test_ecommerce_app/controllers/theme/ThemesController.dart';
 import 'package:test_ecommerce_app/models/cart/cart_item_model/cart_item_model.dart';
@@ -15,17 +16,23 @@ import 'package:test_ecommerce_app/routes/routes.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/language_translation/message.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    as fln;
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 final languageBox = GetStorage();
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await GetStorage.init();
   String savedLanguage = languageBox.read('language') ?? 'ar';
-  if(languageBox.read('language') == null){
-    languageBox.write('language','ar');
+  if (languageBox.read('language') == null) {
+    languageBox.write('language', 'ar');
   }
   await SharedPreferencesClass.init();
   await Hive.initFlutter();
@@ -37,31 +44,94 @@ void main() async {
   Hive.registerAdapter(OfferOptionsAdapter());
   Hive.registerAdapter(CompanyModelAdapter());
   await Hive.openBox<CartModel>('cart_box');
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.white, // navigation bar color
-      systemNavigationBarIconBrightness: Brightness.dark,
-      statusBarColor: Colors.white, // status bar color
-      statusBarIconBrightness: Brightness.dark,
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  await NotificationController.initializeLocalNotifications();
+
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]).then((_) {
+    runApp(Mizaa(savedLanguage: savedLanguage));
+  });
+}
+
+// create an instance of FlutterLocalNotificationsPlugin
+fln.FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    fln.FlutterLocalNotificationsPlugin();
+
+// create a method to initialize notification channels
+Future<void> initNotifications() async {
+  // Android-specific: create a notification channel
+  const fln.AndroidNotificationChannel channel = fln.AndroidNotificationChannel(
+    'default_notification_channel_id', // ID for the channel
+    'default_notification_channel_id', // name of the channel
+    // 'Channel description', // description of the channel
+    importance: fln.Importance.high, // importance level of the notifications
+  );
+
+  // register the notification channel with the plugin
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          fln.AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+}
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('Handling a background message ${message.messageId}');
+  await AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: -1,
+      // message.hashCode,
+      channelKey: "alerts",
+      title: message.data['title'],
+      body: message.data['body'],
+      bigPicture:
+          'https://firebasestorage.googleapis.com/v0/b/muhammadrabeapharmacy.appspot.com/o/logo%2Flogo.jpeg?alt=media&token=b061bbea-a329-4500-95f7-a83f1d208992',
+      largeIcon:
+          'https://firebasestorage.googleapis.com/v0/b/muhammadrabeapharmacy.appspot.com/o/logo%2Flogo.jpeg?alt=media&token=b061bbea-a329-4500-95f7-a83f1d208992',
+      notificationLayout: NotificationLayout.BigPicture,
+      // largeIcon: message.data['image'],
+      payload: Map<String, String>.from(message.data),
+      hideLargeIconOnExpand: true,
     ),
   );
 
-  runApp(Mizaa(savedLanguage: savedLanguage));
+  await FirebaseMessaging.onMessage.listen((event) async {
+    NotificationController.startListeningNotificationEvents();
+  });
+  await FirebaseMessaging.instance.getInitialMessage().then((message) async {
+    // print('message is id is  ${message!.messageId} , message type is ${message!.messageType} and message data ${message.data}');
+  });
 }
+
 class Mizaa extends StatelessWidget {
   final String savedLanguage;
-  Mizaa({Key? key,required this.savedLanguage}) : super(key: key);
+  Mizaa({Key? key, required this.savedLanguage}) : super(key: key);
 
   final ThemesController themeController = Get.put(ThemesController());
 
   @override
   Widget build(BuildContext context) {
-    return
+    // final isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        systemNavigationBarColor: Get.isDarkMode
+            ? ColorConstants.darkMainColor
+            : Colors.white, // navigation bar color
+        systemNavigationBarIconBrightness:
+            Get.isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            Get.isDarkMode ? Brightness.light : Brightness.dark,
+      ),
+    );
 
-      GetMaterialApp(
+    return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         translations: Messages(),
-        locale:  Locale(savedLanguage),
+        locale: Locale(savedLanguage),
         fallbackLocale: const Locale('ar'),
         title: 'Mizaa',
         theme: Themes.lightTheme,
@@ -70,12 +140,13 @@ class Mizaa extends StatelessWidget {
         getPages: Routes.routes,
         initialRoute: Routes.INITIAL,
         initialBinding: AppBinding(),
-          builder:(context,child){
-            final mediaQueryData = MediaQuery.of(context);
-            final scale = mediaQueryData.textScaleFactor.clamp(1.0, 1.1);
-            return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: scale), child: child!);
-          }
-    );
+        builder: (context, child) {
+          final mediaQueryData = MediaQuery.of(context);
+          final scale = mediaQueryData.textScaleFactor.clamp(1.0, 1.1);
+          return MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaleFactor: scale),
+              child: child!);
+        });
   }
 
   ThemeMode getThemeMode(String type) {

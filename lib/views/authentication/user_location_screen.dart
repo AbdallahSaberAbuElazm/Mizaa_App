@@ -29,6 +29,7 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Utils.setSystemOverlayForSplash();
     return Scaffold(
       backgroundColor: Get.isDarkMode
           ? ColorConstants.darkMainColor
@@ -37,193 +38,266 @@ class _UserLocationScreenState extends State<UserLocationScreen> {
         children: [
           Image.asset(
             'assets/images/splash_screen.png',
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            width: double.infinity,
+            height: double.infinity,
             fit: BoxFit.cover,
             // color: Colors.white,
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 88, left: 14, right: 14),
+            padding: const EdgeInsets.only(
+              // top: MediaQuery.of(context).size.height * 0.1,
+              left: 12,
+              right: 12,
+            ),
             child: Align(
               alignment: Alignment.topCenter,
-              child: Column(
-                children: [
-                  Image.asset(
-                    'assets/images/mizaaLogo.png',
-                    height: 140,
-                    fit: BoxFit.cover,
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                    translation.userLocationScreenHeader.tr,
-                    style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  // Stack(
-                  //   children: [
-                  const SizedBox(
-                    height: 45,
-                  ),
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              child: ScrollConfiguration(
+                behavior: const ScrollBehavior(),
+                child: GlowingOverscrollIndicator(
+                  axisDirection: AxisDirection.down,
+                  color: ColorConstants.mainColor,
+                  child: ListView(
+                    padding: EdgeInsets.zero,
                     children: [
-                      _buildDropHeader(text: translation.language.tr),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Obx(() => Utils.drawDropDownListStringsBtn(
-                          optionName: translation.language.tr,
-                          dropDownValue: Controllers
-                              .directionalityController.dropLanguageData.value,
-                          onChanged: (value) {
-                            Controllers.directionalityController
-                                .dropLanguageData.value = value;
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.087,
+                          ),
+                          Image.asset(
+                            'assets/images/mizaaLogo.png',
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.008,
+                          ),
+                          Text(
+                            translation.userLocationScreenHeader.tr,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.018,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildDropHeader(text: translation.language.tr),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.008,
+                              ),
+                              Obx(
+                                () => Utils.drawDropDownListStringsBtn(
+                                  leftPadding: 20,
+                                  rightPadding: 20,
+                                  optionName: translation.language.tr,
+                                  dropDownValue: Controllers
+                                      .directionalityController
+                                      .dropLanguageData
+                                      .value,
+                                  onChanged: (value) {
+                                    Controllers.directionalityController
+                                        .dropLanguageData.value = value;
 
-                            if (Controllers.directionalityController
-                                    .dropLanguageData.value ==
-                                'العربية') {
-                              Controllers.directionalityController
-                                  .changeLanguage('ar');
-                            } else if (Controllers.directionalityController
-                                    .dropLanguageData.value ==
-                                'English') {
-                              Controllers.directionalityController
-                                  .changeLanguage('en');
-                            }
-
-                            Utils.updatePadding();
-
-                            SharedPreferencesClass.setUserLanguageCode(
-                                language: (Controllers.directionalityController
+                                    if (Controllers.directionalityController
                                             .dropLanguageData.value ==
-                                        'العربية')
-                                    ? 'ar'
-                                    : 'en');
-                            SharedPreferencesClass.setUserLanguageName(
-                                language: Controllers.directionalityController
-                                    .dropLanguageData.value);
+                                        'العربية') {
+                                      Controllers.directionalityController
+                                          .changeLanguage('ar');
+                                    } else if (Controllers
+                                            .directionalityController
+                                            .dropLanguageData
+                                            .value ==
+                                        'English') {
+                                      Controllers.directionalityController
+                                          .changeLanguage('en');
+                                    }
 
-                            Controllers.directionalityController.dropCountryData
-                                .value = '';
-                            Controllers.directionalityController.dropCityData
-                                .value = '';
-                          },
-                          menu: [
-                            'العربية',
-                            'English',
-                          ],
-                          context: context,
-                          iconSize: 34,
-                          containerBorderColor: Colors.white,
-                          textColor: ColorConstants.mainColor)),
+                                    Utils.updatePadding();
+
+                                    SharedPreferencesClass.setUserLanguageCode(
+                                      language: (Controllers
+                                                  .directionalityController
+                                                  .dropLanguageData
+                                                  .value ==
+                                              'العربية')
+                                          ? 'ar'
+                                          : 'en',
+                                    );
+                                    SharedPreferencesClass.setUserLanguageName(
+                                      language: Controllers
+                                          .directionalityController
+                                          .dropLanguageData
+                                          .value,
+                                    );
+
+                                    Controllers.directionalityController
+                                        .dropCountryData.value = '';
+                                    Controllers.directionalityController
+                                        .dropCityData.value = '';
+                                  },
+                                  menu: [
+                                    'العربية',
+                                    'English',
+                                  ],
+                                  context: context,
+                                  iconSize: 34,
+                                  containerBorderColor: Colors.white,
+                                  containerColor: Colors.white,
+                                  optionNameColor: ColorConstants.mainColor,
+                                  textColor: ColorConstants.mainColor,
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.018,
+                              ),
+                              _buildDropHeader(
+                                  text: translation.selectCountry.tr),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.008,
+                              ),
+                              Obx(
+                                () => Utils.drawDropDownListCountriesBtn(
+                                  optionName: translation.selectCountry.tr,
+                                  dropDownValue: Controllers
+                                      .directionalityController
+                                      .dropCountryData
+                                      .value,
+                                  onChanged: (country) {
+                                    Controllers
+                                        .directionalityController
+                                        .dropCountryData
+                                        .value = Utils.getTranslatedText(
+                                      arText: country.arName,
+                                      enText: country.enName,
+                                    );
+
+                                    SharedPreferencesClass.setUserCountryId(
+                                      countryId: country.id.toString(),
+                                    );
+
+                                    Controllers.userAuthenticationController
+                                        .getCities(
+                                      countryId: country.id.toString(),
+                                    );
+
+                                    Controllers.directionalityController
+                                        .dropCityData.value = "";
+                                    SharedPreferencesClass.setUserCity(
+                                      cityId: '',
+                                    );
+                                  },
+                                  menu: Controllers
+                                      .directionalityController.countries,
+                                  context: context,
+                                  iconSize: 34,
+                                  containerBorderColor: Colors.white,
+                                  textColor: ColorConstants.mainColor,
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.018,
+                              ),
+                              _buildDropHeader(text: translation.selectCity.tr),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.008,
+                              ),
+                              Obx(
+                                () => Utils.drawDropDownListCitiesBtn(
+                                  optionName: translation.selectCity.tr,
+                                  dropDownValue: Controllers
+                                      .directionalityController
+                                      .dropCityData
+                                      .value,
+                                  onChanged: (city) {
+                                    Controllers
+                                        .directionalityController
+                                        .dropCityData
+                                        .value = Utils.getTranslatedText(
+                                      arText: city.arName,
+                                      enText: city.enName,
+                                    );
+
+                                    SharedPreferencesClass.setUserCity(
+                                      cityId: city.id.toString(),
+                                    );
+                                  },
+                                  menu: Controllers
+                                      .directionalityController.cities,
+                                  context: context,
+                                  iconSize: 34,
+                                  containerBorderColor: Colors.white,
+                                  textColor: ColorConstants.mainColor,
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.050,
+                              ),
+                              CustomButton(
+                                btnText: translation.userLocationScreenBtn.tr,
+                                textColor: ColorConstants.mainColor,
+                                textSize: 17,
+                                btnBackgroundColor: Colors.white,
+                                btnOnpressed: () {
+                                  print(
+                                      'user loc ${SharedPreferencesClass.getLanguageCode()} ${SharedPreferencesClass.getCountryId()}  ${SharedPreferencesClass.getCityId()}');
+                                  if (SharedPreferencesClass.getCountryId() !=
+                                          null &&
+                                      SharedPreferencesClass.getCountryId() !=
+                                          '' &&
+                                      SharedPreferencesClass.getCityId() !=
+                                          '' &&
+                                      SharedPreferencesClass.getCityId() !=
+                                          null) {
+                                    if (Controllers.directionalityController
+                                            .dropLanguageData.value ==
+                                        'العربية') {
+                                      Controllers.directionalityController
+                                          .changeLanguage('ar');
+                                    } else if (Controllers
+                                            .directionalityController
+                                            .dropLanguageData
+                                            .value ==
+                                        'English') {
+                                      print('english');
+                                      Controllers.directionalityController
+                                          .changeLanguage('en');
+                                    }
+
+                                    Utils.updatePadding();
+                                    Get.offAllNamed('/login')!.then((value) {
+                                      Utils.setSystemOverlayForAuthentication();
+                                    });
+                                  } else {
+                                    Utils.snackBar(
+                                      context: context,
+                                      textColor: Colors.white,
+                                      background: ColorConstants.redColor,
+                                      msg: translation.completeDataText.tr,
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                       const SizedBox(
-                        height: 14,
+                        height: 5,
                       ),
-                      _buildDropHeader(text: translation.selectCountry.tr),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Obx(() => Utils.drawDropDownListCountriesBtn(
-                          optionName: translation.selectCountry.tr,
-                          dropDownValue: Controllers
-                              .directionalityController.dropCountryData.value,
-                          onChanged: (country) {
-                            Controllers.directionalityController.dropCountryData
-                                    .value =
-                                Utils.getTranslatedText(
-                                    arText: country.arName,
-                                    enText: country.enName);
-
-                            SharedPreferencesClass.setUserCountryId(
-                                countryId: country.id.toString());
-
-                            Controllers.userAuthenticationController
-                                .getCities(countryId: country.id.toString());
-
-                            Controllers.directionalityController.dropCityData
-                                .value = "";
-                            SharedPreferencesClass.setUserCity(
-                                cityId: '');
-                          },
-                          menu: Controllers.directionalityController.countries,
-                          context: context,
-                          iconSize: 34,
-                          containerBorderColor: Colors.white,
-                          textColor: ColorConstants.mainColor)),
-                      const SizedBox(
-                        height: 14,
-                      ),
-                      _buildDropHeader(text: translation.selectCity.tr),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Obx(
-                        () => Utils.drawDropDownListCitiesBtn(
-                            optionName: translation.selectCity.tr,
-                            dropDownValue: Controllers
-                                .directionalityController.dropCityData.value,
-                            onChanged: (city) {
-                              Controllers.directionalityController.dropCityData
-                                      .value =
-                                  Utils.getTranslatedText(
-                                      arText: city.arName, enText: city.enName);
-
-                              SharedPreferencesClass.setUserCity(
-                                  cityId: city.id.toString());
-                            },
-                            menu: Controllers.directionalityController.cities,
-                            context: context,
-                            iconSize: 34,
-                            containerBorderColor: Colors.white,
-                            textColor: ColorConstants.mainColor),
-                      ),
-                      const SizedBox(
-                        height: 45,
-                      ),
-                      CustomButton(
-                          btnText: translation.userLocationScreenBtn.tr,
-                          textColor: ColorConstants.mainColor,
-                          textSize: 17,
-                          btnBackgroundColor: Colors.white,
-                          btnOnpressed: () {
-                            print(
-                                'user loc ${SharedPreferencesClass.getLanguageCode()} ${SharedPreferencesClass.getCountryId()}  ${SharedPreferencesClass.getCityId()}');
-                            if (SharedPreferencesClass.getCountryId() != null &&
-                                SharedPreferencesClass.getCountryId() != '' &&
-                                SharedPreferencesClass.getCityId() != '' &&
-                                    SharedPreferencesClass.getCityId() != null) {
-                              if (Controllers.directionalityController
-                                      .dropLanguageData.value ==
-                                  'العربية') {
-                                Controllers.directionalityController
-                                    .changeLanguage('ar');
-                              } else if (Controllers.directionalityController
-                                      .dropLanguageData.value ==
-                                  'English') {
-                                print('english');
-                                Controllers.directionalityController
-                                    .changeLanguage('en');
-                              }
-
-                              Utils.updatePadding();
-                              Get.offAllNamed('/login');
-                            } else {
-                              Utils.snackBar(
-                                context: context,
-                                textColor: Colors.white,
-                                background: ColorConstants.redColor,
-                                msg: translation.completeDataText.tr,
-                              );
-                            }
-                          }),
                     ],
-                  )
-                ],
+                  ),
+                ),
               ),
             ),
           ),

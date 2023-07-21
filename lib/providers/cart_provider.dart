@@ -1,9 +1,8 @@
-
 import 'package:test_ecommerce_app/models/cart/cart_item_model/cart_item_model.dart';
 import 'package:test_ecommerce_app/models/cart/cart_model/cart_model.dart';
 import 'package:test_ecommerce_app/repositories/cart_repository.dart';
 
-class CartProvider{
+class CartProvider {
   CartRepository _cartRepository;
   CartProvider(this._cartRepository);
 
@@ -23,7 +22,7 @@ class CartProvider{
     return await _cartRepository.getAllCart();
   }
 
-  Future<void> clearCart() async{
+  Future<void> clearCart() async {
     return await _cartRepository.clearCart();
   }
 
@@ -34,7 +33,4 @@ class CartProvider{
   // Future<CartModel> getSpecificCart({required int cartId}) async {
   //   return await _cartRepository.getSpecificCart(cartId: cartId);
   // }
-
-
-
 }

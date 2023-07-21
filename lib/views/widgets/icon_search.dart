@@ -3,7 +3,10 @@ import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 
 class IconSearch extends StatelessWidget {
   final dynamic searchOnPressed;
-  const IconSearch({Key? key, required this.searchOnPressed,}) : super(key: key);
+  const IconSearch({
+    Key? key,
+    required this.searchOnPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

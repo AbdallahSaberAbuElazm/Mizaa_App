@@ -1,5 +1,3 @@
-
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:test_ecommerce_app/shared/typedef.dart';
 
@@ -7,8 +5,7 @@ part 'CityModel.freezed.dart';
 part 'CityModel.g.dart';
 
 @freezed
-class CityModel with _$CityModel{
-
+class CityModel with _$CityModel {
   factory CityModel({
     required int id,
     required String key,
@@ -16,8 +13,7 @@ class CityModel with _$CityModel{
     required String enName,
     dynamic country,
     dynamic offers,
-})= _CityModel;
+  }) = _CityModel;
 
   factory CityModel.fromJson(JSON json) => _$CityModelFromJson(json);
-
 }

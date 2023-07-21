@@ -7,6 +7,9 @@ class ApiConstants {
   static const String verifyOTPUrl = "${baseUrl}Auth/checkOtp/";
   static const String recoveryOtpUrl = "${baseUrl}Auth/ForgetPasswordOtp/";
   static const String recoveryUrl = "${baseUrl}Auth/forgetPassword/";
+  static const String updateUserData = '${baseUrl}User/updateUserData';
+  static const String resetPassword = '${baseUrl}User/resetPassword';
+  static const String getDeviceToken = '${baseUrl}Auth/addDeviceToken/'; // user token
   static const String countryUrl = "${baseUrl}LookUp/GetAllCountries";
   static const String cityUrl = "${baseUrl}LookUp/GetCitiesByCountryId/";
   static const mainCategoryUrl = "${baseUrl}LookUp/GetMainCateguries";
@@ -29,6 +32,8 @@ class ApiConstants {
   static const newOfferByCityUrl =
       '${baseUrl}Offers/GetNewOffersWithCityId/'; // 1
 
+  static const nearestOffersUrl = '${baseUrl}/Offers/GetNearestOffers'; //post
+
   static const offerRateUrl =
       '${baseUrl}Rating/GetOfferRate/'; // 1
   static const addRateToOffer = '${baseUrl}Rating/AddRateToOffer';
@@ -48,7 +53,12 @@ class ApiConstants {
   static const deleteSpecificCart = '${baseUrl}Cart/ClearCart/'; //phone number
   static const updateCartItem = '${baseUrl}Cart/UpdateItemOnCart/'; // itemid / count
   static const userWallet = '${baseUrl}User/getUserWalletData/'; // phone number
-
+  static const validateOrderData = '${baseUrl}Order/ValidatOrderData';
+  static const makeOrder = '${baseUrl}Order/MakeOrder/'; // order key
+  static const getUserOrders = '${baseUrl}Order/UserOrders/'; // user application id
+  static const addToFavourite = '${baseUrl}Favourite/AddToFavourite';
+  static const getFavouriteByMobile = '${baseUrl}Favourite/GetFavouriteByUserMobile/'; // phone number
+  static const deleteFromFavourite = '${baseUrl}Favourite/DeleteFromFavourite/'; // favourite key
 
 }
 

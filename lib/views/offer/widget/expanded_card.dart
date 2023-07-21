@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/views/offer/widget/counter.dart';
 import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
-as translation;
+    as translation;
 
 class ExpandedCard extends StatefulWidget {
   final String title;
@@ -12,38 +12,35 @@ class ExpandedCard extends StatefulWidget {
   final String priceBefore;
   final String discount;
   final int index;
-  const ExpandedCard({Key? key, required this.title, required this.priceAfter, required this.priceBefore, required this.discount, required this.index}) : super(key: key);
+  const ExpandedCard(
+      {Key? key,
+      required this.title,
+      required this.priceAfter,
+      required this.priceBefore,
+      required this.discount,
+      required this.index})
+      : super(key: key);
 
   @override
   _ExpandedCardState createState() => _ExpandedCardState();
 }
 
 class _ExpandedCardState extends State<ExpandedCard> {
-  final GlobalKey<ExpansionTileCardState> cardA = GlobalKey();
-  final GlobalKey<ExpansionTileCardState> cardB = GlobalKey();
-
-
-
-  bool isExpanded = false;
-  @override
-  void initState() {
-   // if(widget.index == 0){
-     setState(() {
-       isExpanded=true;
-     });
-   // }
-    super.initState();
-  }
+  bool isExpanded = true;
 
   @override
   Widget build(BuildContext context) {
-    return ExpansionTileCard(expandedColor: Colors.white,baseColor: Colors.white,
+    return ExpansionTileCard(
+      expandedColor: Colors.white, baseColor: Colors.white,
       initiallyExpanded: true,
       // (widget.index ==0 )? true: false,
       trailing: Icon(
-        isExpanded? Icons.keyboard_arrow_up_outlined: Icons.keyboard_arrow_down_outlined,
-          color:isExpanded? ColorConstants.mainColor: ColorConstants.greyColor
-      ), onExpansionChanged: (value) {
+          isExpanded
+              ? Icons.keyboard_arrow_up_outlined
+              : Icons.keyboard_arrow_down_outlined,
+          color:
+              isExpanded ? ColorConstants.mainColor : ColorConstants.greyColor),
+      onExpansionChanged: (value) {
         setState(() {
           isExpanded = value;
         });
@@ -51,8 +48,9 @@ class _ExpandedCardState extends State<ExpandedCard> {
       title: Text(
         widget.title,
         style: Theme.of(context).textTheme.subtitle1!.copyWith(
-            fontWeight: FontWeight.w600,color: ColorConstants.black0, fontSize: 13
-        ),
+            fontWeight: FontWeight.w600,
+            color: ColorConstants.black0,
+            fontSize: 13),
       ),
       children: [
         Container(
@@ -91,14 +89,12 @@ class _ExpandedCardState extends State<ExpandedCard> {
                           height: 30, width: 54, text: '${widget.discount}%'),
                     ],
                   ),
-                  CounterScreen(index:widget.index)
+                  CounterScreen(index: widget.index)
                   // _drawCounter(index: index),
                 ])),
       ],
-
     );
   }
-
 
   ////// price content
   Widget _buildPriceContainer(
@@ -116,11 +112,10 @@ class _ExpandedCardState extends State<ExpandedCard> {
       ),
       child: Center(
           child: Text(
-            text,
-            style: const TextStyle(color: Colors.white, fontSize: 13),
-            textAlign: TextAlign.center,
-          )),
+        text,
+        style: const TextStyle(color: Colors.white, fontSize: 13),
+        textAlign: TextAlign.center,
+      )),
     );
   }
-
 }

@@ -1,4 +1,3 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:test_ecommerce_app/shared/typedef.dart';
 
@@ -6,8 +5,7 @@ part 'OfferImages.freezed.dart';
 part 'OfferImages.g.dart';
 
 @freezed
-class OfferImages with _$OfferImages{
-
+class OfferImages with _$OfferImages {
   factory OfferImages({
     int? id,
     String? key,
@@ -19,6 +17,6 @@ class OfferImages with _$OfferImages{
     bool? isPrimary,
   }) = _OfferImages;
 
-  factory OfferImages.fromJson(Map<String, dynamic> json) => _$OfferImagesFromJson(json);
-
+  factory OfferImages.fromJson(Map<String, dynamic> json) =>
+      _$OfferImagesFromJson(json);
 }

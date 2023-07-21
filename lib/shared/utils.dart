@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/models/location/city/CityModel.dart';
 import 'package:test_ecommerce_app/models/location/country/CountryModel.dart';
@@ -6,25 +7,30 @@ import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:test_ecommerce_app/views/offer/nearest_offer.dart';
 import 'package:test_ecommerce_app/views/widgets/custom_button.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:geolocator/geolocator.dart';
+
+enum ComingForCart { homPage, offerListCategory, offerDetail }
 
 class Utils {
-
-
-
-  static snackBar({required BuildContext context, required String? msg, required Color background, required Color textColor}) {
+  static snackBar(
+      {required BuildContext context,
+      required String? msg,
+      required Color background,
+      required Color textColor}) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      duration: const Duration(milliseconds: 2300),padding:const EdgeInsets.all(16),
+      duration: const Duration(milliseconds: 2300),
+      padding: const EdgeInsets.all(16),
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.all(16),
-        content: Container(
+      content: Container(
         decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20))
-        ),
+            borderRadius: BorderRadius.all(Radius.circular(20))),
         child: Text(
           msg!,
-          style:  TextStyle(
+          style: TextStyle(
               color: textColor,
               fontSize: 16,
               fontFamily: 'Noto Kufi Arabic',
@@ -37,7 +43,7 @@ class Utils {
 
   /////////// login / register alert dialog //////
 
-  static showAlertDialogForRegisterLogin({required BuildContext context}){
+  static showAlertDialogForRegisterLogin({required BuildContext context}) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -53,26 +59,27 @@ class Utils {
                 height: 60,
                 child: CustomButton(
                     btnText: Utils.getTranslatedText(
-                        arText: 'تسجيل الدخول',
-                        enText: "Login "),
+                        arText: 'تسجيل الدخول', enText: "Login "),
                     textSize: 15,
-                    textColor:Get.isDarkMode? ColorConstants.bottomAppBarDarkColor: Colors.white,
+                    textColor: Get.isDarkMode
+                        ? ColorConstants.bottomAppBarDarkColor
+                        : Colors.white,
                     btnBackgroundColor: ColorConstants.mainColor,
                     btnOnpressed: () {
                       Get.offAllNamed('/login');
                     }),
               ),
             ),
-          );});
+          );
+        });
   }
 
   ///////////// App bar ////////////////////
 
-  static Widget buildLeadingAppBar({required String title}){
-    return  Padding(
+  static Widget buildLeadingAppBar({required String title}) {
+    return Padding(
       padding: EdgeInsets.only(
-          right: Utils.rightPadding16Right,
-          left: Utils.leftPadding16Left),
+          right: Utils.rightPadding12Right, left: Utils.leftPadding12Left),
       child: GestureDetector(
         onTap: () {
           Get.back();
@@ -97,8 +104,8 @@ class Utils {
             ),
             Text(
               title,
-              style:  TextStyle(
-                  color: Get.isDarkMode? Colors.white : Colors.black,
+              style: TextStyle(
+                  color: Get.isDarkMode ? Colors.white : Colors.black,
                   fontSize: 15,
                   fontFamily: 'Noto Kufi Arabic',
                   fontWeight: FontWeight.bold),
@@ -110,14 +117,18 @@ class Utils {
   }
 
   /////////////// Ratings ///////////////
-  static Widget buildRatings({required double ratings, required double iconSize, required Color unratedColor}){
+  static Widget buildRatings(
+      {required double ratings,
+      required double iconSize,
+      required Color unratedColor}) {
     return RatingBar.builder(
       initialRating: ratings,
       minRating: 1,
       direction: Axis.horizontal,
       allowHalfRating: true,
       ignoreGestures: true,
-      itemSize: iconSize,unratedColor: unratedColor,
+      itemSize: iconSize,
+      unratedColor: unratedColor,
       itemCount: 5,
       itemPadding: const EdgeInsets.symmetric(horizontal: 0.5),
       itemBuilder: (context, _) => const Icon(
@@ -138,38 +149,74 @@ class Utils {
     'assets/images/services.png',
   ];
 
+  ////////////////////// System overlay /////////////
+  static setSystemOverlayForAuthentication() {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        systemNavigationBarColor: Get.isDarkMode
+            ? ColorConstants.darkMainColor
+            : Colors.white, // navigation bar color
+        systemNavigationBarIconBrightness:
+            Get.isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarColor:
+            Get.isDarkMode ? ColorConstants.darkMainColor : Colors.white,
+        statusBarIconBrightness:
+            Get.isDarkMode ? Brightness.light : Brightness.dark,
+      ),
+    );
+  }
+
+  static setSystemOverlayForSplash() {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        systemNavigationBarColor: Get.isDarkMode
+            ? ColorConstants.darkMainColor
+            : ColorConstants.mainColor, // navigation bar color
+        systemNavigationBarIconBrightness: Brightness.light,
+        statusBarColor: Get.isDarkMode
+            ? ColorConstants.darkMainColor
+            : ColorConstants.mainColor,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
+  }
+
   //////////////////////////////////////
 
   // padding left and right based on directionality
-  static double leftPadding16Left =
+  static double leftPadding12Left =
       Controllers.directionalityController.languageBox.value.read('language') ==
               'ar'
           ? 0.0
-          : 14.0;
-  static double rightPadding16Right =
+          : 12.0;
+  static double rightPadding12Right =
       Controllers.directionalityController.languageBox.value.read('language') ==
               'ar'
-          ? 14.0
+          ? 12.0
           : 0.0;
 
-  static double leftPadding10Left = Controllers.directionalityController.languageBox.value.read('language') ==
-      'ar'
-      ?0:10;
-
-  static double rightPadding10Right = Controllers.directionalityController.languageBox.value.read('language') ==
-      'ar'
-      ? 10:0;
-
-  static double leftPadding16Right =
+  static double leftPadding10Left =
       Controllers.directionalityController.languageBox.value.read('language') ==
               'ar'
-          ? 14.0
+          ? 0
+          : 10;
+
+  static double rightPadding10Right =
+      Controllers.directionalityController.languageBox.value.read('language') ==
+              'ar'
+          ? 10
+          : 0;
+
+  static double leftPadding12Right =
+      Controllers.directionalityController.languageBox.value.read('language') ==
+              'ar'
+          ? 12.0
           : 0.0;
-  static double rightPadding16Left =
+  static double rightPadding12Left =
       Controllers.directionalityController.languageBox.value.read('language') ==
               'ar'
           ? 0.0
-          : 14.0;
+          : 12.0;
 
   static double leftPadding10FromLeft =
       Controllers.directionalityController.languageBox.value.read('language') ==
@@ -194,26 +241,26 @@ class Utils {
           : 0.0;
 
   static double leftPadding8FromLeft =
-  Controllers.directionalityController.languageBox.value.read('language') ==
-      'ar'
-      ? 8.0
-      : 0.0;
+      Controllers.directionalityController.languageBox.value.read('language') ==
+              'ar'
+          ? 8.0
+          : 0.0;
   static double rightPadding8FromRight =
-  Controllers.directionalityController.languageBox.value.read('language') ==
-      'ar'
-      ? 0.0
-      : 8.0;
+      Controllers.directionalityController.languageBox.value.read('language') ==
+              'ar'
+          ? 0.0
+          : 8.0;
 
   static double leftPadding8FromRight =
-  Controllers.directionalityController.languageBox.value.read('language') ==
-      'ar'
-      ? 0.0
-      : 8.0;
+      Controllers.directionalityController.languageBox.value.read('language') ==
+              'ar'
+          ? 0.0
+          : 8.0;
   static double rightPadding8FromLeft =
-  Controllers.directionalityController.languageBox.value.read('language') ==
-      'ar'
-      ? 8.0
-      : 0.0;
+      Controllers.directionalityController.languageBox.value.read('language') ==
+              'ar'
+          ? 8.0
+          : 0.0;
 
   static double leftPadding4FromLeft =
       Controllers.directionalityController.languageBox.value.read('language') ==
@@ -238,12 +285,12 @@ class Utils {
           : 0.0;
 
   static void updatePadding() {
-    leftPadding16Left = Controllers.directionalityController.languageBox.value
+    leftPadding12Left = Controllers.directionalityController.languageBox.value
                 .read('language') ==
             'ar'
         ? 0.0
         : 16.0;
-    rightPadding16Right = Controllers.directionalityController.languageBox.value
+    rightPadding12Right = Controllers.directionalityController.languageBox.value
                 .read('language') ==
             'ar'
         ? 16.0
@@ -302,18 +349,23 @@ class Utils {
         : 0.0;
   }
 
-  static String getTranslatedText({required String arText , required String enText}){
-    return Controllers
-        .directionalityController.languageBox.value
-        .read('language') ==
-        'ar'
-        ? arText: enText;
+  static String getTranslatedText(
+      {required String arText, required String enText}) {
+    return Controllers.directionalityController.languageBox.value
+                .read('language') ==
+            'ar'
+        ? arText
+        : enText;
   }
 
   ////////////////////////////////////////////////
 
   static String getMonthName({required DateTime dateTime}) {
-    return  intl.DateFormat('MMMM',Controllers.directionalityController.languageBox.value.read('language')).format(dateTime);
+    return intl.DateFormat(
+            'MMMM',
+            Controllers.directionalityController.languageBox.value
+                .read('language'))
+        .format(dateTime);
   }
 
   static String getDateTime({required DateTime dateTime}) {
@@ -327,6 +379,70 @@ class Utils {
       height: 65,
       fit: BoxFit.cover,
     ));
+  }
+
+  //////////////////////////////////////////////
+  // handle location premission
+  static Future<bool> handleLocationPermission(
+      {required BuildContext context}) async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      //     content: Text('Location services are disabled. Please enable the services')));
+      // return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //     const SnackBar(content: Text('Location permissions are denied')));
+        snackBar(
+            context: context,
+            msg: 'Location permissions are denied',
+            background: ColorConstants.yellowColor,
+            textColor: ColorConstants.black0);
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      snackBar(
+          context: context,
+          msg:
+              'Location permissions are permanently denied, we cannot request permissions.',
+          background: ColorConstants.yellowColor,
+          textColor: ColorConstants.black0);
+      return false;
+    }
+    return true;
+  }
+
+  ////// get current position for longitude and latitude
+  static Future<void> getCurrentPosition(
+      {required BuildContext context}) async {
+    final hasPermission = await handleLocationPermission(context: context);
+    if (!hasPermission) return;
+    showDialog(
+        context: context,
+        builder: (context) => const Center(
+                child: CircularProgressIndicator(
+              color: ColorConstants.mainColor,
+            )));
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      // currentPosition = position;
+      Controllers.homeController.userPositionLongitude.value =
+          position.longitude.toString();
+      Controllers.homeController.userPositionLatitude.value =
+          position.latitude.toString();
+
+      Controllers.homeController.getNearestOffers(
+          latitude: position.latitude, longitude: position.longitude);
+    }).catchError((e) {
+      print('exception is ${e.toString()}');
+    });
   }
 
   //////////////////////////////////////////////
@@ -359,29 +475,34 @@ class Utils {
 
   ////////////////////////////////////////////////
   static Widget drawDropDownListStringsBtn(
-      {required String optionName,
+      {required double leftPadding,
+      required double rightPadding,
+      required String optionName,
       required String dropDownValue,
       required dynamic onChanged,
       required List menu,
       required BuildContext context,
       required double iconSize,
+      required Color containerColor,
       required Color containerBorderColor,
+      required Color optionNameColor,
       required Color textColor}) {
     return DropdownButtonHideUnderline(
       child: Container(
         height: 54,
-        padding: const EdgeInsets.only(left: 20, right: 20),
+        padding: EdgeInsets.only(left: leftPadding, right: rightPadding),
         decoration: BoxDecoration(
-            color: Colors.white,
+            color: containerColor,
             borderRadius: const BorderRadius.all(Radius.circular(12)),
             border: Border.all(width: 1.2, color: containerBorderColor)),
-        child: DropdownButton(dropdownColor: Colors.white,
+        child: DropdownButton(
+            dropdownColor: Colors.white,
             // borderRadius: BorderRadius.circular(5),
             hint: dropDownValue.isEmpty
                 ? Text(
                     optionName,
                     style: TextStyle(
-                      color: textColor,
+                      color: optionNameColor,
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                       fontFamily: 'Noto Kufi Arabic',
@@ -390,7 +511,7 @@ class Utils {
                 : Text(
                     dropDownValue,
                     style: TextStyle(
-                        color: textColor,
+                        color: optionNameColor,
                         fontFamily: 'Noto Kufi Arabic',
                         fontWeight: FontWeight.w600),
                   ),
@@ -443,7 +564,8 @@ class Utils {
           borderRadius: const BorderRadius.all(Radius.circular(12)),
           border: Border.all(width: 1.2, color: containerBorderColor)),
       child: DropdownButtonHideUnderline(
-        child: DropdownButton<CountryModel>(dropdownColor: Colors.white,
+        child: DropdownButton<CountryModel>(
+          dropdownColor: Colors.white,
           // borderRadius: BorderRadius.circular(5),
           hint: dropDownValue.isEmpty
               ? Text(
@@ -474,16 +596,17 @@ class Utils {
           items: menu.map<DropdownMenuItem<CountryModel>>(
             (CountryModel country) {
               return DropdownMenuItem<CountryModel>(
-                alignment: Controllers.directionalityController.languageBox.value
-                    .read('language') ==
-                    'ar'
+                alignment: Controllers
+                            .directionalityController.languageBox.value
+                            .read('language') ==
+                        'ar'
                     ? Alignment.topRight
                     : Alignment.topLeft,
                 value: country,
                 child: Text(
                   Controllers.directionalityController.languageBox.value
-                      .read('language') ==
-                      'ar'
+                              .read('language') ==
+                          'ar'
                       ? country.arName
                       : country.enName,
                   textAlign: TextAlign.end,
@@ -513,7 +636,8 @@ class Utils {
     return DropdownButtonHideUnderline(
       child: SizedBox(
         height: 38,
-        child: DropdownButton<CountryModel>(dropdownColor: Colors.white,
+        child: DropdownButton<CountryModel>(
+            dropdownColor: Colors.white,
             // borderRadius: BorderRadius.circular(5),
             hint: dropDownValue.isEmpty
                 ? Text(
@@ -589,7 +713,8 @@ class Utils {
             color: Colors.white,
             borderRadius: const BorderRadius.all(Radius.circular(12)),
             border: Border.all(width: 1.2, color: containerBorderColor)),
-        child: DropdownButton<CityModel>(dropdownColor: Colors.white,
+        child: DropdownButton<CityModel>(
+            dropdownColor: Colors.white,
             // borderRadius: BorderRadius.circular(5),
             hint: dropDownValue.isEmpty
                 ? Text(
@@ -620,16 +745,17 @@ class Utils {
             items: menu.map<DropdownMenuItem<CityModel>>(
               (CityModel city) {
                 return DropdownMenuItem<CityModel>(
-                  alignment: Controllers.directionalityController.languageBox.value
-                      .read('language') ==
-                      'ar'
+                  alignment: Controllers
+                              .directionalityController.languageBox.value
+                              .read('language') ==
+                          'ar'
                       ? Alignment.topRight
                       : Alignment.topLeft,
                   value: city,
                   child: Text(
                     Controllers.directionalityController.languageBox.value
-                        .read('language') ==
-                        'ar'
+                                .read('language') ==
+                            'ar'
                         ? city.arName
                         : city.enName,
                     textAlign: TextAlign.end,

@@ -15,10 +15,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class MerchantBranches extends GetView<CompanyController> {
   final String companyKey;
-  const MerchantBranches({Key? key, required this.companyKey}) : super(key: key);
+  const MerchantBranches({Key? key, required this.companyKey})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    controller.resetMerchantBranches();
     print('company id is $companyKey');
     controller.getCompanyBranches(companyKey: companyKey);
     return Obx(() => Scaffold(
@@ -31,10 +33,19 @@ class MerchantBranches extends GetView<CompanyController> {
                 controller.appBarMerchantBranchesColor.value,
             flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
                 value: SystemUiOverlayStyle(
-                  statusBarIconBrightness:
-                  Get.isDarkMode ? Brightness.light : Brightness.dark,
+                  statusBarIconBrightness: Get.isDarkMode
+                      ? Brightness.light
+                      : controller.appBarMerchantBranchesColor.value ==
+                              Colors.white
+                          ? Brightness.dark
+                          : Brightness.dark,
                   statusBarBrightness:
-                  Get.isDarkMode ? Brightness.light : Brightness.dark,
+                      Get.isDarkMode ? Brightness.light : Brightness.dark,
+                  systemNavigationBarColor: Get.isDarkMode
+                      ? ColorConstants.darkMainColor
+                      : Colors.white, // navigation bar color
+                  systemNavigationBarIconBrightness:
+                      Get.isDarkMode ? Brightness.light : Brightness.dark,
                 ),
                 child: Container()),
             elevation: 0,
@@ -50,7 +61,8 @@ class MerchantBranches extends GetView<CompanyController> {
                 title: translation.availableBranches.tr),
           ),
           floatingActionButton: const ChattingBtn(),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.miniEndFloat,
           body: (controller.isLoadingCompanyBranches.value)
               ? ListView.builder(
                   itemCount: 3,
@@ -69,20 +81,20 @@ class MerchantBranches extends GetView<CompanyController> {
                     ),
                   ),
                 )
-              : (controller.companyBranches.isNotEmpty || controller.companyBranches != null)
+              : (controller.companyBranches.isNotEmpty ||
+                      controller.companyBranches != null)
                   ? ListView.builder(
                       controller: controller.scrollMerchantBranchesController,
                       padding: const EdgeInsets.only(
                           left: 16, right: 16, top: 20, bottom: 20),
-                      itemCount:
-                          controller.companyBranches.length,
+                      itemCount: controller.companyBranches.length,
                       itemBuilder: (context, index) {
                         return Column(
                           children: [
                             _buildBranchCard(
                                 context: context,
-                                companyBranchesModel: controller.companyBranches[index]
-                                  ),
+                                companyBranchesModel:
+                                    controller.companyBranches[index]),
                             Divider(
                               color: ColorConstants.greyColor,
                               height: 0.5,
@@ -94,7 +106,9 @@ class MerchantBranches extends GetView<CompanyController> {
                         );
                       },
                     )
-                  :   CenterImageForEmptyData(imagePath: 'assets/images/ratings_empty.png', text: translation.noOtherBranches.tr),
+                  : CenterImageForEmptyData(
+                      imagePath: 'assets/images/ratings_empty.png',
+                      text: translation.noOtherBranches.tr),
         ));
   }
 
@@ -136,28 +150,39 @@ class MerchantBranches extends GetView<CompanyController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                        width: MediaQuery.of(context).size.width ,
-                        child:  Text( translation.offerName.trParams({
-                          'offerName': Utils.getTranslatedText(
-                              arText: companyBranchesModel.title.toString(),
-                              enText: companyBranchesModel.enTitle.toString())
-                        }),
+                        width: MediaQuery.of(context).size.width,
+                        child: Text(
+                            translation.offerName.trParams({
+                              'offerName': Utils.getTranslatedText(
+                                  arText: companyBranchesModel.title.toString(),
+                                  enText:
+                                      companyBranchesModel.enTitle.toString())
+                            }),
                             style: TextStyle(
-                                color: Get.isDarkMode? Colors.white: ColorConstants.black0,
+                                color: Get.isDarkMode
+                                    ? Colors.white
+                                    : ColorConstants.black0,
                                 fontSize: 15,
                                 fontFamily: 'Noto Kufi Arabic',
-                                fontWeight: FontWeight.w600,height: 1.5))),
+                                fontWeight: FontWeight.w600,
+                                height: 1.5))),
                     SizedBox(
                         width: MediaQuery.of(context).size.width,
-                        child: Text( translation.offerName.trParams({
-                          'offerName': Utils.getTranslatedText(
-                              arText: companyBranchesModel.address.toString(),
-                              enText: companyBranchesModel.enAddress.toString())
-                        }), style: TextStyle(
-                          color:Get.isDarkMode? Colors.white:  ColorConstants.greyColor,
-                          fontSize: 12,
-                          fontFamily: 'Noto Kufi Arabic',
-                        ),)),
+                        child: Text(
+                          translation.offerName.trParams({
+                            'offerName': Utils.getTranslatedText(
+                                arText: companyBranchesModel.address.toString(),
+                                enText:
+                                    companyBranchesModel.enAddress.toString())
+                          }),
+                          style: TextStyle(
+                            color: Get.isDarkMode
+                                ? Colors.white
+                                : ColorConstants.greyColor,
+                            fontSize: 12,
+                            fontFamily: 'Noto Kufi Arabic',
+                          ),
+                        )),
                   ],
                 ),
               )
@@ -190,7 +215,7 @@ class MerchantBranches extends GetView<CompanyController> {
               ),
               customButton(
                   btnText: translation.call.tr,
-                  textColor: Get.isDarkMode? Colors.white: Colors.black,
+                  textColor: Get.isDarkMode ? Colors.white : Colors.black,
                   btnBackgroundColor: Colors.transparent,
                   borderColor: ColorConstants.greyColor,
                   textSize: 10,

@@ -40,10 +40,16 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
           backgroundColor: Colors.transparent,
           flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
                 statusBarIconBrightness:
-                Get.isDarkMode ? Brightness.light : Brightness.dark,
+                    Get.isDarkMode ? Brightness.light : Brightness.dark,
                 statusBarBrightness:
-                Get.isDarkMode ? Brightness.light : Brightness.dark,
+                    Get.isDarkMode ? Brightness.light : Brightness.dark,
+                systemNavigationBarColor: Get.isDarkMode
+                    ? ColorConstants.darkMainColor
+                    : Colors.white, // navigation bar color
+                systemNavigationBarIconBrightness:
+                    Get.isDarkMode ? Brightness.light : Brightness.dark,
               ),
               child: Container()),
           toolbarHeight: 90,
@@ -51,13 +57,13 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
           leadingWidth: 260,
           actions: [
             Padding(
-              padding: const EdgeInsets.only(right: 16, left: 16),
+              padding: const EdgeInsets.only(right: 12, left: 12),
               child: _buildActionsAppBar(context: context),
             )
           ],
         ),
         floatingActionButton: const ChattingBtn(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
         body: _buildListOfOffers());
   }
 
@@ -95,29 +101,45 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
                         ));
                   }
                 }),
-            Transform.translate(
-              offset: const Offset(-9,-18),
-              child: Align(
-                  alignment: Controllers.directionalityController.languageBox.value
-                      .read('language') ==
-                      'ar'
-                      ?
-                  Alignment.centerLeft: Alignment.centerRight,
-                  child:Obx(()=> Container(
-                    width: 17,height: 17,
-                    alignment: Alignment.center,
-                    // padding: const EdgeInsets.all(2),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child:  Text(Controllers.cartController.cartItems.length.toString(),
-                        style: const TextStyle(color: ColorConstants.mainColor, fontSize: 10, fontWeight: FontWeight.bold)),
-
-                  ))
-
-              ),
-            )
+            Controllers.cartController.cartItems.isNotEmpty
+                ? Transform.translate(
+                    offset: const Offset(-9, -18),
+                    child: Align(
+                        alignment: Controllers
+                                    .directionalityController.languageBox.value
+                                    .read('language') ==
+                                'ar'
+                            ? Alignment.centerLeft
+                            : Alignment.centerRight,
+                        child: Obx(() => Container(
+                              width: 17, height: 17,
+                              alignment: Alignment.center,
+                              // padding: const EdgeInsets.all(2),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(0,
+                                        1.4), // controls the offset of the shadow
+                                    blurRadius:
+                                        3, // controls the blur radius of the shadow
+                                    spreadRadius:
+                                        0, // controls the spread radius of the shadow
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                  Controllers.cartController.cartItems.length
+                                      .toString(),
+                                  style: const TextStyle(
+                                      color: ColorConstants.mainColor,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold)),
+                            ))),
+                  )
+                : const SizedBox.shrink()
           ],
         ),
       ],
@@ -130,11 +152,16 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
       required dynamic onTap}) {
     return GestureDetector(
       onTap: onTap,
-      child: Icon(
-        icon,
-        color: iconColor,
-        size: 25,
-      ),
+      child: Container(
+          width: 37,
+          height: 37,
+          decoration:
+              const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+          child: Icon(
+            icon,
+            color: iconColor,
+            size: 25,
+          )),
     );
   }
 
@@ -179,13 +206,12 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
   Widget _buildOfferCard({required SubCategoriesModel category}) {
     return GestureDetector(
       onTap: () {
-
         homeController.getOffersForSubCategories(
           subCategoryId: category.id.toString(),
         );
         Get.to(() => OfferListForSubCategoryPage(
-              mainCategoryName:
-              Utils.getTranslatedText(arText: category.arName, enText: category.enName),
+              mainCategoryName: Utils.getTranslatedText(
+                  arText: category.arName, enText: category.enName),
               // category.enName,
               categoryId: category.id,
             ));
@@ -193,17 +219,15 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 110,
-        margin: const EdgeInsets.only(left: 16, right: 16),
-        decoration: const BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              offset: Offset(0, 1.4), // controls the offset of the shadow
-              blurRadius: 3, // controls the blur radius of the shadow
-              spreadRadius: 0, // controls the spread radius of the shadow
-            ),
-          ],
-            borderRadius: BorderRadius.all(Radius.circular(12))),
+        margin: const EdgeInsets.only(left: 12, right: 12),
+        decoration: const BoxDecoration(boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            offset: Offset(0, 1.4), // controls the offset of the shadow
+            blurRadius: 3, // controls the blur radius of the shadow
+            spreadRadius: 0, // controls the spread radius of the shadow
+          ),
+        ], borderRadius: BorderRadius.all(Radius.circular(12))),
         child: Row(
           children: [
             Container(

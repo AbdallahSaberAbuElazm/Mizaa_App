@@ -3,8 +3,10 @@ import 'package:test_ecommerce_app/controllers/controllers.dart';
 import 'package:test_ecommerce_app/controllers/offers/OfferController.dart';
 import 'package:get/get.dart';
 import 'package:test_ecommerce_app/models/companies/CompanyModel.dart';
+import 'package:test_ecommerce_app/models/favourite/favourite_model.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
 import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
+import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
@@ -42,8 +44,6 @@ class _MostSellerOfferCardState extends State<MostSellerOfferCard> {
     final theme = Theme.of(context);
     return GestureDetector(
         onTap: () {
-          // Get.put(OfferController(Get.find()));
-          // Get.to(() => OfferDetail(offerModel: widget.offerModel));
           showDialog(
               context: context,
               builder: (context) => const Center(
@@ -55,15 +55,16 @@ class _MostSellerOfferCardState extends State<MostSellerOfferCard> {
               .then((offer) {
             Get.back();
             Get.put(OfferController(Get.find()));
+            Controllers.offerController.cartItemsOfferDetail.clear();
             Get.to(() => OfferDetail(offerModel: offer));
           });
         },
         child: Container(
           width: widget.width,
           height: widget.height,
-          margin: const EdgeInsets.only(top: 6,bottom:6),
-          decoration:const BoxDecoration(
-            borderRadius:  BorderRadius.all(Radius.circular(12)),
+          margin: const EdgeInsets.only(top: 6, bottom: 6),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey,
@@ -132,17 +133,55 @@ class _MostSellerOfferCardState extends State<MostSellerOfferCard> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-                width: 26,
-                height: 26,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: ColorConstants.backgroundContainer),
-                child: const Icon(
-                  Icons.favorite_border_outlined,
-                  color: ColorConstants.mainColor,
-                  size: 19,
-                )),
+            GestureDetector(
+              onTap: () {
+                if (SharedPreferencesClass.getToken() == null ||
+                    SharedPreferencesClass.getToken() == '') {
+                  Utils.showAlertDialogForRegisterLogin(context: context);
+                } else {
+                  if (widget.offerModel.isFavourite!) {
+                    Controllers.favouriteController
+                        .getUserFavourites()
+                        .then((favouriteList) {
+                      FavouriteModel favouriteModel = favouriteList.firstWhere(
+                          (offer) => widget.offerModel.id == offer.offerId);
+                      // Controllers.homeController.todayOffers[index].copyWith(isFavourite: false);
+                      Controllers.favouriteController
+                          .deleteFromFavourites(
+                              favouriteKey: favouriteModel.key,
+                              context: context)
+                          .then((value) {
+                        print('value of delete is $value');
+                        if (value) {
+                          Controllers.homeController.getMostSalesOffers();
+                        }
+                      });
+                      Controllers.homeController.getMostSalesOffers();
+                    });
+                  } else {
+                    Controllers.favouriteController
+                        .addToFavourites(
+                            offerId: widget.offerModel.id!, context: context)
+                        .then((value) {
+                      Controllers.homeController.getMostSalesOffers();
+                    });
+                  }
+                }
+              },
+              child: Container(
+                  width: 29,
+                  height: 29,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: ColorConstants.backgroundContainer),
+                  child: Icon(
+                    widget.offerModel.isFavourite!
+                        ? Icons.favorite_outlined
+                        : Icons.favorite_border_outlined,
+                    color: ColorConstants.mainColor,
+                    size: 22,
+                  )),
+            ),
             _buildPriceContainer(text: '${widget.offerModel.enDiscount}%'),
           ],
         ),

@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
-import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
 import 'package:test_ecommerce_app/controllers/home/HomeController.dart';
 import 'package:test_ecommerce_app/controllers/offers/OfferController.dart';
 import 'package:test_ecommerce_app/controllers/controllers.dart';
@@ -9,6 +8,7 @@ import 'package:test_ecommerce_app/controllers/offers/search_offer_controller.da
 import 'package:test_ecommerce_app/controllers/offers/search_binding.dart';
 import 'package:test_ecommerce_app/models/categories/CategoryModel.dart';
 import 'package:test_ecommerce_app/models/companies/CompanyModel.dart';
+import 'package:test_ecommerce_app/models/favourite/favourite_model.dart';
 import 'package:test_ecommerce_app/models/location/city/CityModel.dart';
 import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
@@ -44,199 +44,226 @@ class ExploreTab extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    Get.put(CartController(Get.find()));
+    // Get.put(CartController(Get.find()));
 
-    return SafeArea(
-        child: Obx(() => Scaffold(
-              extendBodyBehindAppBar:
-                  true, // Extend the body behind the app bar
-              appBar: AppBar(
-                  backgroundColor: controller.appBarColor
-                      .value, // Set the background color to transparent
-                  flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
-                      value: SystemUiOverlayStyle(
-                        statusBarIconBrightness:
-                        Get.isDarkMode ? Brightness.light : Brightness.dark,
-                        statusBarBrightness:
-                        Get.isDarkMode ? Brightness.light : Brightness.dark,
-                      ),
-                      child: Container()),
-                  elevation: 0,
-                  toolbarHeight: 80,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20),
+    controller.resetOfferPageScrolling();
+
+    return Scaffold(
+        body: Stack(children: <Widget>[
+      Scaffold(
+        extendBodyBehindAppBar: true, // Extend the body behind the app bar
+        appBar: PreferredSize(
+            preferredSize: Size(MediaQuery.of(context).size.width, 80),
+            child: Obx(() => AppBar(
+                backgroundColor: controller.appBarColor
+                    .value, // Set the background color to transparent
+                flexibleSpace: AnnotatedRegion<SystemUiOverlayStyle>(
+                    value: SystemUiOverlayStyle(
+                      statusBarColor: Colors.transparent,
+                      statusBarIconBrightness:
+                          controller.appBarColor.value == Colors.white
+                              ? Brightness.dark
+                              : Brightness.light,
+                      statusBarBrightness:
+                          Get.isDarkMode ? Brightness.light : Brightness.dark,
+                      systemNavigationBarColor: Get.isDarkMode
+                          ? ColorConstants.darkMainColor
+                          : Colors.white, // navigation bar color
+                      systemNavigationBarIconBrightness:
+                          Get.isDarkMode ? Brightness.light : Brightness.dark,
                     ),
+                    child: Container()),
+                elevation: 0,
+                toolbarHeight: 80,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
                   ),
-                  title: _buildAppBar(context: context)),
-              floatingActionButton:const ChattingBtn(),
-              floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-              body: ListView(
-                  controller: controller.scrollController,
-                  padding: EdgeInsets.zero,
-                  children: [
-                    _buildOfferCarousel(context),
-                    Transform.translate(
-                        offset: const Offset(0, -50),
-                        child: Obx(() => CustomIndicatorCarousel(
-                            list: controller.activeCarouselOffers,
-                            currentBanner: controller.currentBanner.value))),
+                ),
+                title: _buildAppBar(context: context)))),
+        floatingActionButton: const ChattingBtn(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+        body: SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: ListView(
+              controller: controller.scrollController,
+              padding: EdgeInsets.zero,
+              children: [
+                Obx(() => _buildOfferCarousel(context)),
+                Transform.translate(
+                    offset: const Offset(0, -50),
+                    child: Obx(() => CustomIndicatorCarousel(
+                        list: controller.activeCarouselOffers,
+                        currentBanner: controller.currentBanner.value))),
 
-                    _buildCashback(context: context),
+                _buildCashback(context: context),
 
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                        height: 118,
-                        width: MediaQuery.of(context).size.width,
-                        child: Obx(
-                          () => (controller.mainCategories.isNotEmpty)
-                              ? ListView(
-                                  physics: const ScrollPhysics(),
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    _buildLocationCategory(theme: theme),
-                                    _buildCategories(theme),
-                                  ],
-                                )
-                              : Padding(
-                                  padding: EdgeInsets.only(
-                                      left:Utils.leftPadding10FromRight,
-                                      right: Utils.rightPadding10FromLeft),
-                                  child: ShimmerListView(
-                                    width: 118,
-                                    height: 112,
-                                    topPadding: 0,
-                                    bottomPadding: 0,
-                                      leftPadding: Utils.leftPadding4FromRight,
-                                      rightPadding: Utils.rightPadding4FromLeft,
-                                  ),
-                                ),
-                        )),
-                    const SizedBox(
-                      height: 23,
-                    ),
-                    _buildSection(
-                        title: translation.hotOffersText.tr,
-                        onPressed: () {
-                          controller.isLoadingOffersMainCategory.value = false;
-                          Get.to(() =>
-                              // HomePage(recentPage:
-                          OfferListForMainCategoryPage(
-                              typeOfCategory: TypeOfCategory.specificOffers,
-                              mainCategoryName: translation.hotOffersText.tr,
-                              categoryId: -1,
-                              offers: controller.todayOffers),
-                              // selectedIndex: 0)
-                          );
-                          Get.put(OfferController(Get.find())).getMerchant(catId: '1');
-                        },
-                        theme: theme),
-                    const SizedBox(
-                      height: 14,
-                    ),
-                    Obx(() => (controller.todayOffers.isNotEmpty)
-                        ? _buildTheHotOffers(
-                            offerModels: controller.todayOffers,
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                    height: 118,
+                    width: MediaQuery.of(context).size.width,
+                    child: Obx(
+                      () => (controller.mainCategories.isNotEmpty)
+                          ? ListView(
+                              physics: const ScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                _buildLocationCategory(
+                                    theme: theme, context: context),
+                                _buildCategories(theme),
+                              ],
+                            )
+                          : Padding(
+                              padding: EdgeInsets.only(
+                                  left: Utils.leftPadding10FromRight,
+                                  right: Utils.rightPadding10FromLeft),
+                              child: ShimmerListView(
+                                width: 118,
+                                height: 112,
+                                topPadding: 0,
+                                bottomPadding: 0,
+                                leftPadding: Utils.leftPadding4FromRight,
+                                rightPadding: Utils.rightPadding4FromLeft,
+                              ),
+                            ),
+                    )),
+                const SizedBox(
+                  height: 23,
+                ),
+                _buildSection(
+                    title: translation.hotOffersText.tr,
+                    onPressed: () {
+                      controller.isLoadingOffersMainCategory.value = false;
+                      Get.to(
+                        () =>
+                            // HomePage(recentPage:
+                            OfferListForMainCategoryPage(
+                                typeOfCategory: TypeOfCategory.specificOffers,
+                                mainCategoryName: translation.hotOffersText.tr,
+                                categoryId: -1,
+                                offers: Controllers.homeController.todayOffers),
+                        // selectedIndex: 0)
+                      );
+                      Get.put(OfferController(Get.find()))
+                          .getMerchant(catId: '1');
+                    },
+                    theme: theme),
+                const SizedBox(
+                  height: 14,
+                ),
+                // TODO Controllers.homeController.todayOffers
+                Obx(() => (Controllers.homeController.todayOffers.isNotEmpty)
+                    ? _buildTheHotOffers(
+                        // offerModels: Controllers.homeController.todayOffers,
+                        theme: theme,
+                      )
+                    : _shimmerForListViewForOffer(height: 245)),
+                const SizedBox(
+                  height: 23,
+                ),
+                _buildSection(
+                    title: translation.outingsText.tr,
+                    onPressed: () {
+                      Get.to(
+                        () =>
+                            // HomePage(recentPage:
+                            SubCategoryPage(
+                                categories: controller.subCategoryOutings,
+                                subCategoryName: translation.outingsText.tr),
+                        // selectedIndex: 0)
+                      );
+                    },
+                    theme: theme),
+                const SizedBox(
+                  height: 14,
+                ),
+                _buildSubCategoryOutings(theme),
+                const SizedBox(
+                  height: 23,
+                ),
+                _buildSection(
+                    title: translation.mostSellerText.tr,
+                    onPressed: () {
+                      controller.isLoadingOffersMainCategory.value = false;
+                      Get.to(
+                        () =>
+                            // HomePage(recentPage:
+                            OfferListForMainCategoryPage(
+                                typeOfCategory: TypeOfCategory.specificOffers,
+                                mainCategoryName: translation.mostSellerText.tr,
+                                categoryId: -1,
+                                offers: Controllers
+                                    .homeController.mostSellerOffers),
+                        // selectedIndex:0)
+                      );
+                      Get.put(OfferController(Get.find()))
+                          .getMerchant(catId: '1');
+                    },
+                    theme: theme),
+                const SizedBox(
+                  height: 14,
+                ),
+                Obx(() =>
+                    (Controllers.homeController.mostSellerOffers.isNotEmpty)
+                        ? _buildMostSellerOffers(
+                            offerModels:
+                                Controllers.homeController.mostSellerOffers,
                             theme: theme,
                           )
-                        : _shimmerForListViewForOffer(height: 224)),
-                    const SizedBox(
-                      height: 23,
-                    ),
-                    _buildSection(
-                        title: translation.outingsText.tr,
-                        onPressed: () {
-                          Get.to(() =>
-                              // HomePage(recentPage:
-                              SubCategoryPage(
-                              categories: controller.subCategoryOutings,
-                              subCategoryName: translation.outingsText.tr) ,
-                              // selectedIndex: 0)
-                          );
-                        },
-                        theme: theme),
-                    const SizedBox(
-                      height: 14,
-                    ),
-                    _buildSubCategoryOutings(theme),
-                    const SizedBox(
-                      height: 23,
-                    ),
-                    _buildSection(
-                        title: translation.mostSellerText.tr,
-                        onPressed: () {
-                        controller.isLoadingOffersMainCategory.value = false;
-                          Get.to(() =>
+                        : _shimmerForListViewForOffer(height: 231)),
+                const SizedBox(
+                  height: 23,
+                ),
+                _buildSection(
+                    title: translation.newOfferText.tr,
+                    onPressed: () {
+                      Get.to(() =>
                               // HomePage(recentPage:
                               OfferListForMainCategoryPage(
-                              typeOfCategory: TypeOfCategory.specificOffers,
-                              mainCategoryName: translation.mostSellerText.tr,
-                              categoryId: -1,
-                              offers: controller.mostSellerOffers) ,
-                              // selectedIndex:0)
+                                  typeOfCategory: TypeOfCategory.specificOffers,
+                                  mainCategoryName: translation.newOfferText.tr,
+                                  categoryId: -1,
+                                  offers:
+                                      Controllers.homeController.specialOffers)
+                          // , selectedIndex: 0)
                           );
-                          Get.put(OfferController(Get.find())).getMerchant(catId: '1');
-                        },
-                        theme: theme),
-                    const SizedBox(
-                      height: 14,
-                    ),
-                    Obx(() => (controller.mostSellerOffers.isNotEmpty)
-                        ? _buildMostSellerOffers(
-                            offerModels: controller.mostSellerOffers,
-                            theme: theme,
-                          )
-                        : _shimmerForListViewForOffer(height: 224)),
-                    const SizedBox(
-                      height: 23,
-                    ),
-                    _buildSection(
-                        title: translation.newOfferText.tr,
-                        onPressed: () {
-
-                          Get.to(() =>
-                              // HomePage(recentPage:
-                          OfferListForMainCategoryPage(
-                              typeOfCategory: TypeOfCategory.specificOffers,
-                              mainCategoryName: translation.newOfferText.tr,
-                              categoryId: -1,
-                              offers: controller.specialOffers)
-                              // , selectedIndex: 0)
-                          );
-                          Get.put(OfferController(Get.find())).getMerchant(catId: '1');
-                        },
-                        theme: theme),
-                    const SizedBox(
-                      height: 14,
-                    ),
-                    Obx(() => (controller.specialOffers.isNotEmpty)
-                        ? _buildNewOfferCard(
-                            offerModels: controller.specialOffers,
-                            theme: theme,
-                            context: context
-                          )
-                    // Obx(() => (controller.todayOffers.isNotEmpty)
+                      Get.put(OfferController(Get.find()))
+                          .getMerchant(catId: '1');
+                    },
+                    theme: theme),
+                const SizedBox(
+                  height: 14,
+                ),
+                Obx(() => (Controllers.homeController.specialOffers.isNotEmpty)
+                    ? _buildNewOfferCard(
+                        offerModels: Controllers.homeController.specialOffers,
+                        theme: theme,
+                        context: context)
+                    // Obx(() => (Controllers.homeController.todayOffers.isNotEmpty)
                     //     ? _buildNewOfferCard(
-                    //         offerModels: controller.todayOffers,
+                    //         offerModels: Controllers.homeController.todayOffers,
                     //         theme: theme,
                     //         context: context)
-                        : _shimmerForListViewForOffer(height: 123)),
+                    : _shimmerForListViewForOffer(height: 123)),
 
-                    const SizedBox(
-                      height: 23,
-                    ),
+                const SizedBox(
+                  height: 23,
+                ),
 
-                    Obx(() => CustomIndicatorCarousel(
-                        list: controller.specialOffers,
-                        currentBanner: controller.currentBannerNewOffer.value)),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                  ]),
-            )));
+                Obx(() => CustomIndicatorCarousel(
+                    list: Controllers.homeController.specialOffers,
+                    currentBanner: controller.currentBannerNewOffer.value)),
+                const SizedBox(
+                  height: 25,
+                ),
+              ]),
+        ),
+      )
+    ]));
   }
 
   ////////////////////////////////////////////////
@@ -248,9 +275,13 @@ class ExploreTab extends GetView<HomeController> {
         Row(
           children: [
             Obx(() => appBarIcon(
-                onPressed: (){
+                onPressed: () {
                   Get.put(SearchOfferController(Get.find()));
-                  Get.to(()=> SearchScreen(typeOfSearch: TypeOfSearch.globalSearchWithCity, categoryId: -1),binding: SearchBinding());
+                  Get.to(
+                      () => SearchScreen(
+                          typeOfSearch: TypeOfSearch.globalSearchWithCity,
+                          categoryId: -1),
+                      binding: SearchBinding());
                 },
                 icon: Icons.search,
                 containerColor: controller.appBarItemContainerColor.value,
@@ -259,7 +290,7 @@ class ExploreTab extends GetView<HomeController> {
               width: 6,
             ),
             Obx(() => appBarIcon(
-              onPressed: (){},
+                onPressed: () {},
                 icon: Icons.notifications,
                 containerColor: controller.appBarItemContainerColor.value,
                 iconColor: controller.appBarItemColor.value)),
@@ -267,43 +298,74 @@ class ExploreTab extends GetView<HomeController> {
               width: 6,
             ),
             Obx(() => Stack(
-              children: [
-                appBarIcon(
-                    onPressed: (){
-                      if( SharedPreferencesClass.getToken() == null ||
-                          SharedPreferencesClass.getToken() == ''){
-                        Utils.showAlertDialogForRegisterLogin(context: context);
-                      }else{
-                        Get.to(()=>const CartScreen(comingForCart: ComingForCart.homPage,));
-                      }
-
-                    },
-                    icon: Icons.shopping_cart_rounded,
-                    containerColor: controller.appBarItemContainerColor.value,
-                    iconColor: controller.appBarItemColor.value),
-                Transform.translate(
-                  offset: const Offset(-3,-9),
-                  child: Align(
-                    alignment: Controllers.directionalityController.languageBox.value.read('language') == 'ar'?
-                    Alignment.topRight: Alignment.topRight ,
-                    child: Obx(()=>Container(
-                      width: 19,height: 19,
-                      alignment: Alignment.center,
-                      // padding: const EdgeInsets.all(2),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                      child: Center(
-                        child: Text(Controllers.cartController.cartItems.length.toString(),
-                            style: const TextStyle(color: ColorConstants.mainColor, fontSize: 12, fontWeight: FontWeight.bold)),
-                      ))
-                    )
-
-                  ),
-                )
-              ],
-            )),
+                  alignment: Alignment.center,
+                  children: [
+                    appBarIcon(
+                        onPressed: () {
+                          if (SharedPreferencesClass.getToken() == null ||
+                              SharedPreferencesClass.getToken() == '') {
+                            Utils.showAlertDialogForRegisterLogin(
+                                context: context);
+                          } else {
+                            Get.to(() => const CartScreen(
+                                  comingForCart: ComingForCart.homPage,
+                                ));
+                          }
+                        },
+                        icon: Icons.shopping_cart_rounded,
+                        containerColor:
+                            controller.appBarItemContainerColor.value,
+                        iconColor: controller.appBarItemColor.value),
+                    Controllers.cartController.cartItems.isNotEmpty
+                        ? Transform.translate(
+                            offset: const Offset(-9, -18),
+                            child: Align(
+                                alignment: Controllers.directionalityController
+                                            .languageBox.value
+                                            .read('language') ==
+                                        'ar'
+                                    ? Alignment.centerLeft
+                                    : Alignment.centerRight,
+                                child: Obx(() => Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Container(
+                                          width: 19,
+                                          height: 19,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: ColorConstants.gray100,
+                                                offset: const Offset(0,
+                                                    2), // controls the offset of the shadow
+                                                blurRadius:
+                                                    4, // controls the blur radius of the shadow
+                                                spreadRadius:
+                                                    0, // controls the spread radius of the shadow
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Center(
+                                          child: Text(
+                                              Controllers.cartController
+                                                  .cartItems.length
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  color:
+                                                      ColorConstants.mainColor,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
+                                      ],
+                                    ))),
+                          )
+                        : const SizedBox.shrink()
+                  ],
+                )),
           ],
         )
       ],
@@ -334,7 +396,7 @@ class ExploreTab extends GetView<HomeController> {
             ),
             const SizedBox(width: 3),
             Text(
-                Utils.getTranslatedText(arText: city.arName, enText: city.enName),
+              Utils.getTranslatedText(arText: city.arName, enText: city.enName),
               style: TextStyle(
                 color: controller.appBarItemColor.value,
                 fontFamily: 'Noto Kufi Arabic',
@@ -358,193 +420,206 @@ class ExploreTab extends GetView<HomeController> {
     Get.bottomSheet(
         isDismissible: true,
         Container(
-      padding: const EdgeInsets.all(14),
-      height: 484,
-      decoration:  BoxDecoration(
-          color: Get.isDarkMode? ColorConstants.darkMainColor: Colors.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16),
-          )),
-      child: ListView(
-        children: [
-          _buildDropHeader(
-              text: translation.language.tr,),
-          const SizedBox(
-            height: 8,
-          ),
-          Obx(() => Utils.drawDropDownListStringsBtn(
-              optionName: translation.language.tr,
-              dropDownValue:
-                  Controllers.directionalityController.dropLanguageData.value,
-              onChanged: (value) {
-                showDialog(
+          padding: const EdgeInsets.all(14),
+          height: 484,
+          decoration: BoxDecoration(
+              color:
+                  Get.isDarkMode ? ColorConstants.darkMainColor : Colors.white,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              )),
+          child: ListView(
+            children: [
+              _buildDropHeader(
+                text: translation.language.tr,
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Obx(() => Utils.drawDropDownListStringsBtn(
+                  leftPadding: 20,
+                  rightPadding: 20,
+                  optionName: translation.language.tr,
+                  dropDownValue: Controllers
+                      .directionalityController.dropLanguageData.value,
+                  onChanged: (value) {
+                    showDialog(
+                        context: context,
+                        builder: (context) => const Center(
+                                child: CircularProgressIndicator(
+                              color: ColorConstants.mainColor,
+                            )));
+                    Controllers.directionalityController.dropLanguageData
+                        .value = value;
+
+                    if (Controllers
+                            .directionalityController.dropLanguageData.value ==
+                        'العربية') {
+                      Controllers.directionalityController.changeLanguage('ar');
+                    } else if (Controllers
+                            .directionalityController.dropLanguageData.value ==
+                        'English') {
+                      Controllers.directionalityController.changeLanguage('en');
+                    }
+
+                    Utils.updatePadding();
+
+                    SharedPreferencesClass.setUserLanguageCode(
+                        language: (Controllers.directionalityController
+                                    .dropLanguageData.value ==
+                                'العربية')
+                            ? 'ar'
+                            : 'en');
+                    SharedPreferencesClass.setUserLanguageName(
+                        language: Controllers
+                            .directionalityController.dropLanguageData.value);
+
+                    controller.dropCountryData.value = '';
+                    controller.dropCityData.value = '';
+                    Get.back();
+                  },
+                  menu: [
+                    'العربية',
+                    'English',
+                  ],
+                  context: context,
+                  iconSize: 34,
+                  containerColor: Colors.white,
+                  containerBorderColor: ColorConstants.greyColor,
+                  optionNameColor: ColorConstants.black0,
+                  textColor: ColorConstants.black0)),
+              const SizedBox(
+                height: 14,
+              ),
+              _buildDropHeader(text: translation.selectCountry.tr),
+              const SizedBox(
+                height: 8,
+              ),
+              Obx(
+                () => Utils.drawDropDownListCountriesBtn(
+                    optionName: translation.selectCountry.tr,
+                    dropDownValue: controller.dropCountryData.value,
+                    onChanged: (country) {
+                      controller.dropCountryData.value =
+                          Utils.getTranslatedText(
+                              arText: country.arName, enText: country.enName);
+
+                      Controllers.userAuthenticationController
+                          .getCitiesForSelectedCountry(
+                              countryId: country.id.toString());
+
+                      controller.dropCityData.value = "";
+                      controller.cityId.value = '';
+                      controller.countryId.value = country.id.toString();
+                    },
+                    menu: Controllers.directionalityController.countries,
                     context: context,
-                    builder: (context) => const Center(
-                        child: CircularProgressIndicator(
-                          color: ColorConstants.mainColor,
-                        )));
-                Controllers.directionalityController.dropLanguageData.value =
-                    value;
+                    iconSize: 34,
+                    containerBorderColor: ColorConstants.greyColor,
+                    textColor: ColorConstants.black0),
+              ),
+              const SizedBox(
+                height: 14,
+              ),
+              _buildDropHeader(text: translation.selectCity.tr),
+              const SizedBox(
+                height: 8,
+              ),
+              Obx(
+                () => Utils.drawDropDownListCitiesBtn(
+                    optionName: translation.selectCity.tr,
+                    dropDownValue: controller.dropCityData.value,
+                    onChanged: (city) {
+                      controller.dropCityData.value = Utils.getTranslatedText(
+                          arText: city.arName, enText: city.enName);
 
-                if (Controllers
-                        .directionalityController.dropLanguageData.value ==
-                    'العربية') {
-                  Controllers.directionalityController.changeLanguage('ar');
-                } else if (Controllers
-                        .directionalityController.dropLanguageData.value ==
-                    'English') {
-                  Controllers.directionalityController.changeLanguage('en');
-                }
-
-                Utils.updatePadding();
-
-                SharedPreferencesClass.setUserLanguageCode(
-                    language: (Controllers
-                        .directionalityController.dropLanguageData.value == 'العربية')
-                        ? 'ar'
-                        : 'en');
-                SharedPreferencesClass.setUserLanguageName(
-                    language: Controllers
-                        .directionalityController.dropLanguageData.value);
-
-                controller.dropCountryData.value = '';
-                controller.dropCityData.value = '';
-                Get.back();
-              },
-              menu: [
-                'العربية',
-                'English',
-              ],
-              context: context,
-              iconSize: 34,
-              containerBorderColor: ColorConstants.greyColor,
-              textColor: ColorConstants.black0)),
-          const SizedBox(
-            height: 14,
-          ),
-          _buildDropHeader(
-              text:translation.selectCountry.tr),
-          const SizedBox(
-            height: 8,
-          ),
-          Obx(
-            () => Utils.drawDropDownListCountriesBtn(
-                optionName: translation.selectCountry.tr,
-                dropDownValue: controller.dropCountryData.value,
-                onChanged: (country) {
-                  controller.dropCountryData.value =
-                  Utils.getTranslatedText(arText:  country.arName, enText: country.enName);
-
-                  Controllers.userAuthenticationController
-                      .getCities(countryId: country.id.toString());
-
-                  controller.dropCityData.value = "";
-                  controller.cityId.value = '';
-                  controller.countryId.value = country.id.toString();
-
-                },
-                menu: Controllers.directionalityController.countries,
-                context: context,
-                iconSize: 34,
-                containerBorderColor: ColorConstants.greyColor,
-                textColor: ColorConstants.black0),
-          ),
-          const SizedBox(
-            height: 14,
-          ),
-          _buildDropHeader(
-              text: translation.selectCity.tr),
-          const SizedBox(
-            height: 8,
-          ),
-          Obx(
-            () => Utils.drawDropDownListCitiesBtn(
-                optionName: translation.selectCity.tr,
-                dropDownValue:
-                controller.dropCityData.value,
-                onChanged: (city) {
-                  controller.dropCityData.value =
-                  Utils.getTranslatedText(arText: city.arName, enText: city.enName);
-
-                  controller.cityId.value = city.id.toString();
-
-                },
-                menu: Controllers.directionalityController.cities,
-                context: context,
-                iconSize: 34,
-                containerBorderColor: ColorConstants.greyColor,
-                textColor: ColorConstants.black0),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          CustomButton(
-              btnText: translation.saveText.tr,
-              textColor: Colors.white,
-              textSize: 17,
-              btnBackgroundColor: ColorConstants.mainColor,
-              btnOnpressed: () {
-                if (Controllers.directionalityController.countryId.value != '' &&
-                    Controllers.directionalityController.cityId.value != '') {
-                  print('city id is ${Controllers.directionalityController.cityId.value} country id is ${Controllers.directionalityController.countryId.value}');
-                Get.back();
-                showDialog(
+                      controller.cityId.value = city.id.toString();
+                    },
+                    menu: Controllers
+                        .userAuthenticationController.citiesForSelectedCountry,
                     context: context,
-                    builder: (context) => const Center(
-                        child: CircularProgressIndicator(
-                          color: ColorConstants.mainColor,
-                        )));
-                  ////// language //////
-                  if (Controllers
-                      .directionalityController.dropLanguageData.value ==
-                      'العربية') {
-                    Controllers.directionalityController.changeLanguage('ar');
-                  } else if (Controllers
-                      .directionalityController.dropLanguageData.value ==
-                      'English') {
-                    Controllers.directionalityController.changeLanguage('en');
-                  }
+                    iconSize: 34,
+                    containerBorderColor: ColorConstants.greyColor,
+                    textColor: ColorConstants.black0),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              CustomButton(
+                  btnText: translation.saveText.tr,
+                  textColor: Colors.white,
+                  textSize: 17,
+                  btnBackgroundColor: ColorConstants.mainColor,
+                  btnOnpressed: () {
+                    if (controller.countryId.value != '' &&
+                        controller.cityId.value != '') {
+                      // print('city id is ${Controllers.directionalityController.cityId.value} country id is ${Controllers.directionalityController.countryId.value}');
+                      Get.back();
+                      Controllers.directionalityController.countryId.value =
+                          controller.countryId.value;
+                      Controllers.directionalityController.cityId.value =
+                          controller.cityId.value;
+                      showDialog(
+                          context: context,
+                          builder: (context) => const Center(
+                                  child: CircularProgressIndicator(
+                                color: ColorConstants.mainColor,
+                              )));
+                      ////// language //////
+                      if (Controllers.directionalityController.dropLanguageData
+                              .value ==
+                          'العربية') {
+                        Controllers.directionalityController
+                            .changeLanguage('ar');
+                      } else if (Controllers.directionalityController
+                              .dropLanguageData.value ==
+                          'English') {
+                        Controllers.directionalityController
+                            .changeLanguage('en');
+                      }
 
-                  Utils.updatePadding();
+                      Utils.updatePadding();
 
-                  ////// country //////
-                  SharedPreferencesClass.setUserCountryId(
-                      countryId: Controllers.directionalityController.countryId.value);
-                  ////// city //////
-                  SharedPreferencesClass.setUserCity(
-                      cityId: Controllers.directionalityController.cityId.value);
-                  ////// get offers based on city id //////
-                  controller.getCarouselOffers();
-                  controller.getTodayOffers();
-                  controller.getSpecialOffers();
-                  controller.getMostSalesOffers();
-                  controller.getMostSalesOffers();
-                  controller.getMainCategories();
-                  controller.getSubCategoryOutings(categoryId: '1');
-                  Get.back();
-                } else {
-                  Get.snackbar(
-                    translation.selectLocation.tr,
-                    translation.completeDataText.tr,
-                    backgroundColor: ColorConstants.redColor,
-                    colorText: Colors.white,
-                    snackPosition: SnackPosition.BOTTOM,
-                    borderRadius: 12.0,
-                    margin: const EdgeInsets.all( 14)
-                  );
-
-                }
-              }),
-        ],
-      ),
-    ));
+                      ////// country //////
+                      SharedPreferencesClass.setUserCountryId(
+                          countryId: Controllers
+                              .directionalityController.countryId.value);
+                      ////// city //////
+                      Controllers.userAuthenticationController.getCities(
+                          countryId: Controllers
+                              .directionalityController.countryId
+                              .toString());
+                      SharedPreferencesClass.setUserCity(
+                          cityId: Controllers
+                              .directionalityController.cityId.value);
+                      ////// get offers based on city id //////
+                      controller.getCarouselOffers();
+                      Controllers.homeController.getTodayOffers();
+                      Controllers.homeController.getSpecialOffers();
+                      Controllers.homeController.getMostSalesOffers();
+                      controller.getMainCategories();
+                      controller.getSubCategoryOutings(categoryId: '1');
+                      Get.back();
+                    } else {
+                      Get.snackbar(translation.selectLocation.tr,
+                          translation.completeDataText.tr,
+                          backgroundColor: ColorConstants.redColor,
+                          colorText: Colors.white,
+                          snackPosition: SnackPosition.BOTTOM,
+                          borderRadius: 12.0,
+                          margin: const EdgeInsets.all(14));
+                    }
+                  }),
+            ],
+          ),
+        ));
   }
 
   Widget _buildDropHeader({required String text}) {
     return Text(text,
         style: TextStyle(
-          color:Get.isDarkMode? Colors.white: ColorConstants.black0,
+          color: Get.isDarkMode ? Colors.white : ColorConstants.black0,
           fontSize: 17,
           fontWeight: FontWeight.w500,
           fontFamily: 'Noto Kufi Arabic',
@@ -620,7 +695,9 @@ class ExploreTab extends GetView<HomeController> {
                 width: MediaQuery.of(context).size.width,
                 height: 18,
                 decoration: BoxDecoration(
-                    color: Get.isDarkMode? ColorConstants.darkMainColor:ColorConstants.backgroundContainer,
+                    color: Get.isDarkMode
+                        ? ColorConstants.darkMainColor
+                        : ColorConstants.backgroundContainer,
                     borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(12),
                         topLeft: Radius.circular(12))),
@@ -641,7 +718,7 @@ class ExploreTab extends GetView<HomeController> {
           margin: const EdgeInsets.symmetric(horizontal: 14),
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
             gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
@@ -655,7 +732,7 @@ class ExploreTab extends GetView<HomeController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                 translation.cashbackSentence.tr,
+                  translation.cashbackSentence.tr,
                   style: TextStyle(
                       color: ColorConstants.black0,
                       fontSize: 14.5,
@@ -706,22 +783,24 @@ class ExploreTab extends GetView<HomeController> {
 
   // build carousel item
   Widget _buildCarouselItem(OfferModel offer, BuildContext context) {
-    CompanyModel companyModel = CompanyModel.fromJson(offer.company!.map((key, value) => MapEntry(key.toString(), value)));
+    CompanyModel companyModel = CompanyModel.fromJson(
+        offer.company!.map((key, value) => MapEntry(key.toString(), value)));
     return GestureDetector(
       onTap: () {
-        // Get.put(OfferController(Get.find()));
-        // Get.to(() => OfferDetail(offerModel: offer));
         showDialog(
             context: context,
             builder: (context) => const Center(
-                child: CircularProgressIndicator(
+                    child: CircularProgressIndicator(
                   color: ColorConstants.mainColor,
                 )));
-        Controllers.offerController.getOffer(offerKey: offer.key.toString())
+        Controllers.offerController
+            .getOffer(offerKey: offer.key.toString())
             .then((offer) {
           Get.back();
           Get.put(OfferController(Get.find()));
-          Get.to(() => OfferDetail(offerModel:  offer));
+          Controllers.offerController.cartItemsOfferDetail.clear();
+          Controllers.offerController.cartItemsOfferDetail.clear();
+          Get.to(() => OfferDetail(offerModel: offer));
         });
       },
       child: Stack(
@@ -745,8 +824,8 @@ class ExploreTab extends GetView<HomeController> {
               child: Padding(
                 padding: EdgeInsets.only(
                     bottom: 50,
-                    right: Utils.rightPadding16Right,
-                    left: Utils.leftPadding16Left),
+                    right: Utils.rightPadding12Right,
+                    left: Utils.leftPadding12Left),
                 child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Column(
@@ -755,7 +834,9 @@ class ExploreTab extends GetView<HomeController> {
                     children: [
                       Text(
                         translation.companyName.trParams({
-                          'companyName': Utils.getTranslatedText(arText: companyModel.arName.toString(), enText: companyModel.enName.toString())
+                          'companyName': Utils.getTranslatedText(
+                              arText: companyModel.arName.toString(),
+                              enText: companyModel.enName.toString())
                         }),
                         style: const TextStyle(
                             color: Colors.white,
@@ -774,10 +855,11 @@ class ExploreTab extends GetView<HomeController> {
                               width: MediaQuery.of(context).size.width * 0.66,
                               height: 60,
                               child: Text(
-                                  translation.companyName.trParams({
-                                    'companyName': Utils.getTranslatedText(arText: offer.arTitle.toString(), enText:  offer.enTitle.toString())
-                                  })
-                               ,
+                                translation.companyName.trParams({
+                                  'companyName': Utils.getTranslatedText(
+                                      arText: offer.arTitle.toString(),
+                                      enText: offer.enTitle.toString())
+                                }),
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 17,
@@ -790,29 +872,29 @@ class ExploreTab extends GetView<HomeController> {
                                 color: ColorConstants.mainColor,
                                 borderRadius: BorderRadius.only(
                                     topRight: Controllers
-                  .directionalityController.languageBox.value
-                  .read('language') ==
-                                        'ar'
+                                                .directionalityController
+                                                .languageBox
+                                                .value
+                                                .read('language') ==
+                                            'ar'
                                         ? Radius.circular(12)
                                         : Radius.circular(0),
-                                    bottomRight:Controllers
-                  .directionalityController.languageBox.value
-                  .read('language') ==
-                                        'ar'
+                                    bottomRight: Controllers
+                                                .directionalityController
+                                                .languageBox
+                                                .value
+                                                .read('language') ==
+                                            'ar'
                                         ? Radius.circular(12)
                                         : Radius.circular(0),
-                                    topLeft: Controllers
-                  .directionalityController.languageBox.value
-                  .read('language') ==
-                                        'ar'
-                                        ? Radius.circular(0)
-                                        : Radius.circular(12),
-                                    bottomLeft: Controllers
-                  .directionalityController.languageBox.value
-                  .read('language') ==
-                                        'ar'
-                                        ? Radius.circular(0)
-                                        : Radius.circular(12))),
+                                    topLeft:
+                                        Controllers.directionalityController.languageBox.value.read('language') == 'ar'
+                                            ? Radius.circular(0)
+                                            : Radius.circular(12),
+                                    bottomLeft:
+                                        Controllers.directionalityController.languageBox.value.read('language') == 'ar'
+                                            ? Radius.circular(0)
+                                            : Radius.circular(12))),
                             padding: const EdgeInsets.only(
                                 left: 8, right: 8, top: 5, bottom: 5),
                             child: Text(
@@ -838,7 +920,7 @@ class ExploreTab extends GetView<HomeController> {
                             width: 9,
                           ),
                           CustomTextLineThrough(
-                              text:offer.priceAfterDiscount.toString(),
+                              text: offer.priceBeforDiscount.toString(),
                               textColor: Colors.white),
                         ],
                       ),
@@ -877,112 +959,117 @@ class ExploreTab extends GetView<HomeController> {
         height: 84,
         child: Obx(() => (controller.subCategoryOutings.isNotEmpty)
             ? ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 9),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 scrollDirection: Axis.horizontal,
                 itemCount: controller.subCategoryOutings.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
-                      onTap: () {
-                        controller.getOffersForSubCategories(
-                          subCategoryId:
-                              controller.subCategoryOutings[index].id.toString(),
-                        );
-                        Get.to(() =>
+                    onTap: () {
+                      controller.getOffersForSubCategories(
+                        subCategoryId:
+                            controller.subCategoryOutings[index].id.toString(),
+                      );
+                      Get.to(
+                        () =>
                             // HomePage(recentPage:
-                        OfferListForSubCategoryPage(
-                          mainCategoryName:
-                          Utils.getTranslatedText(arText: controller.subCategoryOutings[index].arName, enText: controller.subCategoryOutings[index].enName),
+                            OfferListForSubCategoryPage(
+                          mainCategoryName: Utils.getTranslatedText(
+                              arText:
+                                  controller.subCategoryOutings[index].arName,
+                              enText:
+                                  controller.subCategoryOutings[index].enName),
                           categoryId: controller.subCategoryOutings[index].id,
-                        ) ,
-                            // selectedIndex: 0)
-                        );
-                        },
-                      child: Container(
-                          width: 235,
-                          height: 84,
-                          clipBehavior: Clip.hardEdge,
-                          margin: const EdgeInsets.only(right: 4, left: 4),
-                          decoration: BoxDecoration(
-                            // boxShadow:const [
-                            //   BoxShadow(
-                            //     color: Colors.grey,
-                            //     offset: Offset(0, 1.4), // controls the offset of the shadow
-                            //     blurRadius: 3, // controls the blur radius of the shadow
-                            //     spreadRadius: 0, // controls the spread radius of the shadow
-                            //   ),
-                            // ],
-                            borderRadius: BorderRadius.circular(12),
-                            color: Get.isDarkMode
-                                ? ColorConstants.gray700
-                                : Colors.grey.shade200,
-                            border: Border.all(
-                                color: Get.isDarkMode
-                                    ? Colors.transparent
-                                    : Colors.grey.shade200,
-                                width: 1),
-                          ),
-                          child: Stack(
-                            children: [
-                              SizedBox(
-                                height: 210,
-                                width: double.infinity,
-                                child: CachedNetworkImage(
-                                  imageUrl: ApiConstants.storageURL +
-                                      controller.subCategoryOutings[index].imageUrl
-                                          .toString(),
-                                  fit: BoxFit.cover,
-                                ),
+                        ),
+                        // selectedIndex: 0)
+                      );
+                    },
+                    child: Container(
+                        width: 235,
+                        height: 84,
+                        clipBehavior: Clip.hardEdge,
+                        margin: const EdgeInsets.only(right: 4, left: 4),
+                        decoration: BoxDecoration(
+                          // boxShadow:const [
+                          //   BoxShadow(
+                          //     color: Colors.grey,
+                          //     offset: Offset(0, 1.4), // controls the offset of the shadow
+                          //     blurRadius: 3, // controls the blur radius of the shadow
+                          //     spreadRadius: 0, // controls the spread radius of the shadow
+                          //   ),
+                          // ],
+                          borderRadius: BorderRadius.circular(12),
+                          color: Get.isDarkMode
+                              ? ColorConstants.gray700
+                              : Colors.grey.shade200,
+                          border: Border.all(
+                              color: Get.isDarkMode
+                                  ? Colors.transparent
+                                  : Colors.grey.shade200,
+                              width: 1),
+                        ),
+                        child: Stack(
+                          children: [
+                            SizedBox(
+                              height: 210,
+                              width: double.infinity,
+                              child: CachedNetworkImage(
+                                imageUrl: ApiConstants.storageURL +
+                                    controller
+                                        .subCategoryOutings[index].imageUrl
+                                        .toString(),
+                                fit: BoxFit.cover,
                               ),
-                              Positioned(
-                                  top: 0,
-                                  left: 0,
-                                  right: 0,
-                                  bottom: 0,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withAlpha(110),
+                            ),
+                            Positioned(
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withAlpha(110),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 17,
+                                      bottom: 8,
+                                      right: 17,
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 17,
-                                        bottom: 8,
-                                        right: 17,
-                                      ),
-                                      child: Align(
-                                        alignment: Controllers
-                  .directionalityController.languageBox.value
-                  .read('language') ==
-                                                'ar'
-                                            ? Alignment.bottomRight
-                                            : Alignment.bottomLeft,
-                                        child: SizedBox(
-                                          height: 28,
-                                          child: Text(
-                                              Controllers
-                  .directionalityController.languageBox.value
-                  .read('language') ==
-                                                  'ar'
-                                                  ? controller
-                                                      .subCategoryOutings[index]
-                                                      .arName
-                                                      .toString()
-                                                  : controller
-                                                      .subCategoryOutings[index]
-                                                      .enName
-                                                      .toString(),
-                                              style: theme.textTheme.headline6!
-                                                  .copyWith(
-                                                      fontSize: 13.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white)),
-                                        ),
+                                    child: Align(
+                                      alignment: Controllers
+                                                  .directionalityController
+                                                  .languageBox
+                                                  .value
+                                                  .read('language') ==
+                                              'ar'
+                                          ? Alignment.bottomRight
+                                          : Alignment.bottomLeft,
+                                      child: SizedBox(
+                                        height: 28,
+                                        child: Text(
+                                            Controllers.directionalityController
+                                                        .languageBox.value
+                                                        .read('language') ==
+                                                    'ar'
+                                                ? controller
+                                                    .subCategoryOutings[index]
+                                                    .arName
+                                                    .toString()
+                                                : controller
+                                                    .subCategoryOutings[index]
+                                                    .enName
+                                                    .toString(),
+                                            style: theme.textTheme.headline6!
+                                                .copyWith(
+                                                    fontSize: 13.0,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white)),
                                       ),
                                     ),
-                                  )),
-                            ],
-                          )),
-
+                                  ),
+                                )),
+                          ],
+                        )),
                   );
                 })
             : _shimmerForListViewForOffer(height: 160)));
@@ -995,8 +1082,7 @@ class ExploreTab extends GetView<HomeController> {
       required ThemeData theme}) {
     return Padding(
       padding: EdgeInsets.only(
-          left: Utils.leftPadding16Left,
-          right: Utils.rightPadding16Right),
+          left: Utils.leftPadding12Left, right: Utils.rightPadding12Right),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -1042,11 +1128,12 @@ class ExploreTab extends GetView<HomeController> {
 
   // build list of categories
   Widget _buildCategories(ThemeData theme) {
-
     return SizedBox(
         height: 116,
         child: Obx(() => ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: EdgeInsets.only(
+                right: Utils.leftPadding12Left,
+                left: Utils.rightPadding12Right),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             scrollDirection: Axis.horizontal,
@@ -1074,18 +1161,21 @@ class ExploreTab extends GetView<HomeController> {
         controller.getSubCategories(categoryId: category.id.toString());
         Controllers.homeController.isLoadingOffersMainCategory.value = true;
         Get.to(() =>
-        // HomePage(recentPage:
-        OfferListForMainCategoryPage(
-          typeOfCategory: TypeOfCategory.mainCategory,
-          mainCategoryName:  translation.categoryName.trParams({
-            'categoryName': Utils.getTranslatedText(arText:  category.arName.toString(), enText:  category.enName.toString())
-          }),
-          categoryId: int.parse(category.id.toString()),
-          offers: controller.offersForMainCategory,
-        )
-          // selectedIndex: 0)
-        );
-        Get.put(OfferController(Get.find())).getMerchant(catId: category.id.toString());
+                // HomePage(recentPage:
+                OfferListForMainCategoryPage(
+                  typeOfCategory: TypeOfCategory.mainCategory,
+                  mainCategoryName: translation.categoryName.trParams({
+                    'categoryName': Utils.getTranslatedText(
+                        arText: category.arName.toString(),
+                        enText: category.enName.toString())
+                  }),
+                  categoryId: int.parse(category.id.toString()),
+                  offers: controller.offersForMainCategory,
+                )
+            // selectedIndex: 0)
+            );
+        Get.put(OfferController(Get.find()))
+            .getMerchant(catId: category.id.toString());
       },
       child: ZoomTapAnimation(
         beginDuration: const Duration(milliseconds: 300),
@@ -1098,8 +1188,9 @@ class ExploreTab extends GetView<HomeController> {
             borderRadius: BorderRadius.circular(12),
           ),
           margin: EdgeInsets.only(
-              right: Utils.rightPadding10FromRight,
-              left: Utils.leftPadding10FromLeft),
+            right: Utils.rightPadding10Right,
+            left: Utils.leftPadding10Left,
+          ),
           child: Stack(
             children: [
               Container(
@@ -1134,10 +1225,10 @@ class ExploreTab extends GetView<HomeController> {
                         ),
                         Text(
                           translation.categoryName.trParams({
-                            'categoryName': Controllers
-                  .directionalityController.languageBox.value
-                  .read('language') ==
-                                'ar'
+                            'categoryName': Controllers.directionalityController
+                                        .languageBox.value
+                                        .read('language') ==
+                                    'ar'
                                 ? category.arName.toString()
                                 : category.enName.toString()
                           }),
@@ -1159,9 +1250,12 @@ class ExploreTab extends GetView<HomeController> {
     );
   }
 
-  Widget _buildLocationCategory({required theme}) {
+  Widget _buildLocationCategory(
+      {required theme, required BuildContext context}) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Utils.getCurrentPosition(context: context);
+      },
       child: ZoomTapAnimation(
         beginDuration: const Duration(milliseconds: 300),
         endDuration: const Duration(milliseconds: 500),
@@ -1173,8 +1267,7 @@ class ExploreTab extends GetView<HomeController> {
             borderRadius: BorderRadius.circular(12),
           ),
           margin: EdgeInsets.only(
-              right: Utils.rightPadding16Right,
-              left: Utils.leftPadding16Left),
+              right: Utils.rightPadding12Right, left: Utils.leftPadding12Left),
           child: Stack(
             children: [
               SizedBox(
@@ -1225,7 +1318,7 @@ class ExploreTab extends GetView<HomeController> {
                                 Radius.circular(12),
                               )),
                           child: Text(
-                           translation.exploreLocationText.tr,
+                            translation.exploreLocationText.tr,
                             style: const TextStyle(
                                 color: ColorConstants.mainColor,
                                 fontSize: 12,
@@ -1246,30 +1339,86 @@ class ExploreTab extends GetView<HomeController> {
 
   // build list of offers
   Widget _buildTheHotOffers(
-      {required List<OfferModel> offerModels, required ThemeData theme}) {
+      {
+      // required List<OfferModel> offerModels,
+      required ThemeData theme}) {
     return SizedBox(
       height: 245,
-      child: ListView.builder(
-        padding: EdgeInsets.only(
-            right: Utils.rightPadding4FromLeft,
-            left: Utils.leftPadding4FromRight,
-            top: 0,
-            bottom: 0),
-        scrollDirection: Axis.horizontal,
-        itemCount: offerModels.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(
-              right: Utils.rightPadding10FromLeft,
-              left:  Utils.leftPadding10FromRight,
-            ),
-            child: OfferCard(
-              offerModel: offerModels[index],
-              width: 290,
-              height: 240,
-            ),
-          );
-        },
+      child: Obx(
+        () => ListView.builder(
+          padding: EdgeInsets.only(
+              right: Controllers.directionalityController.languageBox.value
+                          .read('language') ==
+                      'ar'
+                  ? 2
+                  : 12,
+              left: Controllers.directionalityController.languageBox.value
+                          .read('language') ==
+                      'ar'
+                  ? 12
+                  : 2,
+              top: 0,
+              bottom: 0),
+          scrollDirection: Axis.horizontal,
+          itemCount: Controllers.homeController.todayOffers
+              .length, // TODO Controllers.homeController.todayOffers
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(
+                right: Utils.rightPadding10Right,
+                left: Utils.leftPadding10Left,
+              ),
+              child: OfferCard(
+                isComingFromFavourite: false,
+                typeOfComingOffer: TypeOfComingOffer.comingFromOffer,
+                offerModel: Controllers.homeController.todayOffers[
+                    index], // TODO Controllers.homeController.todayOffers
+                onTapFavourite: () {
+                  if (SharedPreferencesClass.getToken() == null ||
+                      SharedPreferencesClass.getToken() == '') {
+                    Utils.showAlertDialogForRegisterLogin(context: context);
+                  } else {
+                    if (Controllers
+                        .homeController.todayOffers[index].isFavourite!) {
+                      Controllers.favouriteController
+                          .getUserFavourites()
+                          .then((favouriteList) {
+                        FavouriteModel favouriteModel =
+                            favouriteList.firstWhere((offer) =>
+                                Controllers
+                                    .homeController.todayOffers[index].id ==
+                                offer.offerId);
+                        // Controllers.homeController.todayOffers[index].copyWith(isFavourite: false);
+                        Controllers.favouriteController
+                            .deleteFromFavourites(
+                                favouriteKey: favouriteModel.key,
+                                context: context)
+                            .then((value) {
+                          print('value of delete is $value');
+                          if (value) {
+                            Controllers.homeController.getTodayOffers();
+                          }
+                        });
+                        Controllers.homeController.getTodayOffers();
+                      });
+                    } else {
+                      Controllers.favouriteController
+                          .addToFavourites(
+                              offerId: Controllers
+                                  .homeController.todayOffers[index].id!,
+                              context: context)
+                          .then((value) {
+                        Controllers.homeController.getTodayOffers();
+                      });
+                    }
+                  }
+                },
+                width: 290,
+                height: 240,
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -1298,8 +1447,8 @@ class ExploreTab extends GetView<HomeController> {
                 int pageViewIndex) {
               return Padding(
                 padding: const EdgeInsets.only(
-                  right: 14,
-                  left: 14,
+                  right: 12,
+                  left: 12,
                 ),
                 child: NewOfferCard(
                   offerModel: offerModels[itemIndex],
@@ -1318,8 +1467,16 @@ class ExploreTab extends GetView<HomeController> {
       height: 231,
       child: ListView.builder(
         padding: EdgeInsets.only(
-            right: Utils.rightPadding4FromLeft,
-            left: Utils.leftPadding4FromRight,
+            right: Controllers.directionalityController.languageBox.value
+                        .read('language') ==
+                    'ar'
+                ? 2
+                : 12,
+            left: Controllers.directionalityController.languageBox.value
+                        .read('language') ==
+                    'ar'
+                ? 12
+                : 2,
             top: 0,
             bottom: 0),
         scrollDirection: Axis.horizontal,
@@ -1327,8 +1484,9 @@ class ExploreTab extends GetView<HomeController> {
         itemBuilder: (context, index) {
           return Padding(
             padding: EdgeInsets.only(
-              right: Utils.rightPadding10FromLeft,
-              left: Utils.leftPadding10FromRight,),
+              right: Utils.rightPadding10Right,
+              left: Utils.leftPadding10Left,
+            ),
             child: MostSellerOfferCard(
               offerModel: offerModels[index],
               width: 290,
@@ -1343,7 +1501,7 @@ class ExploreTab extends GetView<HomeController> {
   // shimmer for offer's list
   Widget _shimmerForListViewForOffer({required double height}) {
     return ShimmerListView(
-      width: 262,
+      width: 290,
       height: height,
       topPadding: 0,
       bottomPadding: 0,

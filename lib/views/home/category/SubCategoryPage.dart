@@ -1,12 +1,12 @@
 // import 'package:cached_network_image/cached_network_image.dart';
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
-// import 'package:mizaa/models/categories/sub_categories/SubCategoriesModel.dart';
-// import 'package:mizaa/services/networking/ApiConstants.dart';
-// import 'package:mizaa/shared/constants/ColorConstants.dart';
-// import 'package:mizaa/shared/shared_preferences.dart';
-// import 'package:mizaa/shared/utils.dart';
-// import 'package:mizaa/views/widgets/shimmer_container.dart';
+// import 'package:test_ecommerce_app/models/categories/sub_categories/SubCategoriesModel.dart';
+// import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
+// import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
+// import 'package:test_ecommerce_app/shared/shared_preferences.dart';
+// import 'package:test_ecommerce_app/shared/utils.dart';
+// import 'package:test_ecommerce_app/views/widgets/shimmer_container.dart';
 //
 // class SubCategoryPage extends StatelessWidget {
 //   final String subCategoryName;

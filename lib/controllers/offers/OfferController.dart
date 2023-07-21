@@ -10,11 +10,22 @@ import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 import 'package:test_ecommerce_app/shared/utils.dart';
 import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
-as translation;
+    as translation;
+
 class OfferController extends GetxController with StateMixin {
   final OfferProvider _offerProvider;
 
-  OfferController(this._offerProvider);
+  OfferController(this._offerProvider) {
+    carouselController = CarouselController();
+    scrollOfferDescriptionController = ScrollController()
+      ..addListener(_onScrollOfferDescription);
+    scrollMerchantOfferDetailController = ScrollController()
+      ..addListener(_onScrollMerchantOfferDetail);
+    scrollTermsConditionsController = ScrollController()
+      ..addListener(_onScrollTermsConditions);
+    scrollOfferRatingsController = ScrollController()
+      ..addListener(_onScrollOfferRatings);
+  }
 
   final TextEditingController quantityController = TextEditingController();
 
@@ -104,12 +115,22 @@ class OfferController extends GetxController with StateMixin {
   final isScrolledOfferDescription = false.obs;
   final appBarOfferDescriptionColor = Colors.transparent.obs;
   final appBarItemContainerOfferDescriptionColor = Colors.white.obs;
+  final statusIconBarOfferDescriptionColor = Brightness.light.obs;
   final appBarItemOfferDescriptionColor = ColorConstants.mainColor.obs;
+
+  // scrolling for merchant offer detail screen
+  late ScrollController scrollMerchantOfferDetailController;
+  final isScrolledMerchantOfferDetail = false.obs;
+  final appBarMerchantOfferDetailColor = Colors.transparent.obs;
+  final appBarItemContainerMerchantOfferDetailColor = Colors.white.obs;
+  final statusIconBarMerchantOfferDetailColor = Brightness.light.obs;
+  final appBarItemMerchantOfferDetailColor = ColorConstants.mainColor.obs;
 
   // app bar for terms and conditions screen
   late ScrollController scrollTermsConditionsController;
   final isScrolledTermsConditions = false.obs;
   final appBarTermsConditionsColor = Colors.transparent.obs;
+  final statusIconBarTermsConditionsColor = Brightness.light.obs;
   final appBarItemContainerTermsConditionsColor = Colors.white.obs;
   final appBarItemTermsConditionsColor = ColorConstants.mainColor.obs;
 
@@ -117,19 +138,54 @@ class OfferController extends GetxController with StateMixin {
   late ScrollController scrollOfferRatingsController;
   final isScrolledOfferRatings = false.obs;
   final appBarOfferRatingsColor = Colors.transparent.obs;
+  final statusIconBarOfferRatingsColor = Brightness.light.obs;
   final appBarItemContainerOfferRatingsColor = Colors.white.obs;
   final appBarItemOfferRatingsColor = ColorConstants.mainColor.obs;
+
+  resetOfferDetailScrolling() {
+    isScrolledOfferDescription.value = false;
+    appBarOfferDescriptionColor.value = Colors.transparent;
+    statusIconBarOfferDescriptionColor.value = Brightness.light;
+    appBarItemContainerOfferDescriptionColor.value = Colors.white;
+    appBarItemOfferDescriptionColor.value = ColorConstants.mainColor;
+  }
+
+  resetMerchantOfferDetailScrolling() {
+    isScrolledOfferDescription.value = false;
+    appBarOfferDescriptionColor.value = Colors.transparent;
+    statusIconBarOfferDescriptionColor.value = Brightness.light;
+    appBarItemContainerOfferDescriptionColor.value = Colors.white;
+    appBarItemOfferDescriptionColor.value = ColorConstants.mainColor;
+  }
+
+  resetTermsAndConditionsScrolling() {
+    isScrolledTermsConditions.value = false;
+    appBarTermsConditionsColor.value = Colors.transparent;
+    statusIconBarTermsConditionsColor.value = Brightness.light;
+    appBarItemContainerTermsConditionsColor.value = Colors.white;
+    appBarItemTermsConditionsColor.value = ColorConstants.mainColor;
+  }
+
+  resetMerchantRatingsScrolling() {
+    isScrolledOfferRatings.value = false;
+    appBarOfferRatingsColor.value = Colors.transparent;
+    statusIconBarOfferRatingsColor.value = Brightness.light;
+    appBarItemContainerOfferRatingsColor.value = Colors.white;
+    appBarItemOfferRatingsColor.value = ColorConstants.mainColor;
+  }
 
   @override
   void onInit() {
     quantityController.text = count.value.toString();
-    carouselController = CarouselController();
-    scrollOfferDescriptionController = ScrollController()
-      ..addListener(_onScrollOfferDescription);
-    scrollTermsConditionsController = ScrollController()
-      ..addListener(_onScrollTermsConditions);
-    scrollOfferRatingsController = ScrollController()
-      ..addListener(_onScrollOfferRatings);
+    // carouselController = CarouselController();
+    // scrollOfferDescriptionController = ScrollController()
+    //   ..addListener(_onScrollOfferDescription);
+    // scrollMerchantOfferDetailController = ScrollController()
+    //   ..addListener(_onScrollMerchantOfferDetail);
+    // scrollTermsConditionsController = ScrollController()
+    //   ..addListener(_onScrollTermsConditions);
+    // scrollOfferRatingsController = ScrollController()
+    //   ..addListener(_onScrollOfferRatings);
 
     super.onInit();
   }
@@ -151,14 +207,36 @@ class OfferController extends GetxController with StateMixin {
       isScrolledOfferDescription.value = true;
       appBarOfferDescriptionColor.value =
           Get.isDarkMode ? ColorConstants.bottomAppBarDarkColor : Colors.white;
+      statusIconBarOfferDescriptionColor.value = Brightness.light;
       appBarItemContainerOfferDescriptionColor.value = ColorConstants.mainColor;
       appBarItemOfferDescriptionColor.value = Colors.white;
     } else if (scrollOfferDescriptionController.offset <= 80 &&
         isScrolledOfferDescription.value) {
       isScrolledOfferDescription.value = false;
       appBarOfferDescriptionColor.value = Colors.transparent;
+      statusIconBarOfferDescriptionColor.value = Brightness.dark;
       appBarItemContainerOfferDescriptionColor.value = Colors.white;
       appBarItemOfferDescriptionColor.value = ColorConstants.mainColor;
+    }
+  }
+
+  void _onScrollMerchantOfferDetail() {
+    if (scrollMerchantOfferDetailController.offset > 80 &&
+        !isScrolledMerchantOfferDetail.value) {
+      isScrolledMerchantOfferDetail.value = true;
+      appBarMerchantOfferDetailColor.value =
+          Get.isDarkMode ? ColorConstants.bottomAppBarDarkColor : Colors.white;
+      statusIconBarMerchantOfferDetailColor.value = Brightness.light;
+      appBarItemContainerMerchantOfferDetailColor.value =
+          ColorConstants.mainColor;
+      appBarItemMerchantOfferDetailColor.value = Colors.white;
+    } else if (scrollMerchantOfferDetailController.offset <= 80 &&
+        isScrolledMerchantOfferDetail.value) {
+      isScrolledMerchantOfferDetail.value = false;
+      appBarMerchantOfferDetailColor.value = Colors.transparent;
+      statusIconBarMerchantOfferDetailColor.value = Brightness.dark;
+      appBarItemContainerMerchantOfferDetailColor.value = Colors.white;
+      appBarItemMerchantOfferDetailColor.value = ColorConstants.mainColor;
     }
   }
 
@@ -168,11 +246,13 @@ class OfferController extends GetxController with StateMixin {
       isScrolledTermsConditions.value = true;
       appBarTermsConditionsColor.value =
           Get.isDarkMode ? ColorConstants.bottomAppBarDarkColor : Colors.white;
+      statusIconBarTermsConditionsColor.value = Brightness.light;
       appBarItemContainerTermsConditionsColor.value = ColorConstants.mainColor;
       appBarItemTermsConditionsColor.value = Colors.white;
     } else if (scrollTermsConditionsController.offset <= 80 &&
         isScrolledTermsConditions.value) {
       isScrolledTermsConditions.value = false;
+      statusIconBarTermsConditionsColor.value = Brightness.dark;
       appBarTermsConditionsColor.value = Colors.transparent;
       appBarItemContainerTermsConditionsColor.value = Colors.white;
       appBarItemTermsConditionsColor.value = ColorConstants.mainColor;
@@ -185,11 +265,13 @@ class OfferController extends GetxController with StateMixin {
       isScrolledOfferRatings.value = true;
       appBarOfferRatingsColor.value =
           Get.isDarkMode ? ColorConstants.bottomAppBarDarkColor : Colors.white;
+      statusIconBarOfferRatingsColor.value = Brightness.light;
       appBarItemContainerOfferRatingsColor.value = ColorConstants.mainColor;
       appBarItemOfferRatingsColor.value = Colors.white;
     } else if (scrollOfferRatingsController.offset <= 20 &&
         isScrolledOfferRatings.value) {
       isScrolledOfferRatings.value = false;
+      statusIconBarOfferRatingsColor.value = Brightness.dark;
       appBarOfferRatingsColor.value = Colors.transparent;
       appBarItemContainerOfferRatingsColor.value = Colors.white;
       appBarItemOfferRatingsColor.value = ColorConstants.mainColor;
@@ -198,7 +280,8 @@ class OfferController extends GetxController with StateMixin {
 
 /////////////
   void decrementQuantityOfCartItemOfferDetail({required int index}) {
-    if(cartItemsOfferDetail[index].count>1) {
+    if (cartItemsOfferDetail[index].count > 1 ||
+        cartItemsOfferDetail[index].count == 1) {
       cartItemsOfferDetail[index].count -= 1;
       update();
     }
@@ -240,8 +323,8 @@ class OfferController extends GetxController with StateMixin {
     //     (item) => item.offerOptions.id == newItem.offerOptions.id,
     //   );
 
-      // existingItem.quantity += newItem.quantity;
-      // existingItem.price = (newItem.price * newItem.quantity);
+    // existingItem.quantity += newItem.quantity;
+    // existingItem.price = (newItem.price * newItem.quantity);
     // }
   }
 
@@ -262,24 +345,41 @@ class OfferController extends GetxController with StateMixin {
     });
   }
 
-  void addRateToOffer({required int offerId, required String offerKey, required double rate, required BuildContext context}){
-
-    _offerProvider.addRateToOffer(offerId: offerId, offerKey: offerKey, rate: rate).then((value) {
-      if(value){
-        Utils.snackBar(context: context, msg: translation.rateAddedSuccessfully.tr, background: ColorConstants.greenColor, textColor: Colors.white);
+  void addRateToOffer(
+      {required int offerId,
+      required String offerKey,
+      required double rate,
+      required BuildContext context}) {
+    _offerProvider
+        .addRateToOffer(offerId: offerId, offerKey: offerKey, rate: rate)
+        .then((value) {
+      if (value) {
+        Utils.snackBar(
+            context: context,
+            msg: translation.rateAddedSuccessfully.tr,
+            background: ColorConstants.greenColor,
+            textColor: Colors.white);
         Get.back();
         getOfferRate(offerId: offerId.toString());
       }
     });
-
   }
 
   var isUserRateOffer = false.obs;
-  void checkIfUserRatedBefore({required int offerId, required String offerKey,}){
-    _offerProvider.checkIfUserRatedBefore(offerId: offerId, offerKey: offerKey, ).then((value) {
-      if(value){
+  void checkIfUserRatedBefore({
+    required int offerId,
+    required String offerKey,
+  }) {
+    _offerProvider
+        .checkIfUserRatedBefore(
+      offerId: offerId,
+      offerKey: offerKey,
+    )
+        .then((value) {
+      if (value) {
         isUserRateOffer.value = false;
-      }});
+      }
+    });
   }
 
   void getMerchant({
@@ -306,7 +406,6 @@ class OfferController extends GetxController with StateMixin {
     });
   }
 
-  
   @override
   void dispose() {
     scrollOfferDescriptionController.dispose();

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:test_ecommerce_app/models/cart/cart_item_model/cart_item_model.dart';
@@ -7,10 +6,8 @@ import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
 import 'package:test_ecommerce_app/shared/error/exception.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
 
-class CartRepository{
-
+class CartRepository {
   Future<void> addToCart({required CartModel cartModel}) async {
-
     final body = {
       "creationDate": DateTime.now().toIso8601String(),
       "userMobile": SharedPreferencesClass.getPhoneNumber(),
@@ -18,7 +15,8 @@ class CartRepository{
       "cartDetails": cartModel.items.map((item) => item.toJson()).toList(),
     };
 
-    print('token is ${SharedPreferencesClass.getToken()} and user mobile is ${SharedPreferencesClass.getPhoneNumber()}');
+    print(
+        'token is ${SharedPreferencesClass.getToken()} and user mobile is ${SharedPreferencesClass.getPhoneNumber()}');
 
     final response = await http.post(
       Uri.parse(ApiConstants.addToCart),
@@ -33,14 +31,13 @@ class CartRepository{
       print('Items added to cart successfully');
     } else {
       // Product addition failed, handle the error here
-      print('Error: ${response.statusCode} and response body is ${response.body}');
+      print(
+          'Error: ${response.statusCode} and response body is ${response.body}');
     }
-
   }
 
   // Function to update a cart item's quantity
   Future<void> updateCartItem(String cartItemId, int newQuantity) async {
-
     try {
       final response = await http.get(
         Uri.parse('${ApiConstants.updateCartItem}$cartItemId/$newQuantity'),
@@ -67,7 +64,6 @@ class CartRepository{
   // Function to delete a cart item
   Future<bool> deleteCartItem(String cartItemId) async {
     try {
-
       final response = await http.get(
           Uri.parse('${ApiConstants.deleteCartItem}/${cartItemId.toString()}'),
           headers: {
@@ -91,31 +87,34 @@ class CartRepository{
     }
   }
 
-
   Future<List<CartItemModel>> getAllCart() async {
+    var response = await http.get(
+      Uri.parse(
+          '${ApiConstants.getCartByUserMobile}${SharedPreferencesClass.getPhoneNumber()}'),
+    );
+    if (response.statusCode == 200) {
+      final body = json.decode(response.body);
+      List<CartItemModel> cartItems = [];
+      if (body is List && body.isNotEmpty) {
+        final cartDetails = body[0]['cartDetails'];
 
-      var response = await http.get(Uri.parse('${ApiConstants.getCartByUserMobile}${SharedPreferencesClass.getPhoneNumber()}'),
-      );
-      if (response.statusCode == 200) {
-        final  body = json.decode(response.body);
-        List<CartItemModel> cartItems = [];
-        if (body is List && body.isNotEmpty) {
-          final cartDetails = body[0]['cartDetails'];
-
-          if (cartDetails is List) {
-            cartItems = cartDetails.map((cartItem) => CartItemModel.fromJson(cartItem)).toList();
-          }
+        if (cartDetails is List) {
+          cartItems = cartDetails
+              .map((cartItem) => CartItemModel.fromJson(cartItem))
+              .toList();
         }
-        return cartItems;
-      } else {
-        throw ServerException();
       }
+      return cartItems;
+    } else {
+      throw ServerException();
+    }
   }
 
-  Future<void> clearCart() async{
+  Future<void> clearCart() async {
     try {
       final response = await http.get(
-          Uri.parse('${ApiConstants.deleteSpecificCart}${SharedPreferencesClass.getPhoneNumber()}'),
+          Uri.parse(
+              '${ApiConstants.deleteSpecificCart}${SharedPreferencesClass.getPhoneNumber()}'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ${SharedPreferencesClass.getToken()}',
@@ -165,7 +164,4 @@ class CartRepository{
   //     throw ServerException();
   //   }
   // }
-
-
-
 }

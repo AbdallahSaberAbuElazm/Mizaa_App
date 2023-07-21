@@ -8,78 +8,79 @@ import 'package:http/http.dart' as http;
 import 'package:test_ecommerce_app/models/user/user_service.dart';
 import 'package:test_ecommerce_app/shared/error/exception.dart';
 import 'package:test_ecommerce_app/shared/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
-class UserAuthenticationRepository{
+class UserAuthenticationRepository {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-   var client = http.Client();
-
-   Future<UserService> otpLogin(
+  Future<UserService> otpLogin(
       {required String mobileNo, required String password}) async {
     Map<String, String> requestHeaders = {
       'Content-Type': 'application/json',
     };
 
-    var url =  Uri.parse(ApiConstants.otpLoginUrl);
+    var url = Uri.parse(ApiConstants.otpLoginUrl);
     Map<String, dynamic> bodyData = {};
 
-    var response = await client.post(
+    var response = await http.post(
       url,
       headers: requestHeaders,
-      body: jsonEncode({"mobile": mobileNo, "password": password}),
+      body: jsonEncode({
+        "mobile": mobileNo,
+        "password": password,
+        'token': await messaging.getToken()
+      }),
     );
 
     if (response.statusCode == 200) {
       // bodyData = ( json.decode(response.body) is Map) ? json.decode(response.body) : {};
       bodyData = json.decode(response.body);
     }
-    if(bodyData['isAuthenticated'] == true){
-    return UserService.fromJson(bodyData);}else{
-      return UserService(firstName: "", phoneNumber: "", token: "") ;
-     }
+    if (bodyData['isAuthenticated'] == true) {
+      return UserService.fromJson(bodyData);
+    } else {
+      return UserService(firstName: "", phoneNumber: "", token: "");
+    }
   }
 
-   Future<UserBasicInfo> getUserBasicInfo({required String phoneNumber, required String token}) async {
-     Map<String, String> requestHeaders = {
-       'Content-Type': 'application/json',
-       "Authorization": "Bearer $token",
-     };
+  Future<UserBasicInfo> getUserBasicInfo(
+      {required String phoneNumber, required String token}) async {
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      "Authorization": "Bearer $token",
+    };
 
-     var url =  Uri.parse(ApiConstants.getUserBasicInfo+ phoneNumber.toString());
-     Map<String, dynamic> bodyData = {};
+    var url = Uri.parse(ApiConstants.getUserBasicInfo + phoneNumber.toString());
+    Map<String, dynamic> bodyData = {};
 
-     var response = await client.get(
-       url,
-       headers: requestHeaders,
-     );
+    var response = await http.get(
+      url,
+      headers: requestHeaders,
+    );
 
-     if (response.statusCode == 200) {
-       // bodyData = ( json.decode(response.body) is Map) ? json.decode(response.body) : {};
-       bodyData = json.decode(response.body);
-       print('body data of user basic info $bodyData');
-     }
+    if (response.statusCode == 200) {
+      // bodyData = ( json.decode(response.body) is Map) ? json.decode(response.body) : {};
+      bodyData = json.decode(response.body);
+      print('body data of user basic info $bodyData');
+    }
 
-       return UserBasicInfo.fromJson(bodyData);
+    return UserBasicInfo.fromJson(bodyData);
+  }
 
-
-   }
-
-   Future<Map<String, dynamic>> recoverPasswordOtp({required String password, required String mobile, required String otp})async {
+  Future<Map<String, dynamic>> recoverPasswordOtp(
+      {required String password,
+      required String mobile,
+      required String otp}) async {
     Map<String, String> requestHeaders = {
       'Content-Type': 'application/json',
     };
 
-    var url =  Uri.parse(
-        ApiConstants.recoveryOtpUrl
-    );
+    var url = Uri.parse(ApiConstants.recoveryOtpUrl);
 
-    var response = await client.post(
+    var response = await http.post(
       url,
       headers: requestHeaders,
-      body: jsonEncode({
-        "password": password,
-        'mobile': mobile,
-        "otp": otp
-      }),
+      body: jsonEncode({"password": password, 'mobile': mobile, "otp": otp}),
     );
     Map<String, dynamic> bodyData = {};
     if (response.statusCode == 200) {
@@ -88,35 +89,33 @@ class UserAuthenticationRepository{
     return bodyData;
   }
 
-   Future<Map<String, dynamic>> recoverPassword({required String password, required String mobile})async {
-     Map<String, String> requestHeaders = {
-       'Content-Type': 'application/json',
-     };
+  Future<Map<String, dynamic>> recoverPassword(
+      {required String password, required String mobile}) async {
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+    };
 
-     var url =  Uri.parse(
-         ApiConstants.recoveryUrl + mobile
-     );
+    var url = Uri.parse(ApiConstants.recoveryUrl + mobile);
 
-     var response = await client.post(
-       url,
-       headers: requestHeaders,
-       body: jsonEncode({
-         "password": password,
-         'mobile': mobile,
-       }),
-     );
-     Map<String, dynamic> bodyData = {};
-     if (response.statusCode == 200) {
-       bodyData = json.decode(response.body);
-     }
+    var response = await http.post(
+      url,
+      headers: requestHeaders,
+      body: jsonEncode({
+        "password": password,
+        'mobile': mobile,
+      }),
+    );
+    Map<String, dynamic> bodyData = {};
+    if (response.statusCode == 200) {
+      bodyData = json.decode(response.body);
+    }
 
-     print('recovery response is $bodyData and recovery url is $url');
-     // return UserService.fromJson(bodyData);
-     return bodyData;
-   }
+    print('recovery response is $bodyData and recovery url is $url');
+    // return UserService.fromJson(bodyData);
+    return bodyData;
+  }
 
-
-   Future<Map<String, dynamic>> register({
+  Future<Map<String, dynamic>> register({
     required String mobileNo,
     required String firstName,
     required String password,
@@ -125,11 +124,9 @@ class UserAuthenticationRepository{
       'Content-Type': 'application/json',
     };
 
-    var url =  Uri.parse(
-        ApiConstants.registerUrl
-    );
+    var url = Uri.parse(ApiConstants.registerUrl);
 
-    var response = await client.post(
+    var response = await http.post(
       url,
       headers: requestHeaders,
       body: jsonEncode({
@@ -137,7 +134,7 @@ class UserAuthenticationRepository{
         "mobile": mobileNo,
         "password": password,
         'city': SharedPreferencesClass.getCityId().toString(),
-        'country':SharedPreferencesClass.getCountryId().toString(),
+        'country': SharedPreferencesClass.getCountryId().toString(),
       }),
     );
     Map<String, dynamic> bodyData = {};
@@ -148,53 +145,143 @@ class UserAuthenticationRepository{
     // return loginResponseJson(response.body);
   }
 
-   Future<Map<String, dynamic>> registerOtp({
+  Future<Map<String, dynamic>> registerOtp({
     required String mobileNo,
     required String firstName,
     required String password,
     required String otpCode,
-  }
-      ) async {
+  }) async {
     Map<String, String> requestHeaders = {
       'Content-Type': 'application/json',
     };
 
-    var url = Uri.parse(
-        ApiConstants.verifyOTPUrl+ otpCode
-    );
+    var url = Uri.parse(ApiConstants.verifyOTPUrl + otpCode);
 
-    var response = await client.post(
+    var response = await http.post(
       url,
       headers: requestHeaders,
       body: jsonEncode({
         "mobile": mobileNo,
         "password": password,
         "firstName": firstName,
+        "DeviceToken": await messaging.getToken()
       }),
     );
     Map<String, dynamic> bodyData = {};
     if (response.statusCode == 200) {
       bodyData = json.decode(response.body);
     }
-    if(bodyData['firstName'] !=null){
+    if (bodyData['firstName'] != null) {
       print('first name is ${bodyData['firstName']}');
       return bodyData;
-    }else{
+    } else {
       return {};
     }
 
     // return loginResponseJson(response.body);
   }
 
-  Future<List<CountryModel>> getCountries()async{
+  // add device token
+  Future<String> addDeviceToken() async {
+    var url = Uri.parse(
+        ApiConstants.getDeviceToken + messaging.getToken().toString());
+    Map<String, dynamic> bodyData = {};
+
+    var response = await http.get(
+      url,
+    );
+
+    if (response.statusCode == 200) {
+      bodyData = json.decode(response.body);
+    }
+    return bodyData['message'];
+  }
+
+  //// update user data
+  Future<Map<String, dynamic>> updateUserDate({
+    required String mobileNo,
+    required String name,
+    required String email,
+    required DateTime dateOfBrith,
+    required int gender,
+    required int cityId,
+    required int countryId,
+  }) async {
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      "Authorization": "Bearer ${SharedPreferencesClass.getToken().toString()}",
+    };
+
+    var url = Uri.parse(ApiConstants.updateUserData);
+    var body = {
+      "name": name,
+      "email": email,
+      "mobile": mobileNo,
+      "dob": dateOfBrith.toIso8601String(),
+      "gender": gender,
+      "cityId": cityId,
+      "countryId": countryId,
+    };
+    var response = await http.put(
+      url,
+      body: json.encode(body),
+      headers: requestHeaders,
+    );
+
+    print(
+        'the response status of update user data is ${response.statusCode} ,url is $url , body is $body and token ${SharedPreferencesClass.getToken()}');
+
+    Map<String, dynamic> bodyData = {};
+    if (response.statusCode == 200) {
+      bodyData = json.decode(response.body);
+      return bodyData;
+    } else {
+      return bodyData;
+    }
+  }
+
+  //// reset password
+  Future<Map<String, dynamic>> resetPassword({
+    required String oldPassword,
+    required String newPassword,
+    required String mobile,
+  }) async {
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      "Authorization": "Bearer ${SharedPreferencesClass.getToken()}",
+    };
+
+    var url = Uri.parse(ApiConstants.resetPassword);
+
+    var response = await http.post(
+      url,
+      headers: requestHeaders,
+      body: jsonEncode({
+        "oldPassword": oldPassword,
+        "newPassword": newPassword,
+        "mobile": mobile
+      }),
+    );
+    Map<String, dynamic> bodyData = {};
+    if (response.statusCode == 200) {
+      bodyData = json.decode(response.body);
+    }
+    if (bodyData['isSuccess'] != null) {
+      return bodyData;
+    } else {
+      return {};
+    }
+  }
+
+  Future<List<CountryModel>> getCountries() async {
     Map<String, String> requestHeaders = {
       'Content-Type': 'application/json',
     };
 
-    var url =  Uri.parse(ApiConstants.countryUrl);
-    List<dynamic> bodyData =[];
-    var client = http.Client();
-    var response = await client.get(
+    var url = Uri.parse(ApiConstants.countryUrl);
+    List<dynamic> bodyData = [];
+
+    var response = await http.get(
       url,
       headers: requestHeaders,
     );
@@ -203,43 +290,44 @@ class UserAuthenticationRepository{
       // bodyData = ( json.decode(response.body) is Map) ? json.decode(response.body) : {};
       bodyData = json.decode(response.body);
     }
-      return bodyData.map((body)=> CountryModel.fromJson(body)).toList();
-
+    return bodyData.map((body) => CountryModel.fromJson(body)).toList();
   }
 
-   Future<List<CityModel>> getCites({required String id})async{
-     Map<String, String> requestHeaders = {
-       'Content-Type': 'application/json',
-     };
+  Future<List<CityModel>> getCites({required String id}) async {
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+    };
 
-     var url =  Uri.parse(ApiConstants.cityUrl+ id);
-     List<dynamic> bodyData = [];
-     var client = http.Client();
-     var response = await client.get(
-       url,
-       headers: requestHeaders,
-     );
+    var url = Uri.parse(ApiConstants.cityUrl + id);
+    List<dynamic> bodyData = [];
 
-     if (response.statusCode == 200) {
-       // bodyData = ( json.decode(response.body) is Map) ? json.decode(response.body) : {};
-       bodyData = json.decode(response.body);
-     }
-      return bodyData.map((body)=> CityModel.fromJson(body)).toList();
+    var response = await http.get(
+      url,
+      headers: requestHeaders,
+    );
 
-   }
+    if (response.statusCode == 200) {
+      // bodyData = ( json.decode(response.body) is Map) ? json.decode(response.body) : {};
+      bodyData = json.decode(response.body);
+      return bodyData.map((body) => CityModel.fromJson(body)).toList();
+    } else {
+      return [];
+    }
+  }
 
-   Future<WalletModel> getUserWallet()async{
-     var response = await http.get(Uri.parse('${ApiConstants.userWallet}${SharedPreferencesClass.getPhoneNumber()}'),
-         headers: {
-           'Content-Type': 'application/json',
-           'Authorization': 'Bearer ${SharedPreferencesClass.getToken()}',
-         }
-     );
-     if (response.statusCode == 200) {
-       final  body = json.decode(response.body);
-       return WalletModel.fromJson(body);
-     } else {
-       throw ServerException();
-     }
-   }
+  Future<WalletModel> getUserWallet() async {
+    var response = await http.get(
+        Uri.parse(
+            '${ApiConstants.userWallet}${SharedPreferencesClass.getPhoneNumber()}'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${SharedPreferencesClass.getToken()}',
+        });
+    if (response.statusCode == 200) {
+      final body = json.decode(response.body);
+      return WalletModel.fromJson(body);
+    } else {
+      throw ServerException();
+    }
+  }
 }

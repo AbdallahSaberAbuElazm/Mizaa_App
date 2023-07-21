@@ -15,7 +15,7 @@ class SearchOfferController extends GetxController {
   final isLoadingSearchMerchantList = true.obs;
   final merchantsInSearch = <MerchantModel>[].obs;
 
-   final deleteIconShow= false.obs;
+  final deleteIconShow = false.obs;
 
   var isLoadingOffer = true.obs;
   final offerModel = OfferModel(
@@ -72,26 +72,25 @@ class SearchOfferController extends GetxController {
 
   var isLoadingMerchant = true.obs;
   final companyModel = MerchantDetailModel(
-    id:0,
-     key:'',
-    arName:'',
-    enName:'',
-    description:'',
-    enDescription:'',
-     headerPhoto:'',
-     mobile: '',
-     phone: '',
-     logo:'',
-    facebook:'',
-     twitter:'',
-     whatsapp:'',
-     instegram:'',
-     snapchat:'',
-     tiktok:'',
-     youtube:'',
-     website:'',
-      offers: []
-  ).obs;
+      id: 0,
+      key: '',
+      arName: '',
+      enName: '',
+      description: '',
+      enDescription: '',
+      headerPhoto: '',
+      mobile: '',
+      phone: '',
+      logo: '',
+      facebook: '',
+      twitter: '',
+      whatsapp: '',
+      instegram: '',
+      snapchat: '',
+      tiktok: '',
+      youtube: '',
+      website: '',
+      offers: []).obs;
 
   getOffersAndSellersInCity({required String searchKeyWord}) {
     isLoadingSearchOfferList.value = true;
@@ -123,8 +122,10 @@ class SearchOfferController extends GetxController {
     });
   }
 
-  getOffersInSubCategoryWithCity(
-      {required String searchKeyWord, required int subCatId,}) {
+  getOffersInSubCategoryWithCity({
+    required String searchKeyWord,
+    required int subCatId,
+  }) {
     searchProvider
         .getOffersInSubCategoryWithCity(
             cityId: int.parse(SharedPreferencesClass.getCityId().toString()),
@@ -138,14 +139,18 @@ class SearchOfferController extends GetxController {
     });
   }
 
-  getMerchantsInSearch({required String searchKeyWord,}){
-    isLoadingSearchMerchantList.value =true;
-    searchProvider.getMerchantsInSearch(
+  getMerchantsInSearch({
+    required String searchKeyWord,
+  }) {
+    isLoadingSearchMerchantList.value = true;
+    searchProvider
+        .getMerchantsInSearch(
       cityId: int.parse(SharedPreferencesClass.getCityId().toString()),
       searchKeyWord: searchKeyWord,
-    ).then((searchMerchantModel){
+    )
+        .then((searchMerchantModel) {
       merchantsInSearch.value = searchMerchantModel;
-      isLoadingSearchMerchantList.value =false;
+      isLoadingSearchMerchantList.value = false;
     });
   }
 
@@ -159,7 +164,6 @@ class SearchOfferController extends GetxController {
     });
     return offerModel.value;
   }
-
 
   Future<MerchantDetailModel> getMerchant({
     required String merchantKey,

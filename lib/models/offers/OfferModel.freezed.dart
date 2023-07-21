@@ -72,6 +72,7 @@ mixin _$OfferModel {
   bool? get isSpecial => throw _privateConstructorUsedError;
   double? get offerRate => throw _privateConstructorUsedError;
   dynamic get offerRates => throw _privateConstructorUsedError;
+  bool? get isFavourite => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -134,7 +135,8 @@ abstract class $OfferModelCopyWith<$Res> {
       bool? isMostSales,
       bool? isSpecial,
       double? offerRate,
-      dynamic offerRates});
+      dynamic offerRates,
+      bool? isFavourite});
 }
 
 /// @nodoc
@@ -199,6 +201,7 @@ class _$OfferModelCopyWithImpl<$Res, $Val extends OfferModel>
     Object? isSpecial = freezed,
     Object? offerRate = freezed,
     Object? offerRates = freezed,
+    Object? isFavourite = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -397,6 +400,10 @@ class _$OfferModelCopyWithImpl<$Res, $Val extends OfferModel>
           ? _value.offerRates
           : offerRates // ignore: cast_nullable_to_non_nullable
               as dynamic,
+      isFavourite: freezed == isFavourite
+          ? _value.isFavourite
+          : isFavourite // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 }
@@ -458,7 +465,8 @@ abstract class _$$_OfferModelCopyWith<$Res>
       bool? isMostSales,
       bool? isSpecial,
       double? offerRate,
-      dynamic offerRates});
+      dynamic offerRates,
+      bool? isFavourite});
 }
 
 /// @nodoc
@@ -521,6 +529,7 @@ class __$$_OfferModelCopyWithImpl<$Res>
     Object? isSpecial = freezed,
     Object? offerRate = freezed,
     Object? offerRates = freezed,
+    Object? isFavourite = freezed,
   }) {
     return _then(_$_OfferModel(
       id: freezed == id
@@ -719,6 +728,10 @@ class __$$_OfferModelCopyWithImpl<$Res>
           ? _value.offerRates
           : offerRates // ignore: cast_nullable_to_non_nullable
               as dynamic,
+      isFavourite: freezed == isFavourite
+          ? _value.isFavourite
+          : isFavourite // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -775,7 +788,8 @@ class _$_OfferModel implements _OfferModel {
       this.isMostSales,
       this.isSpecial,
       this.offerRate,
-      this.offerRates})
+      this.offerRates,
+      this.isFavourite = false})
       : _company = company,
         _offerImages = offerImages,
         _offerOptions = offerOptions,
@@ -916,10 +930,13 @@ class _$_OfferModel implements _OfferModel {
   final double? offerRate;
   @override
   final dynamic offerRates;
+  @override
+  @JsonKey()
+  final bool? isFavourite;
 
   @override
   String toString() {
-    return 'OfferModel(id: $id, key: $key, arTitle: $arTitle, enTitle: $enTitle, arSubtitle: $arSubtitle, enSubtitle: $enSubtitle, arDiscrict: $arDiscrict, enDiscrict: $enDiscrict, arAddress: $arAddress, enAddress: $enAddress, arDiscount: $arDiscount, enDiscount: $enDiscount, priceBeforDiscount: $priceBeforDiscount, priceAfterDiscount: $priceAfterDiscount, arFeatures: $arFeatures, enFeatures: $enFeatures, arConditions: $arConditions, enConditions: $enConditions, arOfferDuration: $arOfferDuration, enOfferDuration: $enOfferDuration, companyId: $companyId, arCommunications: $arCommunications, enCommunications: $enCommunications, isSpecialOffer: $isSpecialOffer, arAttentionMessgae: $arAttentionMessgae, enAttentionMessgae: $enAttentionMessgae, creationDate: $creationDate, expireDate: $expireDate, cityId: $cityId, city: $city, mainImage: $mainImage, image: $image, companyLogoImage: $companyLogoImage, latitude: $latitude, longitude: $longitude, subCategoryId: $subCategoryId, salesCount: $salesCount, company: $company, offerImages: $offerImages, offerOptions: $offerOptions, subCategory: $subCategory, userOfferActionHistories: $userOfferActionHistories, isShowInHomePage: $isShowInHomePage, isTodayOffer: $isTodayOffer, isNewest: $isNewest, isMostSales: $isMostSales, isSpecial: $isSpecial, offerRate: $offerRate, offerRates: $offerRates)';
+    return 'OfferModel(id: $id, key: $key, arTitle: $arTitle, enTitle: $enTitle, arSubtitle: $arSubtitle, enSubtitle: $enSubtitle, arDiscrict: $arDiscrict, enDiscrict: $enDiscrict, arAddress: $arAddress, enAddress: $enAddress, arDiscount: $arDiscount, enDiscount: $enDiscount, priceBeforDiscount: $priceBeforDiscount, priceAfterDiscount: $priceAfterDiscount, arFeatures: $arFeatures, enFeatures: $enFeatures, arConditions: $arConditions, enConditions: $enConditions, arOfferDuration: $arOfferDuration, enOfferDuration: $enOfferDuration, companyId: $companyId, arCommunications: $arCommunications, enCommunications: $enCommunications, isSpecialOffer: $isSpecialOffer, arAttentionMessgae: $arAttentionMessgae, enAttentionMessgae: $enAttentionMessgae, creationDate: $creationDate, expireDate: $expireDate, cityId: $cityId, city: $city, mainImage: $mainImage, image: $image, companyLogoImage: $companyLogoImage, latitude: $latitude, longitude: $longitude, subCategoryId: $subCategoryId, salesCount: $salesCount, company: $company, offerImages: $offerImages, offerOptions: $offerOptions, subCategory: $subCategory, userOfferActionHistories: $userOfferActionHistories, isShowInHomePage: $isShowInHomePage, isTodayOffer: $isTodayOffer, isNewest: $isNewest, isMostSales: $isMostSales, isSpecial: $isSpecial, offerRate: $offerRate, offerRates: $offerRates, isFavourite: $isFavourite)';
   }
 
   @override
@@ -1014,7 +1031,9 @@ class _$_OfferModel implements _OfferModel {
             (identical(other.offerRate, offerRate) ||
                 other.offerRate == offerRate) &&
             const DeepCollectionEquality()
-                .equals(other.offerRates, offerRates));
+                .equals(other.offerRates, offerRates) &&
+            (identical(other.isFavourite, isFavourite) ||
+                other.isFavourite == isFavourite));
   }
 
   @JsonKey(ignore: true)
@@ -1069,7 +1088,8 @@ class _$_OfferModel implements _OfferModel {
         isMostSales,
         isSpecial,
         offerRate,
-        const DeepCollectionEquality().hash(offerRates)
+        const DeepCollectionEquality().hash(offerRates),
+        isFavourite
       ]);
 
   @JsonKey(ignore: true)
@@ -1136,7 +1156,8 @@ abstract class _OfferModel implements OfferModel {
       final bool? isMostSales,
       final bool? isSpecial,
       final double? offerRate,
-      final dynamic offerRates}) = _$_OfferModel;
+      final dynamic offerRates,
+      final bool? isFavourite}) = _$_OfferModel;
 
   factory _OfferModel.fromJson(Map<String, dynamic> json) =
       _$_OfferModel.fromJson;
@@ -1239,6 +1260,8 @@ abstract class _OfferModel implements OfferModel {
   double? get offerRate;
   @override
   dynamic get offerRates;
+  @override
+  bool? get isFavourite;
   @override
   @JsonKey(ignore: true)
   _$$_OfferModelCopyWith<_$_OfferModel> get copyWith =>

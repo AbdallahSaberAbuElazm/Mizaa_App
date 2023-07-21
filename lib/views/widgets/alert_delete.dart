@@ -38,13 +38,13 @@ class AlertDelete extends StatelessWidget {
         _textBtn(
             textBtn: translation.deleteText.tr,
             onPressed: onPressedOkBtn,
-            textColor:  Get.isDarkMode ? Colors.white : ColorConstants.black0),
+            textColor: Get.isDarkMode ? Colors.white : ColorConstants.black0),
         _textBtn(
             textBtn: translation.cancelText.tr,
-            onPressed: (){
+            onPressed: () {
               Get.back();
             },
-            textColor:ColorConstants.mainColor),
+            textColor: ColorConstants.mainColor),
       ],
     );
   }
@@ -54,6 +54,9 @@ class AlertDelete extends StatelessWidget {
       required dynamic onPressed,
       required Color textColor}) {
     return TextButton(
+        style: ButtonStyle(
+            overlayColor: MaterialStateProperty.all(
+                ColorConstants.backgroundContainerLightColor)),
         onPressed: onPressed,
         child: Text(
           textBtn,

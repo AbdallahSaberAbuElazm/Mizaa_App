@@ -65,6 +65,7 @@ _$_OfferModel _$$_OfferModelFromJson(Map<String, dynamic> json) =>
       isSpecial: json['isSpecial'] as bool?,
       offerRate: (json['offerRate'] as num?)?.toDouble(),
       offerRates: json['offerRates'],
+      isFavourite: json['isFavourite'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_OfferModelToJson(_$_OfferModel instance) =>
@@ -118,4 +119,5 @@ Map<String, dynamic> _$$_OfferModelToJson(_$_OfferModel instance) =>
       'isSpecial': instance.isSpecial,
       'offerRate': instance.offerRate,
       'offerRates': instance.offerRates,
+      'isFavourite': instance.isFavourite,
     };

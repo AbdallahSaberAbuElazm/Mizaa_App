@@ -5,5 +5,4 @@ class ProductProvider {
   final ProductRepository _productRepository;
 
   ProductProvider(this._productRepository);
-
 }

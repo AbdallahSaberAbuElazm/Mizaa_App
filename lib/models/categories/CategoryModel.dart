@@ -16,10 +16,7 @@ class CategoryModel with _$CategoryModel {
     String? image,
     required int order,
     List<SubCategoriesModel>? subCategories,
-
   }) = _CategoryModel;
 
   factory CategoryModel.fromJson(JSON json) => _$CategoryModelFromJson(json);
-
-
 }

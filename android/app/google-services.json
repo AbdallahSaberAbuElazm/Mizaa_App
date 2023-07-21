@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "447834256093",
+    "project_id": "mizaa-b6aa4",
+    "storage_bucket": "mizaa-b6aa4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:447834256093:android:e9a7e70bc289e9b709a134",
+        "android_client_info": {
+          "package_name": "com.example.mizaa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "447834256093-282ksgtt6dm2pci7ura808oj4v0hh0um.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mizaa",
+            "certificate_hash": "3c0e11c487a3cabf7cff7c49e80e4833b578637a"
+          }
+        },
+        {
+          "client_id": "447834256093-djvfaqpf4nid18smdg81mpvta8onfs3u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_m2bbvv1diVwvolZPIpAZoI1d5LrXP0c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "447834256093-djvfaqpf4nid18smdg81mpvta8onfs3u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

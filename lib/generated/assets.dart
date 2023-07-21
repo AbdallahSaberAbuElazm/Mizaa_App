@@ -2,6 +2,7 @@
 class Assets {
   Assets._();
 
+  static const String assetsImagesPerson = 'assets/images/person.png';
   static const String darkHomePage = 'assets/screenshots/dark/home-page.png';
   static const String darkSelectTheme = 'assets/screenshots/dark/select-theme.png';
   static const String darkUserTab = 'assets/screenshots/dark/user-tab.png';
@@ -22,23 +23,29 @@ class Assets {
   static const String imagesEntertainment = 'assets/images/entertainment.png';
   static const String imagesFacebook = 'assets/images/facebook.png';
   static const String imagesFilter = 'assets/images/filter.png';
+  static const String imagesGooglePlay = 'assets/images/google_play.png';
   static const String imagesLocation = 'assets/images/location.png';
   static const String imagesLocationCategory = 'assets/images/location_category.png';
   static const String imagesLogo = 'assets/images/Logo.png';
   static const String imagesLogoShimmer = 'assets/images/logo_shimmer.png';
   static const String imagesMap = 'assets/images/map.png';
+  static const String imagesMastercard = 'assets/images/mastercard.png';
+  static const String imagesMeeza = 'assets/images/meeza.png';
   static const String imagesMenuEmpty = 'assets/images/menu_empty.png';
   static const String imagesMerchantEmpty = 'assets/images/merchant_empty.png';
   static const String imagesMerchantIcon = 'assets/images/merchant_icon.png';
-  static const String imagestest_ecommerce_appLogo = 'assets/images/test_ecommerce_appLogo.png';
+  static const String imagesMizaaLogo = 'assets/images/mizaaLogo.png';
   static const String imagesMizaaLogoDark = 'assets/images/mizaa_logo_dark.png';
   static const String imagesOfferEmpty = 'assets/images/offer_empty.png';
   static const String imagesOfferIcon = 'assets/images/offer_icon.png';
   static const String imagesOutings = 'assets/images/outings.png';
+  static const String imagesPerson = 'assets/images/person.jpg';
+  static const String imagesPersonProfile = 'assets/images/person_profile.png';
   static const String imagesRatingsEmpty = 'assets/images/ratings_empty.png';
   static const String imagesSearchEmpty = 'assets/images/search_empty.png';
   static const String imagesServices = 'assets/images/services.png';
   static const String imagesSplashScreen = 'assets/images/splash_screen.png';
+  static const String imagesVisa = 'assets/images/visa.png';
   static const String imagesWallet = 'assets/images/wallet.png';
   static const String imagesWebsite = 'assets/images/website.png';
   static const String screenshotsHomePage = 'assets/screenshots/home-page.png';

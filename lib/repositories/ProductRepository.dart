@@ -5,5 +5,4 @@ class ProductRepository {
   final ApiService _apiService;
 
   ProductRepository(this._apiService);
-
 }

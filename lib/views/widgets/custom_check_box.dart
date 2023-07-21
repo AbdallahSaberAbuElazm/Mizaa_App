@@ -5,29 +5,33 @@ import 'package:test_ecommerce_app/views/widgets/custom_text_btn.dart';
 
 class CustomCheckBox extends StatefulWidget {
   final String text;
-   CustomCheckBox({Key? key,required this.text, }) : super(key: key);
+  CustomCheckBox({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
 
   @override
   State<CustomCheckBox> createState() => _CustomCheckBoxState();
 }
 
 class _CustomCheckBoxState extends State<CustomCheckBox> {
-
-  String checkedData ='';
+  String checkedData = '';
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-       setState(() {
-         if(checkedData != widget.text){
+        setState(() {
+          if (checkedData != widget.text) {
             checkedData = widget.text;
-            Controllers.userAuthenticationController.updateIsChecked(isCheckedValue:  true);
-         }else{
-           checkedData ='';
-           Controllers.userAuthenticationController.updateIsChecked(isCheckedValue:  false);
-         }
-       });
+            Controllers.userAuthenticationController
+                .updateIsChecked(isCheckedValue: true);
+          } else {
+            checkedData = '';
+            Controllers.userAuthenticationController
+                .updateIsChecked(isCheckedValue: false);
+          }
+        });
       },
       child: SizedBox(
         width: 135,
@@ -45,27 +49,24 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
                     color: ColorConstants.mainColor,
                     width: 1,
                   )),
-              child:
-              (checkedData == widget.text)
+              child: (checkedData == widget.text)
                   ? const Center(
-                  child: Icon(
-                    Icons.done,
-                    color: ColorConstants.mainColor,
-                    size: 20,
-                  ))
+                      child: Icon(
+                      Icons.done,
+                      color: ColorConstants.mainColor,
+                      size: 20,
+                    ))
                   : const SizedBox(),
             ),
             const SizedBox(
               width: 20,
             ),
             Flexible(
-                child:
-                Text(
-                  widget.text,
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-      ),
-
+              child: Text(
+                widget.text,
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+            ),
           ],
         ),
       ),
