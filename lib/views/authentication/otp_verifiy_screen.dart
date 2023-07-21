@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
-as translation;
+    as translation;
 
 class OTPVerifyScreen extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -43,144 +43,158 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Utils.setSystemOverlayForAuthentication();
     return SafeArea(
-      child:  Scaffold(
-              backgroundColor:Get.isDarkMode? ColorConstants.darkMainColor:   Colors.white,
-              body: Form(
-                  key: _fomrKey,
-                  child: Container(
-                      alignment: Alignment.topRight,
-                      margin:
-                          const EdgeInsets.only(top: 35, right: 14, left: 14),
-                      child: ListView(
-                          // crossAxisAlignment: CrossAxisAlignment.start,
+      child: Scaffold(
+          backgroundColor:
+              Get.isDarkMode ? ColorConstants.darkMainColor : Colors.white,
+          body: Form(
+              key: _fomrKey,
+              child: Container(
+                  alignment: Alignment.topRight,
+                  margin: const EdgeInsets.symmetric(horizontal: 12),
+                  child: ListView(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.039,
+                        ),
+                        Utils.buildLogo(),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height / 40),
+                        BuildIntroText(
+                          headerText: translation.confirmPhoneNumber.tr,
+                        ),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height / 23),
+                        Text(
+                          translation.typeCodeReceived.tr,
+                          style: TextStyle(
+                              fontSize: 15,
+                              color:
+                                  Get.isDarkMode ? Colors.white : Colors.black,
+                              fontFamily: 'Noto Kufi Arabic'),
+                        ),
+                        Row(
                           children: [
-                            Utils.buildLogo(),
-                            const SizedBox(height: 22),
-                             BuildIntroText(
-                              headerText: translation.confirmPhoneNumber.tr,
-                            ),
-                            const SizedBox(height: 40),
-                             Text(
-                               translation.typeCodeReceived.tr,
-                              style:  TextStyle(
-                                  fontSize: 15,
-                                  color: Get.isDarkMode? Colors.white:Colors.black,
+                            Text(
+                              '${widget.data['mobileNo']}',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Get.isDarkMode
+                                      ? Colors.white
+                                      : Colors.black,
                                   fontFamily: 'Noto Kufi Arabic'),
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  '${widget.data['mobileNo']}',
-                                  style:  TextStyle(
-                                      fontSize: 18,
-                                      color: Get.isDarkMode? Colors.white:Colors.black,
-                                      fontFamily: 'Noto Kufi Arabic'),
-                                ),
-                                TextButton(
-                                    onPressed: () {
-                                      if(widget.routeName == 'recover'){
-                                        Get.offNamed('/recovery');
-                                      }else if (widget.routeName == 'register'){
-                                        Get.offNamed('/register');
+                            TextButton(
+                                style: ButtonStyle(
+                                    overlayColor: MaterialStateProperty.all(
+                                        ColorConstants
+                                            .backgroundContainerLightColor)),
+                                onPressed: () {
+                                  if (widget.routeName == 'recover') {
+                                    Get.offNamed('/recovery');
+                                  } else if (widget.routeName == 'register') {
+                                    Get.offNamed('/register');
+                                  }
+                                },
+                                child: Text(
+                                  translation.editText.tr,
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      color: ColorConstants.mainColor),
+                                )),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 14,
+                        ),
+                        PinCodeTextField(
+                          length: 6,
+                          obscureText: false,
+                          autoFocus: true,
+                          cursorColor:
+                              Get.isDarkMode ? Colors.white : Colors.black,
+                          keyboardType: TextInputType.number,
+                          animationType: AnimationType.scale,
+                          pinTheme: PinTheme(
+                            shape: PinCodeFieldShape.box,
+                            borderRadius: BorderRadius.circular(8),
+                            fieldHeight: 60,
+                            fieldWidth: 50,
+                            activeFillColor: ColorConstants.btnBackgroundGrey,
+                            activeColor: ColorConstants.btnBackgroundGrey,
+                            inactiveColor: ColorConstants.btnBackgroundGrey,
+                            inactiveFillColor: Colors.white,
+                            selectedColor: ColorConstants.btnBackgroundGrey,
+                            selectedFillColor: Colors.white,
+                          ),
+                          animationDuration: const Duration(milliseconds: 300),
+                          // backgroundColor: Colors.blue.shade50,
+                          enableActiveFill: true,
+                          // errorAnimationController: errorController,
+                          // controller: textEditingController,
+                          onCompleted: (v) {
+                            userAuthenticationController.otpController.value =
+                                v;
+                            print("Completed $v");
+                          },
+                          onChanged: (value) {
+                            userAuthenticationController.otpController.value =
+                                value;
+                          },
+                          appContext: context,
+                        ),
+                        const SizedBox(height: 30),
+                        Obx(
+                          () => CustomButton(
+                              btnText: translation.activateConfirmation.tr,
+                              textColor: Colors.white,
+                              textSize: 17,
+                              btnBackgroundColor: ColorConstants.mainColor,
+                              btnOnpressed: (userAuthenticationController
+                                          .otpController.value.length ==
+                                      6)
+                                  ? () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) => const Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                color: ColorConstants.mainColor,
+                                              )));
+                                      if (widget.routeName == 'recover') {
+                                        userAuthenticationController
+                                            .recoverPasswordOtp(
+                                                password:
+                                                    widget.data['password'],
+                                                mobileNo:
+                                                    widget.data['mobileNo'],
+                                                otp:
+                                                    userAuthenticationController
+                                                        .otpController.value,
+                                                context: context);
+                                      } else if (widget.routeName ==
+                                          'register') {
+                                        userAuthenticationController
+                                            .registerOtp(
+                                                mobileNo:
+                                                    widget.data['mobileNo'],
+                                                firstName:
+                                                    widget.data['firstName'],
+                                                password:
+                                                    widget.data['password'],
+                                                context: context,
+                                                otpCode:
+                                                    userAuthenticationController
+                                                        .otpController.value);
                                       }
-
-                                    },
-                                    child:  Text(
-                                      translation.editText.tr,
-                                      style: const TextStyle(
-                                          fontSize: 15,
-                                          color: ColorConstants.mainColor),
-                                    )),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 14,
-                            ),
-                            PinCodeTextField(
-                              length: 6,
-                              obscureText: false,
-                              autoFocus: true,
-                              cursorColor:Get.isDarkMode? Colors.white: Colors.black,
-                              keyboardType: TextInputType.number,
-                              animationType: AnimationType.scale,
-                              pinTheme: PinTheme(
-                                shape: PinCodeFieldShape.box,
-                                borderRadius: BorderRadius.circular(8),
-                                fieldHeight: 60,
-                                fieldWidth: 50,
-                                activeFillColor:
-                                    ColorConstants.btnBackgroundGrey,
-                                activeColor: ColorConstants.btnBackgroundGrey,
-                                inactiveColor: ColorConstants.btnBackgroundGrey,
-                                inactiveFillColor: Colors.white,
-                                selectedColor: ColorConstants.btnBackgroundGrey,
-                                selectedFillColor: Colors.white,
-                              ),
-                              animationDuration:
-                                  const Duration(milliseconds: 300),
-                              // backgroundColor: Colors.blue.shade50,
-                              enableActiveFill: true,
-                              // errorAnimationController: errorController,
-                              // controller: textEditingController,
-                              onCompleted: (v) {
-                                  userAuthenticationController
-                                      .otpController.value = v;
-                                print("Completed $v");
-                              },
-                              onChanged: (value) {
-                                userAuthenticationController
-                                    .otpController.value = value;
-                              },
-                              appContext: context,
-                            ),
-                            const SizedBox(height: 30),
-                            Obx(
-                              () => CustomButton(
-                                  btnText:translation.activateConfirmation.tr,
-                                  textColor: Colors.white,
-                                  textSize: 17,
-                                  btnBackgroundColor: ColorConstants.mainColor,
-                                  btnOnpressed: (userAuthenticationController
-                                              .otpController.value.length ==
-                                          6)
-                                      ? () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  const Center(
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                    color: ColorConstants
-                                                        .mainColor,
-                                                  )));
-                                          if (widget.routeName == 'recover') {
-                                            userAuthenticationController
-                                                .recoverPasswordOtp(
-                                                    password:
-                                                        widget.data['password'],
-                                                    mobileNo:
-                                                        widget.data['mobileNo'],
-                                                    otp: userAuthenticationController.otpController.value,
-                                                    context: context);
-                                          } else if (widget.routeName ==
-                                              'register') {
-                                            userAuthenticationController
-                                                .registerOtp(
-                                                    mobileNo:
-                                                        widget.data['mobileNo'],
-                                                    firstName: widget
-                                                        .data['firstName'],
-                                                    password:
-                                                        widget.data['password'],context: context,
-                                                    otpCode: userAuthenticationController.otpController.value);
-                                          }
-                                        }
-                                      : null),
-                            ),
-                            const SizedBox(height: 30),
-                            // countDown(),
-                          ])))),
+                                    }
+                                  : null),
+                        ),
+                        const SizedBox(height: 30),
+                        // countDown(),
+                      ])))),
     );
   }
 
@@ -197,7 +211,7 @@ class _OTPVerifyScreenState extends State<OTPVerifyScreen> {
               },
               child: Center(
                   child: Text(
-                   translation.resendCode.tr,
+                translation.resendCode.tr,
                 style: Theme.of(context).textTheme.subtitle1,
               )));
         } else {
