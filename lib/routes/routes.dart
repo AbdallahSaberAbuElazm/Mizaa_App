@@ -1,21 +1,21 @@
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/controllers/cart/cart_binding.dart';
-import 'package:test_ecommerce_app/controllers/home/HomeBinding.dart';
-import 'package:test_ecommerce_app/controllers/offers/OfferBinding.dart';
-import 'package:test_ecommerce_app/controllers/order/order_binding.dart';
-import 'package:test_ecommerce_app/views/authentication/otp_login_screen.dart';
-import 'package:test_ecommerce_app/views/authentication/recover_password.dart';
-import 'package:test_ecommerce_app/views/authentication/register.dart';
-import 'package:test_ecommerce_app/views/authentication/splash_screen.dart';
-import 'package:test_ecommerce_app/views/authentication/user_location_screen.dart';
-import 'package:test_ecommerce_app/views/home/HomePage.dart';
-import 'package:test_ecommerce_app/controllers/user/user_authentication_binding.dart';
-import 'package:test_ecommerce_app/controllers/favourite/favourite_binding.dart';
-import 'package:test_ecommerce_app/views/home/tabs/offer_tab.dart';
-import 'package:test_ecommerce_app/views/merchant/merchant_branches.dart';
-import 'package:test_ecommerce_app/views/offer/offer_detail.dart';
-import 'package:test_ecommerce_app/controllers/companies/company_binding.dart';
-import 'package:test_ecommerce_app/controllers/offers/search_binding.dart';
+import 'package:mizaa/controllers/cart/cart_binding.dart';
+import 'package:mizaa/controllers/home/HomeBinding.dart';
+import 'package:mizaa/controllers/offers/OfferBinding.dart';
+import 'package:mizaa/controllers/order/order_binding.dart';
+import 'package:mizaa/views/authentication/otp_login_screen.dart';
+import 'package:mizaa/views/authentication/recover_password.dart';
+import 'package:mizaa/views/authentication/register.dart';
+import 'package:mizaa/views/authentication/splash_screen.dart';
+import 'package:mizaa/views/authentication/user_location_screen.dart';
+import 'package:mizaa/views/home/HomePage.dart';
+import 'package:mizaa/controllers/user/user_authentication_binding.dart';
+import 'package:mizaa/controllers/favourite/favourite_binding.dart';
+import 'package:mizaa/views/home/tabs/offer_tab.dart';
+import 'package:mizaa/views/merchant/merchant_branches.dart';
+import 'package:mizaa/views/offer/offer_detail.dart';
+import 'package:mizaa/controllers/companies/company_binding.dart';
+import 'package:mizaa/controllers/offers/search_binding.dart';
 
 class Routes {
   static const INITIAL = '/splash';

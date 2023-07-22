@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/shared/language_translation/ar.dart';
-import 'package:test_ecommerce_app/shared/language_translation/En.dart';
+import 'package:mizaa/shared/language_translation/ar.dart';
+import 'package:mizaa/shared/language_translation/En.dart';
 
 class Messages extends Translations {
   @override

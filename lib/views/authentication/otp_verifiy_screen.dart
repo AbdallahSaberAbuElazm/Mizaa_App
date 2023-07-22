@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:test_ecommerce_app/controllers/user/user_authentication_controller.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/utils.dart';
-import 'package:test_ecommerce_app/views/widgets/build_intro_text.dart';
-import 'package:test_ecommerce_app/views/widgets/custom_button.dart';
+import 'package:mizaa/controllers/user/user_authentication_controller.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/utils.dart';
+import 'package:mizaa/views/widgets/build_intro_text.dart';
+import 'package:mizaa/views/widgets/custom_button.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:get/get.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
-import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+import 'package:mizaa/shared/language_translation/translation_keys.dart'
     as translation;
 
 class OTPVerifyScreen extends StatefulWidget {

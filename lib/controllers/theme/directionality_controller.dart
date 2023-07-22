@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:test_ecommerce_app/models/location/city/CityModel.dart';
-import 'package:test_ecommerce_app/models/location/country/CountryModel.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
+import 'package:mizaa/models/location/city/CityModel.dart';
+import 'package:mizaa/models/location/country/CountryModel.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
 
 class DirectionalityController extends GetxController {
   final direction = TextDirection.rtl.obs;

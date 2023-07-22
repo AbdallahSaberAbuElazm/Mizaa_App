@@ -1,10 +1,10 @@
-import 'package:test_ecommerce_app/controllers/home/HomeController.dart';
-import 'package:test_ecommerce_app/providers/CategoryProvider.dart';
-import 'package:test_ecommerce_app/providers/OfferProvider.dart';
-import 'package:test_ecommerce_app/providers/ProductProvider.dart';
-import 'package:test_ecommerce_app/repositories/CategoryRepository.dart';
-import 'package:test_ecommerce_app/repositories/OfferRepository.dart';
-import 'package:test_ecommerce_app/repositories/ProductRepository.dart';
+import 'package:mizaa/controllers/home/HomeController.dart';
+import 'package:mizaa/providers/CategoryProvider.dart';
+import 'package:mizaa/providers/OfferProvider.dart';
+import 'package:mizaa/providers/ProductProvider.dart';
+import 'package:mizaa/repositories/CategoryRepository.dart';
+import 'package:mizaa/repositories/OfferRepository.dart';
+import 'package:mizaa/repositories/ProductRepository.dart';
 import 'package:get/get.dart';
 
 class HomeBinding implements Bindings {

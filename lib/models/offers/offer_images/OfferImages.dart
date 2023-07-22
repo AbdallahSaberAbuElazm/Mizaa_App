@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:test_ecommerce_app/shared/typedef.dart';
+import 'package:mizaa/shared/typedef.dart';
 
 part 'OfferImages.freezed.dart';
 part 'OfferImages.g.dart';

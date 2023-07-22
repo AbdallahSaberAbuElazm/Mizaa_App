@@ -2,18 +2,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/controllers/home/HomeController.dart';
-import 'package:test_ecommerce_app/models/categories/sub_categories/SubCategoriesModel.dart';
-import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
-import 'package:test_ecommerce_app/shared/utils.dart';
-import 'package:test_ecommerce_app/views/cart/cart_screen.dart';
-import 'package:test_ecommerce_app/views/offer/OfferListForSubCategoryPage.dart';
-import 'package:test_ecommerce_app/views/widgets/chatting_btn.dart';
-import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+import 'package:mizaa/controllers/cart/cart_controller.dart';
+import 'package:mizaa/controllers/controllers.dart';
+import 'package:mizaa/controllers/home/HomeController.dart';
+import 'package:mizaa/models/categories/sub_categories/SubCategoriesModel.dart';
+import 'package:mizaa/services/networking/ApiConstants.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
+import 'package:mizaa/shared/utils.dart';
+import 'package:mizaa/views/cart/cart_screen.dart';
+import 'package:mizaa/views/offer/OfferListForSubCategoryPage.dart';
+import 'package:mizaa/views/widgets/chatting_btn.dart';
+import 'package:mizaa/shared/language_translation/translation_keys.dart'
     as translation;
 
 class SubCategoryPage extends StatefulWidget {

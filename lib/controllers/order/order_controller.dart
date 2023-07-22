@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/models/cart/validate_order_data/order_data_model.dart';
-import 'package:test_ecommerce_app/models/order/order_model.dart';
-import 'package:test_ecommerce_app/providers/order_provider.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/utils.dart';
-import 'package:test_ecommerce_app/views/home/HomePage.dart';
-import 'package:test_ecommerce_app/views/home/tabs/order_tab.dart';
-import 'package:test_ecommerce_app/views/widgets/custom_button.dart';
-import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+import 'package:mizaa/controllers/controllers.dart';
+import 'package:mizaa/models/cart/validate_order_data/order_data_model.dart';
+import 'package:mizaa/models/order/order_model.dart';
+import 'package:mizaa/providers/order_provider.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/utils.dart';
+import 'package:mizaa/views/home/HomePage.dart';
+import 'package:mizaa/views/home/tabs/order_tab.dart';
+import 'package:mizaa/views/widgets/custom_button.dart';
+import 'package:mizaa/shared/language_translation/translation_keys.dart'
     as translation;
 
 class OrderController extends GetxController {

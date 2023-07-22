@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:test_ecommerce_app/models/companies/CompanyModel.dart';
+import 'package:mizaa/models/companies/CompanyModel.dart';
 
 class CompanyModelAdapter extends TypeAdapter<CompanyModel> {
   @override

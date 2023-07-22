@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+import 'package:mizaa/controllers/controllers.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/language_translation/translation_keys.dart'
     as translation;
 
 class WalletButtons extends StatefulWidget {

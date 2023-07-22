@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:test_ecommerce_app/models/offers/offer_options/OfferOptions.dart';
+import 'package:mizaa/models/offers/offer_options/OfferOptions.dart';
 
 class OfferOptionsAdapter extends TypeAdapter<OfferOptions> {
   @override

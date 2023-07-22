@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/controllers/user/user_authentication_controller.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/utils.dart';
-import 'package:test_ecommerce_app/views/widgets/build_intro_text.dart';
-import 'package:test_ecommerce_app/views/widgets/custom_button.dart';
-import 'package:test_ecommerce_app/views/widgets/custom_password_form_field.dart';
-import 'package:test_ecommerce_app/views/widgets/custom_text_btn.dart';
-import 'package:test_ecommerce_app/views/widgets/custom_text_form_field.dart';
+import 'package:mizaa/controllers/controllers.dart';
+import 'package:mizaa/controllers/user/user_authentication_controller.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/utils.dart';
+import 'package:mizaa/views/widgets/build_intro_text.dart';
+import 'package:mizaa/views/widgets/custom_button.dart';
+import 'package:mizaa/views/widgets/custom_password_form_field.dart';
+import 'package:mizaa/views/widgets/custom_text_btn.dart';
+import 'package:mizaa/views/widgets/custom_text_form_field.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/views/widgets/custom_check_box.dart';
-import 'package:test_ecommerce_app/views/widgets/phone_number_field.dart';
-import 'package:test_ecommerce_app/views/widgets/custom_confirm_password_field.dart';
-import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+import 'package:mizaa/views/widgets/custom_check_box.dart';
+import 'package:mizaa/views/widgets/phone_number_field.dart';
+import 'package:mizaa/views/widgets/custom_confirm_password_field.dart';
+import 'package:mizaa/shared/language_translation/translation_keys.dart'
     as translation;
-import 'package:test_ecommerce_app/views/widgets/arrow_back.dart';
+import 'package:mizaa/views/widgets/arrow_back.dart';
 
 class Register extends GetView<UserAuthenticationController> {
   final _formKey = GlobalKey<FormState>();

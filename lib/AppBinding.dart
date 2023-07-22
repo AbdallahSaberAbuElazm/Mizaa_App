@@ -1,9 +1,9 @@
-import 'package:test_ecommerce_app/controllers/theme/directionality_controller.dart';
-import 'package:test_ecommerce_app/controllers/user/user_authentication_controller.dart';
-import 'package:test_ecommerce_app/providers/user_authentication_provider.dart';
-import 'package:test_ecommerce_app/repositories/user_authentication_repository.dart';
-import 'package:test_ecommerce_app/services/networking/ApiService.dart';
-import 'package:test_ecommerce_app/services/networking/BaseProvider.dart';
+import 'package:mizaa/controllers/theme/directionality_controller.dart';
+import 'package:mizaa/controllers/user/user_authentication_controller.dart';
+import 'package:mizaa/providers/user_authentication_provider.dart';
+import 'package:mizaa/repositories/user_authentication_repository.dart';
+import 'package:mizaa/services/networking/ApiService.dart';
+import 'package:mizaa/services/networking/BaseProvider.dart';
 import 'package:get/instance_manager.dart';
 
 class AppBinding extends Bindings {

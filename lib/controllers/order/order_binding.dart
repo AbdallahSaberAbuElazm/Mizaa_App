@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/controllers/order/order_controller.dart';
-import 'package:test_ecommerce_app/providers/order_provider.dart';
-import 'package:test_ecommerce_app/repositories/order_repository.dart';
+import 'package:mizaa/controllers/order/order_controller.dart';
+import 'package:mizaa/providers/order_provider.dart';
+import 'package:mizaa/repositories/order_repository.dart';
 
 class OrderBinding extends Bindings {
   @override

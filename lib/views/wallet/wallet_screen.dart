@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/controllers/user/user_authentication_controller.dart';
-import 'package:test_ecommerce_app/models/user/wallet/wallet_history/wallet_history_model.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+import 'package:mizaa/controllers/controllers.dart';
+import 'package:mizaa/controllers/user/user_authentication_controller.dart';
+import 'package:mizaa/models/user/wallet/wallet_history/wallet_history_model.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/language_translation/translation_keys.dart'
     as translation;
-import 'package:test_ecommerce_app/shared/utils.dart';
-import 'package:test_ecommerce_app/views/widgets/chatting_btn.dart';
-import 'package:test_ecommerce_app/views/widgets/custom_texts.dart';
+import 'package:mizaa/shared/utils.dart';
+import 'package:mizaa/views/widgets/chatting_btn.dart';
+import 'package:mizaa/views/widgets/custom_texts.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:test_ecommerce_app/views/wallet/wallet_buttons.dart';
+import 'package:mizaa/views/wallet/wallet_buttons.dart';
 
 enum TypeOfMoney { income, spending }
 

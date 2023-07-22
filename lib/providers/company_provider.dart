@@ -1,7 +1,7 @@
-import 'package:test_ecommerce_app/models/companies/CompanyModel.dart';
-import 'package:test_ecommerce_app/models/companies/company_branches/CompanyBranchesModel.dart';
-import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
-import 'package:test_ecommerce_app/repositories/company_repository.dart';
+import 'package:mizaa/models/companies/CompanyModel.dart';
+import 'package:mizaa/models/companies/company_branches/CompanyBranchesModel.dart';
+import 'package:mizaa/models/offers/OfferModel.dart';
+import 'package:mizaa/repositories/company_repository.dart';
 
 class CompanyProvider {
   CompanyRepository _companyRepository;

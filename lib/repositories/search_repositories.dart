@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:test_ecommerce_app/models/merchant/merchant_detail_model/merchant_detail_model.dart';
-import 'package:test_ecommerce_app/models/merchant/merchant_model.dart';
-import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
-import 'package:test_ecommerce_app/models/search/search_model.dart';
-import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
-import 'package:test_ecommerce_app/shared/error/exception.dart';
+import 'package:mizaa/models/merchant/merchant_detail_model/merchant_detail_model.dart';
+import 'package:mizaa/models/merchant/merchant_model.dart';
+import 'package:mizaa/models/offers/OfferModel.dart';
+import 'package:mizaa/models/search/search_model.dart';
+import 'package:mizaa/services/networking/ApiConstants.dart';
+import 'package:mizaa/shared/error/exception.dart';
 import 'package:http/http.dart' as http;
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
 
 class SearchRepository {
   Map<String, String> requestHeaders = {

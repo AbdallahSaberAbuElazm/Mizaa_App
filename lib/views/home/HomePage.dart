@@ -1,12 +1,12 @@
 import 'package:get_storage/get_storage.dart';
-import 'package:test_ecommerce_app/controllers/home/HomeController.dart';
+import 'package:mizaa/controllers/home/HomeController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+import 'package:mizaa/shared/language_translation/translation_keys.dart'
     as translation;
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
+import 'package:mizaa/controllers/controllers.dart';
 import '../../shared/constants/ColorConstants.dart';
 
 class HomePage extends StatefulWidget {

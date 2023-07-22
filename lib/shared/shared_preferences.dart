@@ -1,6 +1,6 @@
-import 'package:test_ecommerce_app/models/user/basic_info/user_basic_info.dart';
+import 'package:mizaa/models/user/basic_info/user_basic_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test_ecommerce_app/models/user/user_login_data.dart';
+import 'package:mizaa/models/user/user_login_data.dart';
 
 class SharedPreferencesClass {
   static SharedPreferences? _sharedPreferences;

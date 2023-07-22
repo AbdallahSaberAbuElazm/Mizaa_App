@@ -1,22 +1,22 @@
 import 'package:carousel_slider/carousel_controller.dart';
-import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/models/categories/CategoryModel.dart';
-import 'package:test_ecommerce_app/models/categories/sub_categories/SubCategoriesModel.dart';
-import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
-import 'package:test_ecommerce_app/providers/CategoryProvider.dart';
-import 'package:test_ecommerce_app/providers/OfferProvider.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
-import 'package:test_ecommerce_app/shared/utils.dart';
-import 'package:test_ecommerce_app/views/home/tabs/order_tab.dart';
-import 'package:test_ecommerce_app/views/home/tabs/offer_tab.dart';
-import 'package:test_ecommerce_app/views/home/tabs/favorite_tab.dart';
-import 'package:test_ecommerce_app/views/home/tabs/user_tab.dart';
-import 'package:test_ecommerce_app/views/home/tabs/categories_tab.dart';
+import 'package:mizaa/controllers/cart/cart_controller.dart';
+import 'package:mizaa/controllers/controllers.dart';
+import 'package:mizaa/models/categories/CategoryModel.dart';
+import 'package:mizaa/models/categories/sub_categories/SubCategoriesModel.dart';
+import 'package:mizaa/models/offers/OfferModel.dart';
+import 'package:mizaa/providers/CategoryProvider.dart';
+import 'package:mizaa/providers/OfferProvider.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
+import 'package:mizaa/shared/utils.dart';
+import 'package:mizaa/views/home/tabs/order_tab.dart';
+import 'package:mizaa/views/home/tabs/offer_tab.dart';
+import 'package:mizaa/views/home/tabs/favorite_tab.dart';
+import 'package:mizaa/views/home/tabs/user_tab.dart';
+import 'package:mizaa/views/home/tabs/categories_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/views/offer/nearest_offer.dart';
+import 'package:mizaa/views/offer/nearest_offer.dart';
 
 class HomeController extends GetxController {
   final OfferProvider _offerProvider;

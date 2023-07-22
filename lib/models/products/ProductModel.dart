@@ -1,6 +1,6 @@
-import 'package:test_ecommerce_app/models/products/product_contents/ProductContent.dart';
-import 'package:test_ecommerce_app/shared/typedef.dart';
-import 'package:test_ecommerce_app/models/categories/CategoryModel.dart';
+import 'package:mizaa/models/products/product_contents/ProductContent.dart';
+import 'package:mizaa/shared/typedef.dart';
+import 'package:mizaa/models/categories/CategoryModel.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'ProductModel.freezed.dart';

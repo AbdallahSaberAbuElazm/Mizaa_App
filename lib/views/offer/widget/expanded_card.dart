@@ -1,9 +1,9 @@
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/views/offer/widget/counter.dart';
-import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/views/offer/widget/counter.dart';
+import 'package:mizaa/shared/language_translation/translation_keys.dart'
     as translation;
 
 class ExpandedCard extends StatefulWidget {

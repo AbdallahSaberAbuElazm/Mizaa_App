@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/models/location/city/CityModel.dart';
-import 'package:test_ecommerce_app/models/location/country/CountryModel.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
+import 'package:mizaa/models/location/city/CityModel.dart';
+import 'package:mizaa/models/location/country/CountryModel.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
+import 'package:mizaa/controllers/controllers.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:test_ecommerce_app/views/offer/nearest_offer.dart';
-import 'package:test_ecommerce_app/views/widgets/custom_button.dart';
+import 'package:mizaa/views/offer/nearest_offer.dart';
+import 'package:mizaa/views/widgets/custom_button.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:geolocator/geolocator.dart';
 

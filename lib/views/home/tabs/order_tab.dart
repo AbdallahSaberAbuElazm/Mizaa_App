@@ -3,22 +3,22 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/controllers/offers/OfferController.dart';
-import 'package:test_ecommerce_app/controllers/order/order_controller.dart';
-import 'package:test_ecommerce_app/models/order/order_model.dart';
-import 'package:test_ecommerce_app/models/order/order_offer_detail/order_offer/order_offer_model.dart';
-import 'package:test_ecommerce_app/models/order/order_offer_detail/order_offer_detail/order_offer_detail_model.dart';
-import 'package:test_ecommerce_app/models/order/order_status/order_status_model.dart';
-import 'package:test_ecommerce_app/models/payment_getway/payment_way_model.dart';
-import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/utils.dart';
-import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+import 'package:mizaa/controllers/controllers.dart';
+import 'package:mizaa/controllers/offers/OfferController.dart';
+import 'package:mizaa/controllers/order/order_controller.dart';
+import 'package:mizaa/models/order/order_model.dart';
+import 'package:mizaa/models/order/order_offer_detail/order_offer/order_offer_model.dart';
+import 'package:mizaa/models/order/order_offer_detail/order_offer_detail/order_offer_detail_model.dart';
+import 'package:mizaa/models/order/order_status/order_status_model.dart';
+import 'package:mizaa/models/payment_getway/payment_way_model.dart';
+import 'package:mizaa/services/networking/ApiConstants.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/utils.dart';
+import 'package:mizaa/shared/language_translation/translation_keys.dart'
     as translation;
-import 'package:test_ecommerce_app/views/offer/offer_detail.dart';
-import 'package:test_ecommerce_app/views/widgets/chatting_btn.dart';
-import 'package:test_ecommerce_app/views/widgets/shimmer_container.dart';
+import 'package:mizaa/views/offer/offer_detail.dart';
+import 'package:mizaa/views/widgets/chatting_btn.dart';
+import 'package:mizaa/views/widgets/shimmer_container.dart';
 
 class OrderTab extends GetView<OrderController> {
   const OrderTab({Key? key}) : super(key: key);

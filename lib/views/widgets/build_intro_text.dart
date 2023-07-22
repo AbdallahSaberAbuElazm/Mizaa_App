@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_ecommerce_app/shared/utils.dart';
+import 'package:mizaa/shared/utils.dart';
 
 class BuildIntroText extends StatelessWidget {
   final String headerText;

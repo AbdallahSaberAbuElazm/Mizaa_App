@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/models/merchant/merchant_detail_model/merchant_detail_model.dart';
-import 'package:test_ecommerce_app/models/merchant/merchant_model.dart';
-import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
-import 'package:test_ecommerce_app/models/search/search_model.dart';
-import 'package:test_ecommerce_app/providers/search_provider.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
+import 'package:mizaa/models/merchant/merchant_detail_model/merchant_detail_model.dart';
+import 'package:mizaa/models/merchant/merchant_model.dart';
+import 'package:mizaa/models/offers/OfferModel.dart';
+import 'package:mizaa/models/search/search_model.dart';
+import 'package:mizaa/providers/search_provider.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
 
 class SearchOfferController extends GetxController {
   SearchProvider searchProvider;

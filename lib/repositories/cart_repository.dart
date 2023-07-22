@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:test_ecommerce_app/models/cart/cart_item_model/cart_item_model.dart';
-import 'package:test_ecommerce_app/models/cart/cart_model/cart_model.dart';
-import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
-import 'package:test_ecommerce_app/shared/error/exception.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
+import 'package:mizaa/models/cart/cart_item_model/cart_item_model.dart';
+import 'package:mizaa/models/cart/cart_model/cart_model.dart';
+import 'package:mizaa/services/networking/ApiConstants.dart';
+import 'package:mizaa/shared/error/exception.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
 
 class CartRepository {
   Future<void> addToCart({required CartModel cartModel}) async {

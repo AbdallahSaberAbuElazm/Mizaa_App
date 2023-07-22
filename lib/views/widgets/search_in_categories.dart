@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test_ecommerce_app/views/widgets/icon_search.dart';
-import 'package:test_ecommerce_app/views/widgets/sorted_by_icon.dart';
-import 'package:test_ecommerce_app/views/widgets/filteration_icon.dart';
+import 'package:mizaa/views/widgets/icon_search.dart';
+import 'package:mizaa/views/widgets/sorted_by_icon.dart';
+import 'package:mizaa/views/widgets/filteration_icon.dart';
 
 class SearchInCategories extends StatelessWidget {
   final dynamic searchOnPressed;

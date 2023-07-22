@@ -1,13 +1,13 @@
 import 'dart:convert';
-import 'package:test_ecommerce_app/models/location/city/CityModel.dart';
-import 'package:test_ecommerce_app/models/location/country/CountryModel.dart';
-import 'package:test_ecommerce_app/models/user/basic_info/user_basic_info.dart';
-import 'package:test_ecommerce_app/models/user/wallet/wallet_model.dart';
-import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
+import 'package:mizaa/models/location/city/CityModel.dart';
+import 'package:mizaa/models/location/country/CountryModel.dart';
+import 'package:mizaa/models/user/basic_info/user_basic_info.dart';
+import 'package:mizaa/models/user/wallet/wallet_model.dart';
+import 'package:mizaa/services/networking/ApiConstants.dart';
 import 'package:http/http.dart' as http;
-import 'package:test_ecommerce_app/models/user/user_service.dart';
-import 'package:test_ecommerce_app/shared/error/exception.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
+import 'package:mizaa/models/user/user_service.dart';
+import 'package:mizaa/shared/error/exception.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class UserAuthenticationRepository {

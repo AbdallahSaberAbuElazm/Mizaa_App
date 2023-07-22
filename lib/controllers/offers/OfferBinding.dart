@@ -1,7 +1,7 @@
-import 'package:test_ecommerce_app/controllers/offers/OfferController.dart';
+import 'package:mizaa/controllers/offers/OfferController.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/providers/OfferProvider.dart';
-import 'package:test_ecommerce_app/repositories/OfferRepository.dart';
+import 'package:mizaa/providers/OfferProvider.dart';
+import 'package:mizaa/repositories/OfferRepository.dart';
 
 class OfferBinding implements Bindings {
   @override

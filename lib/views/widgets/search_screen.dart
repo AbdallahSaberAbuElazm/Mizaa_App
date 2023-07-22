@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/controllers/companies/company_controller.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/controllers/offers/OfferController.dart';
-import 'package:test_ecommerce_app/controllers/offers/search_offer_controller.dart';
-import 'package:test_ecommerce_app/models/merchant/merchant_model.dart';
-import 'package:test_ecommerce_app/models/search/search_model.dart';
-import 'package:test_ecommerce_app/providers/company_provider.dart';
-import 'package:test_ecommerce_app/repositories/company_repository.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+import 'package:mizaa/controllers/companies/company_controller.dart';
+import 'package:mizaa/controllers/controllers.dart';
+import 'package:mizaa/controllers/offers/OfferController.dart';
+import 'package:mizaa/controllers/offers/search_offer_controller.dart';
+import 'package:mizaa/models/merchant/merchant_model.dart';
+import 'package:mizaa/models/search/search_model.dart';
+import 'package:mizaa/providers/company_provider.dart';
+import 'package:mizaa/repositories/company_repository.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/language_translation/translation_keys.dart'
     as translation;
-import 'package:test_ecommerce_app/shared/utils.dart';
-import 'package:test_ecommerce_app/views/merchant/merchant_detail.dart';
-import 'package:test_ecommerce_app/views/offer/offer_detail.dart';
-import 'package:test_ecommerce_app/views/offer/widget/merchant_logo.dart';
-import 'package:test_ecommerce_app/views/widgets/custom_texts.dart';
-import 'package:test_ecommerce_app/views/widgets/center_image_for_empty_data.dart';
-import 'package:test_ecommerce_app/views/widgets/shimmer_container.dart';
+import 'package:mizaa/shared/utils.dart';
+import 'package:mizaa/views/merchant/merchant_detail.dart';
+import 'package:mizaa/views/offer/offer_detail.dart';
+import 'package:mizaa/views/offer/widget/merchant_logo.dart';
+import 'package:mizaa/views/widgets/custom_texts.dart';
+import 'package:mizaa/views/widgets/center_image_for_empty_data.dart';
+import 'package:mizaa/views/widgets/shimmer_container.dart';
 
 enum TypeOfSearch {
   globalSearchWithCity,

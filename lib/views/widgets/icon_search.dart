@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
 
 class IconSearch extends StatelessWidget {
   final dynamic searchOnPressed;

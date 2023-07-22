@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
 
 class ArrowBack extends StatelessWidget {
   final dynamic onTap;
