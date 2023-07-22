@@ -1,8 +1,8 @@
-import 'package:test_ecommerce_app/models/merchant/merchant_detail_model/merchant_detail_model.dart';
-import 'package:test_ecommerce_app/models/merchant/merchant_model.dart';
-import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
-import 'package:test_ecommerce_app/models/search/search_model.dart';
-import 'package:test_ecommerce_app/repositories/search_repositories.dart';
+import 'package:mizaa/models/merchant/merchant_detail_model/merchant_detail_model.dart';
+import 'package:mizaa/models/merchant/merchant_model.dart';
+import 'package:mizaa/models/offers/OfferModel.dart';
+import 'package:mizaa/models/search/search_model.dart';
+import 'package:mizaa/repositories/search_repositories.dart';
 
 class SearchProvider {
   final SearchRepository _searchRepository;

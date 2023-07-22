@@ -1,7 +1,7 @@
-import 'package:test_ecommerce_app/models/merchant/merchant_model.dart';
-import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
-import 'package:test_ecommerce_app/models/offers/offer_rate/OfferRateModel.dart';
-import 'package:test_ecommerce_app/repositories/OfferRepository.dart';
+import 'package:mizaa/models/merchant/merchant_model.dart';
+import 'package:mizaa/models/offers/OfferModel.dart';
+import 'package:mizaa/models/offers/offer_rate/OfferRateModel.dart';
+import 'package:mizaa/repositories/OfferRepository.dart';
 
 class OfferProvider {
   final OfferRepository _offerRepository;

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:get/get_connect.dart';
 import 'package:get/get_connect/http/src/request/request.dart';
-import 'package:test_ecommerce_app/views/widgets/CommonWidgets.dart';
+import 'package:mizaa/views/widgets/CommonWidgets.dart';
 
 FutureOr<dynamic> responseInterceptor(
     Request request, Response response) async {

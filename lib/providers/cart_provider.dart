@@ -1,6 +1,6 @@
-import 'package:test_ecommerce_app/models/cart/cart_item_model/cart_item_model.dart';
-import 'package:test_ecommerce_app/models/cart/cart_model/cart_model.dart';
-import 'package:test_ecommerce_app/repositories/cart_repository.dart';
+import 'package:mizaa/models/cart/cart_item_model/cart_item_model.dart';
+import 'package:mizaa/models/cart/cart_model/cart_model.dart';
+import 'package:mizaa/repositories/cart_repository.dart';
 
 class CartProvider {
   CartRepository _cartRepository;

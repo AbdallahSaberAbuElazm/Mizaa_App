@@ -1,5 +1,5 @@
-import 'package:test_ecommerce_app/services/networking/BaseProvider.dart';
-import 'package:test_ecommerce_app/shared/typedef.dart';
+import 'package:mizaa/services/networking/BaseProvider.dart';
+import 'package:mizaa/shared/typedef.dart';
 
 class ApiService {
   final BaseProvider _baseProvider;

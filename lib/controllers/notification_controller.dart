@@ -1,7 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:test_ecommerce_app/main.dart';
+import 'package:mizaa/main.dart';
 
 class NotificationController {
   // FlutterTts flutterTts = FlutterTts();

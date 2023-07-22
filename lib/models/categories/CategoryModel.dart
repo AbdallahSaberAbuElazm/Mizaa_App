@@ -1,5 +1,5 @@
-import 'package:test_ecommerce_app/models/categories/sub_categories/SubCategoriesModel.dart';
-import 'package:test_ecommerce_app/shared/typedef.dart';
+import 'package:mizaa/models/categories/sub_categories/SubCategoriesModel.dart';
+import 'package:mizaa/shared/typedef.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'CategoryModel.freezed.dart';

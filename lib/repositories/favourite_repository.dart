@@ -1,7 +1,7 @@
-import 'package:test_ecommerce_app/models/favourite/favourite_model.dart';
-import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
-import 'package:test_ecommerce_app/shared/error/exception.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
+import 'package:mizaa/models/favourite/favourite_model.dart';
+import 'package:mizaa/services/networking/ApiConstants.dart';
+import 'package:mizaa/shared/error/exception.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 

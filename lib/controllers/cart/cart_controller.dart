@@ -2,15 +2,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/models/cart/cart_item_model/cart_item_model.dart';
-import 'package:test_ecommerce_app/models/cart/cart_model/cart_model.dart';
-import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
-import 'package:test_ecommerce_app/models/offers/offer_model_adapter.dart';
-import 'package:test_ecommerce_app/models/offers/offer_options/offer_options_adapter.dart';
-import 'package:test_ecommerce_app/providers/cart_provider.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
+import 'package:mizaa/controllers/controllers.dart';
+import 'package:mizaa/models/cart/cart_item_model/cart_item_model.dart';
+import 'package:mizaa/models/cart/cart_model/cart_model.dart';
+import 'package:mizaa/models/offers/OfferModel.dart';
+import 'package:mizaa/models/offers/offer_model_adapter.dart';
+import 'package:mizaa/models/offers/offer_options/offer_options_adapter.dart';
+import 'package:mizaa/providers/cart_provider.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
 
 class CartController extends GetxController {
   late CartProvider cartProvider;

@@ -1,5 +1,5 @@
-import 'package:test_ecommerce_app/models/products/ProductModel.dart';
-import 'package:test_ecommerce_app/repositories/ProductRepository.dart';
+import 'package:mizaa/models/products/ProductModel.dart';
+import 'package:mizaa/repositories/ProductRepository.dart';
 
 class ProductProvider {
   final ProductRepository _productRepository;

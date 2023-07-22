@@ -1,5 +1,5 @@
-import 'package:test_ecommerce_app/shared/typedef.dart';
-import 'package:test_ecommerce_app/services/networking/ApiService.dart';
+import 'package:mizaa/shared/typedef.dart';
+import 'package:mizaa/services/networking/ApiService.dart';
 
 class ProductRepository {
   final ApiService _apiService;

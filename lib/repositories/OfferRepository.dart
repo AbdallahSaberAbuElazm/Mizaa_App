@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'package:test_ecommerce_app/models/merchant/merchant_model.dart';
-import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
-import 'package:test_ecommerce_app/models/offers/offer_rate/OfferRateModel.dart';
-import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
-import 'package:test_ecommerce_app/shared/error/exception.dart';
+import 'package:mizaa/models/merchant/merchant_model.dart';
+import 'package:mizaa/models/offers/OfferModel.dart';
+import 'package:mizaa/models/offers/offer_rate/OfferRateModel.dart';
+import 'package:mizaa/services/networking/ApiConstants.dart';
+import 'package:mizaa/shared/error/exception.dart';
 import 'package:http/http.dart' as http;
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
 
 class OfferRepository {
   Future<List<OfferModel>> getCarouselOffers({required String cityId}) async {

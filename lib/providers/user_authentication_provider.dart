@@ -1,9 +1,9 @@
-import 'package:test_ecommerce_app/models/location/city/CityModel.dart';
-import 'package:test_ecommerce_app/models/location/country/CountryModel.dart';
-import 'package:test_ecommerce_app/models/user/basic_info/user_basic_info.dart';
-import 'package:test_ecommerce_app/models/user/user_service.dart';
-import 'package:test_ecommerce_app/models/user/wallet/wallet_model.dart';
-import 'package:test_ecommerce_app/repositories/user_authentication_repository.dart';
+import 'package:mizaa/models/location/city/CityModel.dart';
+import 'package:mizaa/models/location/country/CountryModel.dart';
+import 'package:mizaa/models/user/basic_info/user_basic_info.dart';
+import 'package:mizaa/models/user/user_service.dart';
+import 'package:mizaa/models/user/wallet/wallet_model.dart';
+import 'package:mizaa/repositories/user_authentication_repository.dart';
 
 class UserAuthenticationProvider {
   final UserAuthenticationRepository userAuthenticationRepository;

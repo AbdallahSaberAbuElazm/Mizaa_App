@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_ecommerce_app/views/widgets/shimmer_container.dart';
+import 'package:mizaa/views/widgets/shimmer_container.dart';
 
 class ShimmerListView extends StatelessWidget {
   final double width;

@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:test_ecommerce_app/models/companies/CompanyModel.dart';
-import 'package:test_ecommerce_app/models/companies/company_branches/CompanyBranchesModel.dart';
-import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
-import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
-import 'package:test_ecommerce_app/shared/error/exception.dart';
+import 'package:mizaa/models/companies/CompanyModel.dart';
+import 'package:mizaa/models/companies/company_branches/CompanyBranchesModel.dart';
+import 'package:mizaa/models/offers/OfferModel.dart';
+import 'package:mizaa/services/networking/ApiConstants.dart';
+import 'package:mizaa/shared/error/exception.dart';
 
 class CompanyRepository {
   Future<List<CompanyBranchesModel>> getCompanyBranches(

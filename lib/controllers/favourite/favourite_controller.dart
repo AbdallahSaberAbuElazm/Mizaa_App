@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/models/favourite/favourite_model.dart';
-import 'package:test_ecommerce_app/providers/favourite_provider.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/utils.dart';
-import 'package:test_ecommerce_app/shared/language_translation/translation_keys.dart'
+import 'package:mizaa/models/favourite/favourite_model.dart';
+import 'package:mizaa/providers/favourite_provider.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/utils.dart';
+import 'package:mizaa/shared/language_translation/translation_keys.dart'
     as translation;
 
 class FavouriteController extends GetxController {

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
-import 'package:test_ecommerce_app/providers/cart_provider.dart';
-import 'package:test_ecommerce_app/repositories/cart_repository.dart';
+import 'package:mizaa/controllers/cart/cart_controller.dart';
+import 'package:mizaa/providers/cart_provider.dart';
+import 'package:mizaa/repositories/cart_repository.dart';
 
 class CartBinding extends Bindings {
   @override

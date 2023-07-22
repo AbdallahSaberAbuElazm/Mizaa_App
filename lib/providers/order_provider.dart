@@ -1,6 +1,6 @@
-import 'package:test_ecommerce_app/models/cart/validate_order_data/order_data_model.dart';
-import 'package:test_ecommerce_app/models/order/order_model.dart';
-import 'package:test_ecommerce_app/repositories/order_repository.dart';
+import 'package:mizaa/models/cart/validate_order_data/order_data_model.dart';
+import 'package:mizaa/models/order/order_model.dart';
+import 'package:mizaa/repositories/order_repository.dart';
 
 class OrderProvider {
   final OrderRepository _orderRepository;

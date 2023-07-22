@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/controllers/favourite/favourite_controller.dart';
-import 'package:test_ecommerce_app/providers/favourite_provider.dart';
-import 'package:test_ecommerce_app/repositories/favourite_repository.dart';
+import 'package:mizaa/controllers/favourite/favourite_controller.dart';
+import 'package:mizaa/providers/favourite_provider.dart';
+import 'package:mizaa/repositories/favourite_repository.dart';
 
 class FavouriteBinding extends Bindings {
   @override

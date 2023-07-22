@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:test_ecommerce_app/controllers/user/user_authentication_controller.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
-import 'package:test_ecommerce_app/shared/utils.dart';
+import 'package:mizaa/controllers/user/user_authentication_controller.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
+import 'package:mizaa/shared/utils.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

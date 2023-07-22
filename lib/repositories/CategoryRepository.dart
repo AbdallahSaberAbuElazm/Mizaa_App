@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:test_ecommerce_app/models/categories/CategoryModel.dart';
-import 'package:test_ecommerce_app/models/categories/sub_categories/SubCategoriesModel.dart';
-import 'package:test_ecommerce_app/services/networking/ApiConstants.dart';
+import 'package:mizaa/models/categories/CategoryModel.dart';
+import 'package:mizaa/models/categories/sub_categories/SubCategoriesModel.dart';
+import 'package:mizaa/services/networking/ApiConstants.dart';
 import 'package:http/http.dart' as http;
-import 'package:test_ecommerce_app/shared/error/exception.dart';
+import 'package:mizaa/shared/error/exception.dart';
 
 class CategoryRepository {
   // final ApiService _apiService;

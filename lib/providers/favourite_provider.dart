@@ -1,5 +1,5 @@
-import 'package:test_ecommerce_app/models/favourite/favourite_model.dart';
-import 'package:test_ecommerce_app/repositories/favourite_repository.dart';
+import 'package:mizaa/models/favourite/favourite_model.dart';
+import 'package:mizaa/repositories/favourite_repository.dart';
 
 class FavouriteProvider {
   final FavouriteRepository _favouriteRepository;

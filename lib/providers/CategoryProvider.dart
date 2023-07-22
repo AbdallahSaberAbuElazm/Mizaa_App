@@ -1,6 +1,6 @@
-import 'package:test_ecommerce_app/models/categories/CategoryModel.dart';
-import 'package:test_ecommerce_app/models/categories/sub_categories/SubCategoriesModel.dart';
-import 'package:test_ecommerce_app/repositories/CategoryRepository.dart';
+import 'package:mizaa/models/categories/CategoryModel.dart';
+import 'package:mizaa/models/categories/sub_categories/SubCategoriesModel.dart';
+import 'package:mizaa/repositories/CategoryRepository.dart';
 
 class CategoryProvider {
   final CategoryRepository _categoryRepository;

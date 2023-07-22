@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/controllers/cart/cart_controller.dart';
-import 'package:test_ecommerce_app/controllers/companies/company_controller.dart';
-import 'package:test_ecommerce_app/controllers/favourite/favourite_controller.dart';
-import 'package:test_ecommerce_app/controllers/home/HomeController.dart';
-import 'package:test_ecommerce_app/controllers/offers/OfferController.dart';
-import 'package:test_ecommerce_app/controllers/offers/search_offer_controller.dart';
-import 'package:test_ecommerce_app/controllers/order/order_controller.dart';
-import 'package:test_ecommerce_app/controllers/theme/directionality_controller.dart';
-import 'package:test_ecommerce_app/controllers/user/user_authentication_controller.dart';
+import 'package:mizaa/controllers/cart/cart_controller.dart';
+import 'package:mizaa/controllers/companies/company_controller.dart';
+import 'package:mizaa/controllers/favourite/favourite_controller.dart';
+import 'package:mizaa/controllers/home/HomeController.dart';
+import 'package:mizaa/controllers/offers/OfferController.dart';
+import 'package:mizaa/controllers/offers/search_offer_controller.dart';
+import 'package:mizaa/controllers/order/order_controller.dart';
+import 'package:mizaa/controllers/theme/directionality_controller.dart';
+import 'package:mizaa/controllers/user/user_authentication_controller.dart';
 
 class Controllers {
   static UserAuthenticationController userAuthenticationController =

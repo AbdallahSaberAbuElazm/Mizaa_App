@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/utils.dart';
+import 'package:mizaa/controllers/controllers.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/utils.dart';
 import 'package:get/get.dart';
 
 class CustomTextFormField extends StatefulWidget {

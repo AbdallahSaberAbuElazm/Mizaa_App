@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:test_ecommerce_app/models/companies/CompanyModel.dart';
-import 'package:test_ecommerce_app/models/companies/company_branches/CompanyBranchesModel.dart';
-import 'package:test_ecommerce_app/models/offers/OfferModel.dart';
-import 'package:test_ecommerce_app/providers/company_provider.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/shared/shared_preferences.dart';
+import 'package:mizaa/models/companies/CompanyModel.dart';
+import 'package:mizaa/models/companies/company_branches/CompanyBranchesModel.dart';
+import 'package:mizaa/models/offers/OfferModel.dart';
+import 'package:mizaa/providers/company_provider.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/shared/shared_preferences.dart';
 
 class CompanyController extends GetxController {
   CompanyProvider companyProvider;

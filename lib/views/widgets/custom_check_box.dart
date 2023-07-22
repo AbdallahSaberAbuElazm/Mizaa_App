@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test_ecommerce_app/controllers/controllers.dart';
-import 'package:test_ecommerce_app/shared/constants/ColorConstants.dart';
-import 'package:test_ecommerce_app/views/widgets/custom_text_btn.dart';
+import 'package:mizaa/controllers/controllers.dart';
+import 'package:mizaa/shared/constants/ColorConstants.dart';
+import 'package:mizaa/views/widgets/custom_text_btn.dart';
 
 class CustomCheckBox extends StatefulWidget {
   final String text;
