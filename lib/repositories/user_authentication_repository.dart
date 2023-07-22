@@ -15,6 +15,7 @@ class UserAuthenticationRepository {
 
   Future<UserService> otpLogin(
       {required String mobileNo, required String password}) async {
+    String? fcmToken = await messaging.getToken();
     Map<String, String> requestHeaders = {
       'Content-Type': 'application/json',
     };
@@ -25,11 +26,8 @@ class UserAuthenticationRepository {
     var response = await http.post(
       url,
       headers: requestHeaders,
-      body: jsonEncode({
-        "mobile": mobileNo,
-        "password": password,
-        'token': await messaging.getToken()
-      }),
+      body: jsonEncode(
+          {"mobile": mobileNo, "password": password, 'token': fcmToken!}),
     );
 
     if (response.statusCode == 200) {
@@ -151,6 +149,7 @@ class UserAuthenticationRepository {
     required String password,
     required String otpCode,
   }) async {
+    String? fcmToken = await messaging.getToken();
     Map<String, String> requestHeaders = {
       'Content-Type': 'application/json',
     };
@@ -164,7 +163,7 @@ class UserAuthenticationRepository {
         "mobile": mobileNo,
         "password": password,
         "firstName": firstName,
-        "DeviceToken": await messaging.getToken()
+        "DeviceToken": fcmToken!
       }),
     );
     Map<String, dynamic> bodyData = {};
@@ -183,8 +182,9 @@ class UserAuthenticationRepository {
 
   // add device token
   Future<String> addDeviceToken() async {
-    var url = Uri.parse(
-        ApiConstants.getDeviceToken + messaging.getToken().toString());
+    String? fcmToken = await messaging.getToken();
+
+    var url = Uri.parse(ApiConstants.getDeviceToken + fcmToken!);
     Map<String, dynamic> bodyData = {};
 
     var response = await http.get(

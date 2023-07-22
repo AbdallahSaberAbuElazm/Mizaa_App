@@ -17,11 +17,13 @@ import 'package:mizaa/shared/language_translation/translation_keys.dart'
 
 class MostSellerOfferCard extends StatefulWidget {
   final OfferModel offerModel;
+  final int index;
   final double width;
   final double height;
   const MostSellerOfferCard(
       {Key? key,
       required this.offerModel,
+      required this.index,
       required this.width,
       required this.height})
       : super(key: key);
@@ -145,26 +147,22 @@ class _MostSellerOfferCardState extends State<MostSellerOfferCard> {
                         .then((favouriteList) {
                       FavouriteModel favouriteModel = favouriteList.firstWhere(
                           (offer) => widget.offerModel.id == offer.offerId);
-                      // Controllers.homeController.todayOffers[index].copyWith(isFavourite: false);
-                      Controllers.favouriteController
-                          .deleteFromFavourites(
-                              favouriteKey: favouriteModel.key,
-                              context: context)
-                          .then((value) {
-                        print('value of delete is $value');
-                        if (value) {
-                          Controllers.homeController.getMostSalesOffers();
-                        }
-                      });
+                      Controllers
+                              .homeController.mostSellerOffers[widget.index] =
+                          Controllers
+                              .homeController.mostSellerOffers[widget.index]
+                              .copyWith(isFavourite: false);
+                      Controllers.favouriteController.deleteFromFavourites(
+                          favouriteKey: favouriteModel.key, context: context);
                       Controllers.homeController.getMostSalesOffers();
                     });
                   } else {
-                    Controllers.favouriteController
-                        .addToFavourites(
-                            offerId: widget.offerModel.id!, context: context)
-                        .then((value) {
-                      Controllers.homeController.getMostSalesOffers();
-                    });
+                    Controllers.homeController.mostSellerOffers[widget.index] =
+                        Controllers
+                            .homeController.mostSellerOffers[widget.index]
+                            .copyWith(isFavourite: true);
+                    Controllers.favouriteController.addToFavourites(
+                        offerId: widget.offerModel.id!, context: context);
                   }
                 }
               },

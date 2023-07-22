@@ -1388,28 +1388,20 @@ class ExploreTab extends GetView<HomeController> {
                                 Controllers
                                     .homeController.todayOffers[index].id ==
                                 offer.offerId);
-                        // Controllers.homeController.todayOffers[index].copyWith(isFavourite: false);
-                        Controllers.favouriteController
-                            .deleteFromFavourites(
-                                favouriteKey: favouriteModel.key,
-                                context: context)
-                            .then((value) {
-                          print('value of delete is $value');
-                          if (value) {
-                            Controllers.homeController.getTodayOffers();
-                          }
-                        });
-                        Controllers.homeController.getTodayOffers();
+                        Controllers.homeController.todayOffers[index] =
+                            Controllers.homeController.todayOffers[index]
+                                .copyWith(isFavourite: false);
+                        Controllers.favouriteController.deleteFromFavourites(
+                            favouriteKey: favouriteModel.key, context: context);
                       });
                     } else {
-                      Controllers.favouriteController
-                          .addToFavourites(
-                              offerId: Controllers
-                                  .homeController.todayOffers[index].id!,
-                              context: context)
-                          .then((value) {
-                        Controllers.homeController.getTodayOffers();
-                      });
+                      Controllers.homeController.todayOffers[index] =
+                          Controllers.homeController.todayOffers[index]
+                              .copyWith(isFavourite: true);
+                      Controllers.favouriteController.addToFavourites(
+                          offerId:
+                              Controllers.homeController.todayOffers[index].id!,
+                          context: context);
                     }
                   }
                 },
@@ -1451,6 +1443,7 @@ class ExploreTab extends GetView<HomeController> {
                   left: 12,
                 ),
                 child: NewOfferCard(
+                  index: itemIndex,
                   offerModel: offerModels[itemIndex],
                   width: MediaQuery.of(context).size.width,
                   // 336,
@@ -1488,6 +1481,7 @@ class ExploreTab extends GetView<HomeController> {
               left: Utils.leftPadding10Left,
             ),
             child: MostSellerOfferCard(
+              index: index,
               offerModel: offerModels[index],
               width: 290,
               height: 219,
