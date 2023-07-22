@@ -1,4 +1,4 @@
-# test_ecommerce_app
+# mizaa
 
 A new Flutter project.
 
